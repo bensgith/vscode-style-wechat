@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WeChat Web with VS Code UI
-// @namespace    https://github.com/bensgith/tampermonkey-scripts
-// @version      0.10.5
+// @namespace    https://github.com/bensgith/vscode-style-wechat
+// @version      0.10.6
 // @description  VS Code style for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -14,343 +14,111 @@
     'use strict';
 
     const qqface_names_map = new Map(
-            [['qqemoji0', 'Smile'],
-             ['qqemoji1', 'Grimace'],
-             ['qqemoji2', 'Drool'],
-             ['qqemoji3', 'Scowl'],
-             ['qqemoji4', 'CoolGuy'],
-             ['qqemoji5', 'Sob'],
-             ['qqemoji6', 'Shy'],
-             ['qqemoji7', 'Silent'],
-             ['qqemoji8', 'Sleep'],
-             ['qqemoji9', 'Cry'],
-             ['qqemoji10', 'Awkward'],
-             ['qqemoji11', 'Angry'],
-             ['qqemoji12', 'Tongue'],
-             ['qqemoji13', 'Grin'],
-             ['qqemoji14', 'Surprise'],
-             ['qqemoji15', 'Frown'],
-             ['qqemoji16', 'Ruthless'],
-             ['qqemoji17', 'Blush'],
-             ['qqemoji18', 'Scream'],
-             ['qqemoji19', 'Puke'],
-             ['qqemoji20', 'Chuckle'],
-             ['qqemoji21', 'Joyful'],
-             ['qqemoji22', 'Slight'],
-             ['qqemoji23', 'Smug'],
-             ['qqemoji24', 'Hungry'],
-             ['qqemoji25', 'Drowsy'],
-             ['qqemoji26', 'Panic'],
-             ['qqemoji27', 'Sweat'],
-             ['qqemoji28', 'Laugh'],
-             ['qqemoji29', 'Commando'],
-             ['qqemoji30', 'Determined'],
-             ['qqemoji31', 'Scold'],
-             ['qqemoji32', 'Shocked'],
-             ['qqemoji33', 'Shhh'],
-             ['qqemoji34', 'Dizzy'],
-             ['qqemoji35', 'Tormented'],
-             ['qqemoji36', 'Toasted'],
-             ['qqemoji37', 'Skull'],
-             ['qqemoji38', 'Hammer'],
-             ['qqemoji39', 'Wave'],
-             ['qqemoji40', 'Speechless'],
-             ['qqemoji41', 'NosePick'],
-             ['qqemoji42', 'Clap'],
-             ['qqemoji43', 'Shame'],
-             ['qqemoji44', 'Trick'],
-             ['qqemoji45', 'Bah！L'],
-             ['qqemoji46', 'Bah！R'],
-             ['qqemoji47', 'Yawn'],
-             ['qqemoji48', 'Pooh-pooh'],
-             ['qqemoji49', 'Shrunken'],
-             ['qqemoji50', 'TearingUp'],
-             ['qqemoji51', 'Sly'],
-             ['qqemoji52', 'Kiss'],
-             ['qqemoji53', 'Wrath'],
-             ['qqemoji54', 'Whimper'],
-             ['qqemoji55', 'Cleaver'],
-             ['qqemoji56', 'Watermelon'],
-             ['qqemoji57', 'Beer'],
-             ['qqemoji58', 'Basketball'],
-             ['qqemoji59', 'PingPong'],
-             ['qqemoji60', 'Coffee'],
-             ['qqemoji61', 'Rice'],
-             ['qqemoji62', 'Pig'],
-             ['qqemoji63', 'Rose'],
-             ['qqemoji64', 'Wilt'],
-             ['qqemoji65', 'Lips'],
-             ['qqemoji66', 'Heart'],
-             ['qqemoji67', 'BrokenHeart'],
-             ['qqemoji68', 'Cake'],
-             ['qqemoji69', 'Lightning'],
-             ['qqemoji70', 'Bomb'],
-             ['qqemoji71', 'Dagger'],
-             ['qqemoji72', 'Soccer'],
-             ['qqemoji73', 'Ladybug'],
-             ['qqemoji74', 'Poop'],
-             ['qqemoji75', 'Moon'],
-             ['qqemoji76', 'Sun'],
-             ['qqemoji77', 'Gift'],
-             ['qqemoji78', 'Hug'],
-             ['qqemoji79', 'ThumbsUp'],
-             ['qqemoji80', 'ThumbsDown'],
-             ['qqemoji81', 'Shake'],
-             ['qqemoji82', 'Peace'],
-             ['qqemoji83', 'Fight'],
-             ['qqemoji84', 'Beckon'],
-             ['qqemoji85', 'Fist'],
-             ['qqemoji86', 'Pinky'],
-             ['qqemoji87', 'RockOn'],
-             ['qqemoji88', 'Nuh-uh'],
-             ['qqemoji89', 'OK'],
-             ['qqemoji90', 'InLove'],
-             ['qqemoji91', 'Blowkiss'],
-             ['qqemoji92', 'Waddle'],
-             ['qqemoji93', 'Tremble'],
-             ['qqemoji94', 'Aaagh!'],
-             ['qqemoji95', 'Twirl'],
-             ['qqemoji96', 'Kotow'],
-             ['qqemoji97', 'Dramatic'],
-             ['qqemoji98', 'JumpRope'],
-             ['qqemoji99', 'Surrender'],
-             ['qqemoji100', 'Hooray'],
-             ['qqemoji101', 'Meditate'],
-             ['qqemoji102', 'Smooch'],
-             ['qqemoji103', 'TaiChi L'],
-             ['qqemoji104', 'TaiChi R'],
-             // from emoji panel
-             ['qqemoji105', 'Hey'],
-             ['qqemoji106', 'Facepalm'],
-             ['qqemoji107', 'Smirk'],
-             ['qqemoji108', 'Smart'],
-             ['qqemoji109', 'Concerned'],
-             ['qqemoji110', 'Yeah!'],
-             ['qqemoji112', 'Packet'],
-             ['qqemoji111', 'Chicken']]
+            [
+                ['qqemoji0', 'Smile'], ['qqemoji1', 'Grimace'], ['qqemoji2', 'Drool'], ['qqemoji3', 'Scowl'], ['qqemoji4', 'CoolGuy'],
+                ['qqemoji5', 'Sob'], ['qqemoji6', 'Shy'], ['qqemoji7', 'Silent'], ['qqemoji8', 'Sleep'], ['qqemoji9', 'Cry'],
+                ['qqemoji10', 'Awkward'], ['qqemoji11', 'Angry'], ['qqemoji12', 'Tongue'], ['qqemoji13', 'Grin'], ['qqemoji14', 'Surprise'],
+                ['qqemoji15', 'Frown'], ['qqemoji16', 'Ruthless'], ['qqemoji17', 'Blush'], ['qqemoji18', 'Scream'], ['qqemoji19', 'Puke'],
+                ['qqemoji20', 'Chuckle'], ['qqemoji21', 'Joyful'], ['qqemoji22', 'Slight'], ['qqemoji23', 'Smug'], ['qqemoji24', 'Hungry'],
+                ['qqemoji25', 'Drowsy'], ['qqemoji26', 'Panic'], ['qqemoji27', 'Sweat'], ['qqemoji28', 'Laugh'], ['qqemoji29', 'Commando'],
+                ['qqemoji30', 'Determined'], ['qqemoji31', 'Scold'], ['qqemoji32', 'Shocked'], ['qqemoji33', 'Shhh'], ['qqemoji34', 'Dizzy'],
+                ['qqemoji35', 'Tormented'], ['qqemoji36', 'Toasted'], ['qqemoji37', 'Skull'], ['qqemoji38', 'Hammer'], ['qqemoji39', 'Wave'],
+                ['qqemoji40', 'Speechless_1'], ['qqemoji41', 'NosePick'], ['qqemoji42', 'Clap'], ['qqemoji43', 'Shame'], ['qqemoji44', 'Trick'],
+                ['qqemoji45', 'Bah！L'], ['qqemoji46', 'Bah！R'], ['qqemoji47', 'Yawn'], ['qqemoji48', 'Pooh-pooh'], ['qqemoji49', 'Shrunken'],
+                ['qqemoji50', 'TearingUp'], ['qqemoji51', 'Sly'], ['qqemoji52', 'Kiss'], ['qqemoji53', 'Wrath'], ['qqemoji54', 'Whimper'],
+                ['qqemoji55', 'Cleaver'], ['qqemoji56', 'Watermelon'], ['qqemoji57', 'Beer'], ['qqemoji58', 'Basketball'], ['qqemoji59', 'PingPong'],
+                ['qqemoji60', 'Coffee'], ['qqemoji61', 'Rice'], ['qqemoji62', 'Pig'], ['qqemoji63', 'Rose'], ['qqemoji64', 'Wilt'], ['qqemoji65', 'Lips'],
+                ['qqemoji66', 'Heart'], ['qqemoji67', 'BrokenHeart'], ['qqemoji68', 'Cake'], ['qqemoji69', 'Lightning'], ['qqemoji70', 'Bomb'],
+                ['qqemoji71', 'Dagger'], ['qqemoji72', 'Soccer'], ['qqemoji73', 'Ladybug'], ['qqemoji74', 'Poop'], ['qqemoji75', 'Moon'],
+                ['qqemoji76', 'Sun'], ['qqemoji77', 'Gift'], ['qqemoji78', 'Hug'], ['qqemoji79', 'ThumbsUp'], ['qqemoji80', 'ThumbsDown'],
+                ['qqemoji81', 'Shake'], ['qqemoji82', 'Peace'], ['qqemoji83', 'Fight'], ['qqemoji84', 'Beckon'], ['qqemoji85', 'Fist'],
+                ['qqemoji86', 'Pinky'], ['qqemoji87', 'RockOn'], ['qqemoji88', 'Nuh-uh'], ['qqemoji89', 'OK'], ['qqemoji90', 'InLove'],
+                ['qqemoji91', 'Blowkiss'], ['qqemoji92', 'Waddle'], ['qqemoji93', 'Tremble'], ['qqemoji94', 'Aaagh!'], ['qqemoji95', 'Twirl'],
+                ['qqemoji96', 'Kotow'], ['qqemoji97', 'Dramatic'], ['qqemoji98', 'JumpRope'], ['qqemoji99', 'Surrender'], ['qqemoji100', 'Hooray'],
+                ['qqemoji101', 'Meditate'], ['qqemoji102', 'Smooch'], ['qqemoji103', 'TaiChi L'], ['qqemoji104', 'TaiChi R'],
+                // from emoji panel
+                ['qqemoji105', 'Hey'], ['qqemoji106', 'Facepalm'], ['qqemoji107', 'Smirk'], ['qqemoji108', 'Smart'], ['qqemoji109', 'Concerned'],
+                ['qqemoji110', 'Yeah!'], ['qqemoji112', 'Packet'], ['qqemoji111', 'Chicken']
+            ]
         );
 
     const emoji_names_map = new Map(
-            [['emoji1f604', 'Laugh'],
-             ['emoji1f637', 'Sick'],
-             ['emoji1f639', 'Lol'],
-             ['emoji1f602', 'Lol'], // extra
-             ['emoji1f61d', 'Tongue'],
-             ['emoji1f633', 'Blush'],
-             ['emoji1f631', 'Terror'],
-             ['emoji1f64d', 'LetDown'],
-             ['emoji1f612', 'Speechless'],
-             ['emoji1f47b', 'Ghost'],
-             ['emoji1f4aa', 'Strong'],
-             ['emoji1f389', 'Party'],
-             ['emoji1f4e6', 'Gift'],
-             ['emoji1f60a', 'Happy'],
-             ['emoji1f63a', 'BigSmile'],
-             ['emoji263a', 'Glowing'],
-             ['emoji1f609', 'Wink'],
-             ['emoji1f63b', 'Drool'],
-             ['emoji1f63d', 'Smooch'],
-             ['emoji1f61a', 'Kiss'],
-             ['emoji1f63c', 'Grin'],
-             ['emoji1f60c', 'Satisfied'],
-             ['emoji1f61c', 'Tease'],
-             ['emoji1f60f', 'CoolGuy'],
-             ['emoji1f613', 'Sweat'],
-             ['emoji1f61e', 'Low'],
-             ['emoji1f4ab', 'Ugh'],
-             ['emoji1f625', 'Anxious'],
-             ['emoji1f630', 'Worried'],
-             ['emoji1f628', 'Shocked'],
-             ['emoji1f62b', 'D’oh!'],
-             ['emoji1f63f', 'Tear'],
-             ['emoji1f62d', 'Cry'],
-             ['emoji1f632', 'Dizzy'],
-             ['emoji1f620', 'Upset'],
-             ['emoji1f64e', 'Angry'],
-             ['emoji1f62a', 'Zzz'],
-             ['emoji1f47f', 'Demon'],
-             ['emoji1f47d', 'Alien'],
-             ['emoji2764', 'Heart'],
-             ['emoji1f494', 'BrokenHeart'],
-             ['emoji1f498', 'Cupid'],
-             ['emoji2747', 'Twinkle'],
-             ['emoji1f31f', 'Star'],
-             ['emoji2755', '!'],
-             ['emoji2757', '!'], // extra
-             ['emoji2754', '?'],
-             ['emoji1f4a4', 'Asleep'],
-             ['emoji1f4a7', 'Drops'],
-             ['emoji1f3b5', 'Music'],
-             ['emoji1f525', 'Fire'],
-             ['emoji1f4a9', 'Poop'],
-             ['emoji1f44d', 'ThumbsUp'],
-             ['emoji1f44e', 'ThumbsDown'],
-             ['emoji1f44a', 'Fist'],
-             ['emoji270c', 'Peace'],
-             ['emoji1f446', 'Up'],
-             ['emoji1f447', 'Down'],
-             ['emoji1f449', 'Right'],
-             ['emoji1f448', 'Left'],
-             ['emoji261d', '#1'],
-             ['emoji1f48f', 'Kissing'],
-             ['emoji1f491', 'Couple'],
-             ['emoji1f466', 'Boy'],
-             ['emoji1f467', 'Girl'],
-             ['emoji1f469', 'Lady'],
-             ['emoji1f468', 'Man'],
-             ['emoji1f47c', 'Angel'],
-             ['emoji1f480', 'Skull'],
-             ['emoji1f48b', 'Lips'],
-             ['emoji2600', 'Sun'],
-             ['emoji2614', 'Rain'],
-             ['emoji2601', 'Cloud'],
-             ['emoji26c4', 'Snowman'],
-             ['emoji1f31b', 'Moon'],
-             ['emoji26a1', 'Lightning'],
-             ['emoji1f30a', 'Waves'],
-             ['emoji1f431', 'Cat'],
-             ['emoji1f436', 'Doggy'],
-             ['emoji1f42d', 'Mouse'],
-             ['emoji1f439', 'Hamster'],
-             ['emoji1f430', 'Rabbit'],
-             ['emoji1f43a', 'Dog'],
-             ['emoji1f438', 'Frog'],
-             ['emoji1f42f', 'Tiger'],
-             ['emoji1f428', 'Koala'],
-             ['emoji1f43b', 'Bear'],
-             ['emoji1f43d', 'Pig'],
-             ['emoji1f42e', 'Cow'],
-             ['emoji1f417', 'Boar'],
-             ['emoji1f435', 'Monkey'],
-             ['emoji1f434', 'Horse'],
-             ['emoji1f40d', 'Snake'],
-             ['emoji1f426', 'Pigeon'],
-             ['emoji1f414', 'Chicken'],
-             ['emoji1f427', 'Penguin'],
-             ['emoji1f41b', 'Caterpillar'],
-             ['emoji1f419', 'Octopus'],
-             ['emoji1f420', 'Fish'],
-             ['emoji1f433', 'Whale'],
-             ['emoji1f42c', 'Dolphin'],
-             ['emoji1f339', 'Rose'],
-             ['emoji1f33a', 'Flower'],
-             ['emoji1f334', 'Palm'],
-             ['emoji1f335', 'Cactus'],
-             ['emoji1f49d', 'CandyBox'],
-             ['emoji1f383', 'Jack-o-lantern'],
-             ['emoji1f385', 'Santa'],
-             ['emoji1f384', 'XmasTree'],
-             ['emoji1f514', 'Bell'],
-             ['emoji1f388', 'Balloon'],
-             ['emoji1f4bf', 'CD'],
-             ['emoji1f4f7', 'Camera'],
-             ['emoji1f4f9', 'FilmCamera'],
-             ['emoji1f4bb', 'Computer'],
-             ['emoji1f4fa', 'TV'],
-             ['emoji1f4de', 'Phone'],
-             ['emoji1f513', 'Unlocked'],
-             ['emoji1f510', 'Locked'],
-             ['emoji1f511', 'Key'],
-             ['emoji1f528', 'Judgement'],
-             ['emoji1f4a1', 'LightBulb'],
-             ['emoji1f4eb', 'Mail'],
-             ['emoji1f6c0', 'Wash'],
-             ['emoji1f4b5', 'Money'],
-             ['emoji1f4a3', 'Bomb'],
-             ['emoji1f52b', 'Pistol'],
-             ['emoji1f48a', 'Pill'],
-             ['emoji1f3c8', 'Football'],
-             ['emoji1f3c0', 'Basketball'],
-             ['emoji26bd', 'Soccer'],
-             ['emoji26be', 'Baseball'],
-             ['emoji26f3', 'Golf'],
-             ['emoji1f3c6', 'Trophy'],
-             ['emoji1f47e', 'Invader'],
-             ['emoji1f3a4', 'Singing'],
-             ['emoji1f3b8', 'Guitar'],
-             ['emoji1f459', 'Bikini'],
-             ['emoji1f451', 'Crown'],
-             ['emoji1f302', 'Umbrella'],
-             ['emoji1f45c', 'Purse'],
-             ['emoji1f484', 'Lipstick'],
-             ['emoji1f48d', 'Ring'],
-             ['emoji1f48e', 'Gem'],
-             ['emoji2615', 'Coffee'],
-             ['emoji1f37a', 'Beer'],
-             ['emoji1f37b', 'Toast'],
-             ['emoji1f379', 'Martini'],
-             ['emoji1f354', 'Burger'],
-             ['emoji1f35f', 'Fries'],
-             ['emoji1f35d', 'Sphaghetti'],
-             ['emoji1f363', 'Sushi'],
-             ['emoji1f35c', 'Noodles'],
-             ['emoji1f373', 'Eggs'],
-             ['emoji1f366', 'IceCream'],
-             ['emoji1f382', 'Cake'],
-             ['emoji1f34f', 'Apple'],
-             ['emoji2708', 'Plane'],
-             ['emoji1f680', 'RocketShip'],
-             ['emoji1f6b2', 'Bike'],
-             ['emoji1f684', 'BulletTrain'],
-             ['emoji26a0', 'Warning'],
-             ['emoji1f3c1', 'Flag'],
-             ['emoji1f6b9', 'Men'],
-             ['emoji1f6ba', 'Women'],
-             ['emoji2b55', 'O'],
-             ['emoji2716', 'X'],
-             ['emoji274c', 'X'], // extra
-             ['emojia9', 'Copyright'],
-             ['emojiae', 'RegisteredTM'],
-             ['emoji2122', 'Trademark'],
-             // extra (not in qq face or emoji panel)
-            ['emoji1f1e81f1f3', 'China'],
-            ['emoji1f1fa1f1f8', 'America'],
-            ['emoji1f1ec1f1e7', 'Canada'],
-            ['emoji1f3ac', 'Film'],
-            ['emoji1f3c4', 'Surfing'],
-            ['emoji1f33f', 'FourLeafClover'],
-            ['emoji1f340', 'FourLeafClover'], //extra
-            ['emoji1f483', 'Dancer'],
-            ['emoji1f49c', 'PurpleHeart'],
-            ['emoji1f49e', 'SparklingHeart'],
-            ['emoji1f490', 'Bouquet'],
-            ['emoji1f4e7', 'LoveLetter'],
-            ['emoji1f48c', 'LoveLetter'],
-            ['emoji1f4d2', 'TextBook'],
-            ['emoji2733', 'EightSpokedAsterisk'],
-            ['emoji1f6a8', 'RotatingLight'],
-            ['emoji1f338', 'PinkFlower'],
-            ['emoji1f33c', 'YellowFlower'],
-            ['emoji1f496', 'PinkSparklingHeart'],
-            ['emoji1f17e', 'RedSquareO'],
-            ['emoji1f23a', 'BusinessOpen'],
-            ['emoji1f308', 'Rainbow'],
-            ['emoji1f4f1', 'MobilePhone'],
-            ['emoji1f3a3', 'BlueFish'],
-            ['emoji1f3e1', 'House'],
-            ['emoji1f4d1', 'Note'],
-            ['emoji1f3ab', 'Ticket'],
-            //['emoji1f530', ''],
-            ['emoji1f45a', 'BlueT-Shirt'],
-            ['emoji1f393', 'graduation_cap']]
+            [
+                ['emoji1f604', 'Laugh'], ['emoji1f637', 'Sick'], ['emoji1f639', 'Lol_1'], ['emoji1f602', 'Lol_2'], ['emoji1f61d', 'Tongue'],
+                ['emoji1f633', 'Blush'], ['emoji1f631', 'Terror'], ['emoji1f64d', 'LetDown'], ['emoji1f612', 'Speechless_2'], ['emoji1f47b', 'Ghost'],
+                ['emoji1f4aa', 'Strong'], ['emoji1f389', 'Party'], ['emoji1f4e6', 'Gift'], ['emoji1f60a', 'Happy'], ['emoji1f63a', 'BigSmile'],
+                ['emoji263a', 'Glowing'], ['emoji1f609', 'Wink'], ['emoji1f63b', 'Drool'], ['emoji1f63d', 'Smooch'], ['emoji1f61a', 'Kiss'],
+                ['emoji1f63c', 'Grin'], ['emoji1f60c', 'Satisfied'], ['emoji1f61c', 'Tease'], ['emoji1f60f', 'CoolGuy'], ['emoji1f613', 'Sweat'],
+                ['emoji1f61e', 'Low'], ['emoji1f4ab', 'Ugh'], ['emoji1f625', 'Anxious'], ['emoji1f630', 'Worried'], ['emoji1f628', 'Shocked'],
+                ['emoji1f62b', 'D’oh!'], ['emoji1f63f', 'Tear'], ['emoji1f62d', 'Cry'], ['emoji1f632', 'Dizzy'], ['emoji1f620', 'Upset'],
+                ['emoji1f64e', 'Angry'], ['emoji1f62a', 'Zzz'], ['emoji1f47f', 'Demon'], ['emoji1f47d', 'Alien'], ['emoji2764', 'Heart'],
+                ['emoji1f494', 'BrokenHeart'], ['emoji1f498', 'Cupid'], ['emoji2747', 'Twinkle'], ['emoji1f31f', 'Star'], ['emoji2755', '!_1'],
+                ['emoji2757', '!_2'], ['emoji2754', '?'], ['emoji1f4a4', 'Asleep'], ['emoji1f4a7', 'Drops'], ['emoji1f3b5', 'Music'],
+                ['emoji1f525', 'Fire'], ['emoji1f4a9', 'Poop'], ['emoji1f44d', 'ThumbsUp'], ['emoji1f44e', 'ThumbsDown'], ['emoji1f44a', 'Fist'],
+                ['emoji270c', 'Peace'], ['emoji1f446', 'Up'], ['emoji1f447', 'Down'], ['emoji1f449', 'Right'], ['emoji1f448', 'Left'],
+                ['emoji261d', '#1'], ['emoji1f48f', 'Kissing'], ['emoji1f491', 'Couple'], ['emoji1f466', 'Boy'], ['emoji1f467', 'Girl'],
+                ['emoji1f469', 'Lady'], ['emoji1f468', 'Man'], ['emoji1f47c', 'Angel'], ['emoji1f480', 'Skull'], ['emoji1f48b', 'Lips'],
+                ['emoji2600', 'Sun'], ['emoji2614', 'Rain'], ['emoji2601', 'Cloud'], ['emoji26c4', 'Snowman'], ['emoji1f31b', 'Moon'],
+                ['emoji26a1', 'Lightning'], ['emoji1f30a', 'Waves'], ['emoji1f431', 'Cat'], ['emoji1f436', 'Doggy'], ['emoji1f42d', 'Mouse'],
+                ['emoji1f439', 'Hamster'], ['emoji1f430', 'Rabbit'], ['emoji1f43a', 'Dog'], ['emoji1f438', 'Frog'], ['emoji1f42f', 'Tiger'],
+                ['emoji1f428', 'Koala'], ['emoji1f43b', 'Bear'], ['emoji1f43d', 'Pig'], ['emoji1f42e', 'Cow'], ['emoji1f417', 'Boar'],
+                ['emoji1f435', 'Monkey'], ['emoji1f434', 'Horse'], ['emoji1f40d', 'Snake'], ['emoji1f426', 'Pigeon'], ['emoji1f414', 'Chicken'],
+                ['emoji1f427', 'Penguin'], ['emoji1f41b', 'Caterpillar'], ['emoji1f419', 'Octopus'], ['emoji1f420', 'Fish'], ['emoji1f433', 'Whale'],
+                ['emoji1f42c', 'Dolphin'], ['emoji1f339', 'Rose'], ['emoji1f33a', 'Flower'], ['emoji1f334', 'Palm'], ['emoji1f335', 'Cactus'],
+                ['emoji1f49d', 'CandyBox'], ['emoji1f383', 'Jack-o-lantern'], ['emoji1f385', 'Santa'], ['emoji1f384', 'XmasTree'], ['emoji1f514', 'Bell'],
+                ['emoji1f388', 'Balloon'], ['emoji1f4bf', 'CD'], ['emoji1f4f7', 'Camera'], ['emoji1f4f9', 'FilmCamera'], ['emoji1f4bb', 'Computer'],
+                ['emoji1f4fa', 'TV'], ['emoji1f4de', 'Phone'], ['emoji1f513', 'Unlocked'], ['emoji1f510', 'Locked'], ['emoji1f511', 'Key'],
+                ['emoji1f528', 'Judgement'], ['emoji1f4a1', 'LightBulb'], ['emoji1f4eb', 'Mail'], ['emoji1f6c0', 'Wash'], ['emoji1f4b5', 'Money'],
+                ['emoji1f4a3', 'Bomb'], ['emoji1f52b', 'Pistol'], ['emoji1f48a', 'Pill'], ['emoji1f3c8', 'Football'], ['emoji1f3c0', 'Basketball'],
+                ['emoji26bd', 'Soccer'], ['emoji26be', 'Baseball'], ['emoji26f3', 'Golf'], ['emoji1f3c6', 'Trophy'], ['emoji1f47e', 'Invader'],
+                ['emoji1f3a4', 'Singing'], ['emoji1f3b8', 'Guitar'], ['emoji1f459', 'Bikini'], ['emoji1f451', 'Crown'], ['emoji1f302', 'Umbrella'],
+                ['emoji1f45c', 'Purse'], ['emoji1f484', 'Lipstick'], ['emoji1f48d', 'Ring'], ['emoji1f48e', 'Gem'], ['emoji2615', 'Coffee'],
+                ['emoji1f37a', 'Beer'], ['emoji1f37b', 'Toast'], ['emoji1f379', 'Martini'], ['emoji1f354', 'Burger'], ['emoji1f35f', 'Fries'],
+                ['emoji1f35d', 'Sphaghetti'], ['emoji1f363', 'Sushi'], ['emoji1f35c', 'Noodles'], ['emoji1f373', 'Eggs'], ['emoji1f366', 'IceCream'],
+                ['emoji1f382', 'Cake'], ['emoji1f34f', 'Apple'], ['emoji2708', 'Plane'], ['emoji1f680', 'RocketShip'], ['emoji1f6b2', 'Bike'],
+                ['emoji1f684', 'BulletTrain'], ['emoji26a0', 'Warning'], ['emoji1f3c1', 'Flag'], ['emoji1f6b9', 'Men'], ['emoji1f6ba', 'Women'],
+                ['emoji2b55', 'O'], ['emoji2716', 'X_1'], ['emoji274c', 'X_2'], ['emojia9', 'Copyright'], ['emojiae', 'RegisteredTM'], ['emoji2122', 'Trademark'],
+                // extra (not in qq face or emoji panel)
+                ['emoji1f1e81f1f3', 'China'], ['emoji1f1fa1f1f8', 'America'], ['emoji1f1ec1f1e7', 'Canada'], ['emoji1f3ac', 'Film'], ['emoji1f3c4', 'Surfing'],
+                ['emoji1f33f', 'FourLeafClover_1'], ['emoji1f340', 'FourLeafClover_2'], ['emoji1f483', 'Dancer'], ['emoji1f49c', 'PurpleHeart'], ['emoji1f49e', 'SparklingHeart'],
+                ['emoji1f490', 'Bouquet'], ['emoji1f4e7', 'LoveLetter_1'], ['emoji1f48c', 'LoveLetter_2'], ['emoji1f4d2', 'TextBook'], ['emoji2733', 'EightSpokedAsterisk'],
+                ['emoji1f6a8', 'RotatingLight'], ['emoji1f338', 'PinkFlower'], ['emoji1f33c', 'YellowFlower'], ['emoji1f496', 'PinkSparklingHeart'], ['emoji1f17e', 'RedSquareO'],
+                ['emoji1f23a', 'BusinessOpen'], ['emoji1f308', 'Rainbow'], ['emoji1f4f1', 'MobilePhone'], ['emoji1f3a3', 'BlueFish'], ['emoji1f3e1', 'House'],
+                ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
+                ['emoji1f236', 'You']
+            ]
         );
 
     //https://github.com/ikatyang/emoji-cheat-sheet
     const special_emoji_map = new Map(
-        [['🥺', 'pleading_face'], ['🤣', 'rofl'], ['😬', 'grimacing'], ['🤑', 'money_mouth_face'], ['🤫', 'shushing_face'], ['🥰', 'smiling_face_with_three_hearts'],
-         ['0️⃣', 'zero'], ['1️⃣', 'one'], ['2️⃣', 'two'], ['3️⃣', 'three'], ['4️⃣', 'four'],
-         ['5️⃣', 'five'], ['6️⃣', 'six'], ['7️⃣', 'seven'], ['8️⃣', 'eight'], ['9️⃣', 'nine'],
-         ['🌎', 'earth_americas'], ['🌍', 'earth_africa'], ['🌏', 'earth_asia'],
-         ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'],
-         ['🎊', 'confetti_ball'], ['★', 'star'], ['☼', 'sunny'], ['🏙️', 'cityscape'],
-         ['📍', 'round_pushpin'],['🌘', 'waning_crescent_moon'], ['⛱️', 'parasol_on_ground'],
-         ['✅', 'white_check_mark'], ['💯', '100'], ['🖥️', 'desktop_computer'], ['➕', 'heavy_plus_sign'], ['✔️', 'heavy_check_mark'],
-         ['💮', 'white_flower'], ['💸', 'money_with_wings'], ['💴', 'yen'],
-         ['🐼', 'panda_face'], ['🦐', 'shrimp'], ['🐲', 'dragon_face'], ['🐋', 'whale2'], ['🦋', 'butterfly'],
-         ['🧸', 'teddy_bear'], ['🦅', 'eagle'],
-         ['📬', 'mailbox_with_mail'], ['✍', 'writing_hand'], ['🤍', 'white_heart'], ['⌛', 'hourglass'],
-        // https://emojipedia.org (not in cheat sheet)
-        ['🪪', 'identification_card'], ['🥹', 'face_holding_back_tears']]
+        [
+            ['🥺', 'pleading_face'], ['🤣', 'rofl'], ['😬', 'grimacing'], ['🤑', 'money_mouth_face'], ['🤫', 'shushing_face'], ['🥰', 'smiling_face_with_three_hearts'],
+            ['0️⃣', 'zero'], ['1️⃣', 'one'], ['2️⃣', 'two'], ['3️⃣', 'three'], ['4️⃣', 'four'],
+            ['5️⃣', 'five'], ['6️⃣', 'six'], ['7️⃣', 'seven'], ['8️⃣', 'eight'], ['9️⃣', 'nine'],
+            ['🌎', 'earth_americas'], ['🌍', 'earth_africa'], ['🌏', 'earth_asia'],
+            ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'],
+            ['🎊', 'confetti_ball'], ['★', 'star'], ['☼', 'sunny'], ['🏙️', 'cityscape'],
+            ['📍', 'round_pushpin'],['🌘', 'waning_crescent_moon'], ['⛱️', 'parasol_on_ground'],
+            ['✅', 'white_check_mark'], ['💯', '100'], ['🖥️', 'desktop_computer'], ['➕', 'heavy_plus_sign'], ['✔️', 'heavy_check_mark'],
+            ['💮', 'white_flower'], ['💸', 'money_with_wings'], ['💴', 'yen'],
+            ['🐼', 'panda_face'], ['🦐', 'shrimp'], ['🐲', 'dragon_face'], ['🐋', 'whale2'], ['🦋', 'butterfly'],
+            ['🧸', 'teddy_bear'], ['🦅', 'eagle'],
+            ['📬', 'mailbox_with_mail'], ['✍', 'writing_hand'], ['🤍', 'white_heart'], ['⌛', 'hourglass'],
+            // https://emojipedia.org (not in cheat sheet)
+            ['🪪', 'identification_card'], ['🥹', 'face_holding_back_tears']
+        ]
+    );
+
+    const text_emoji_map = new Map(
+        [
+            ['[破涕为笑]', 'Lol_3'], ['[裂开]', 'ChappedFace'], ['[庆祝]', 'Celebrating'], ['[囧]', 'Jiong'],
+            ['[笑脸]', 'Smile_2'], ['[生病]', 'Sick_2'], ['[脸红]', 'Shy'], ['[恐惧]', 'Panic'], ['[失望]', 'Dispointed'],
+            ['[无语]', 'Speechless_3'], ['[吃瓜]', 'EatingWatermelon'], ['[加油]', 'WorkHard'], ['[汗]', 'Speechless_4'], ['[天啊]', 'OMG'],
+            ['[Emm]', 'Emm'], ['[社会社会]', 'SocialSocial'], ['[旺柴]', 'Doge'], ['[好的]', 'OK'], ['[打脸]', 'SlapOnFace'],
+            ['[哇]', 'Wow'], ['[翻白眼]', 'RollEyes'], ['[666]', '666'], ['[让我看看]', 'LetMeSee'], ['[叹气]', 'Sigh'],
+            ['[苦涩]', 'Bitter'], ['[合十]', 'Namaste_2'], ['[發]', 'Fa'], ['[福]', 'Lucky'], ['[烟花]', 'Fireworks'],
+            ['[爆竹]', 'Firecracker']
+        ]
     );
 
     var css = `
@@ -713,7 +481,7 @@
             margin: 0 6px;
         }
         .chat .box_bd {
-            bottom: 260px;
+            bottom: 270px;
         }
         .members_wrp {
             box-shadow: none;
@@ -1167,7 +935,7 @@
     function maskChatTitleNames() {
         setInterval(function() {
             var title = document.querySelector(".box_hd .title_wrap .title .title_name");
-            var maskedTitle = maskSpecialEmojis(title.innerHTML, 'remove');
+            var maskedTitle = maskUnicodeEmojis(title.innerHTML, 'remove');
             if (title.innerHTML != maskedTitle) {
                 title.innerHTML = maskedTitle;
             }
@@ -1229,7 +997,7 @@
                 // nickname
                 var nicknames = msgCont.getElementsByClassName('nickname');
                 if (nicknames.length > 0) {
-                    var maskedNickname = maskSpecialEmojis(nicknames[0].innerHTML, 'remove');
+                    var maskedNickname = maskUnicodeEmojis(nicknames[0].innerHTML, 'remove');
                     if (nicknames[0].innerHTML != maskedNickname) {
                         nicknames[0].innerHTML = maskedNickname;
                     }
@@ -1268,7 +1036,7 @@
                             preText = preText.replace(re, '<span class="masked" emoid="' + classStr + '">(' + getEmojiText(classStr) + ')</span>');
                         }
                         // mask special emojis that not on panels
-                        var maskedPreText = maskSpecialEmojis(preText);
+                        var maskedPreText = maskTextEmojis(maskUnicodeEmojis(preText));
                         if (pre.innerHTML != maskedPreText) {
                             pre.innerHTML = maskedPreText;
                         }
@@ -1317,7 +1085,7 @@
                     var apps = bubbleCont.getElementsByClassName('app');
                     if (nodeIsAvailable(apps)) {
                         var title = apps[0].getElementsByTagName('h4')[0];
-                        var maskedTitle = maskSpecialEmojis(title.innerHTML, 'remove');
+                        var maskedTitle = maskUnicodeEmojis(title.innerHTML, 'remove');
                         if (title.innerHTML != maskedTitle) {
                             title.innerHTML = maskedTitle;
                         }
@@ -1372,7 +1140,7 @@
         return special_emoji_map.get(key);
     }
 
-    function maskSpecialEmojis(text, mode = 'replace') {
+    function maskUnicodeEmojis(text, mode = 'replace') {
         if (mode == 'replace') {
             for (let [key, value] of special_emoji_map) {
                 text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
@@ -1381,6 +1149,16 @@
             for (let [key, value] of special_emoji_map) {
                 text = text.replaceAll(key, '');
             }
+            for (let [key, value] of text_emoji_map) {
+                text = text.replaceAll(key, '');
+            }
+        }
+        return text;
+    }
+
+    function maskTextEmojis(text) {
+        for (let [key, value] of text_emoji_map) {
+            text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
         }
         return text;
     }
@@ -1518,7 +1296,7 @@
         endOfLineInfo.innerHTML = 'CRLF';
         var langInfo = document.createElement('span');
         langInfo.classList.add('vscode_status_item');
-        langInfo.innerHTML = 'JavaScript';
+        langInfo.innerHTML = '{}JavaScript';
         var notificationInfo = document.createElement('span');
         notificationInfo.classList.add('vscode_status_item');
         notificationInfo.innerHTML = `

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WeChat Web with VS Code UI
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.8
+// @version      0.10.9
 // @description  VS Code style for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -179,7 +179,7 @@
         .download_entry,
         .header .avatar,
         .header .info .nickname .display_name,
-        .chat_item .avatar .img,
+        .chat_item .avatar,
         .chat_item .info .msg,
         .chat_item .ext,
         .chat_item .nickname .emoji {
@@ -239,28 +239,22 @@
         .chat_item:hover {
             background-color: #2A2D2E;
         }
-        .chat_item .avatar {
-            height: 15px;
-            width: 15px;
-            float: left;
-            margin-right: 2px;
-            position: relative;
-            background: url(//res.wx.qq.com/t/wx_fed/webwx/res/static/img/1OvE4o2.png);
-            background-position: -33px 614px;
-            background-size: 150px 2489px;
-        }
         .chat_item.active {
             background:#37373D;
         }
         .chat_item .info .nickname {
             color: #CCC;
         }
+        .chat_item .vscode_file_icon {
+            float: left;
+            margin-right: 6px;
+        }
         .web_wechat_reddot {
-            background:url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
-            background-position:-473px -380px;
+            background: url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
+            background-position: -473px -380px;
         }
         .web_wechat_reddot_middle {
-            background:url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
+            background: url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
             background-position: -451px -380px;
         }
 
@@ -611,6 +605,7 @@
             display: flex;
             align-items: center;
             height: unset;
+            font-family: system-ui;
         }
         .chat .box_ft .toolbar a:hover {
             color: #D4D4D4;
@@ -948,16 +943,29 @@
         const maskedNames = ['algorithm.js', 'database.js', 'build.js', 'web-api.js', 'encryption.js', 'firewall-settings.js', 'cloud-services.js',
                              'kernel-core.js', 'network-status.js', 'protocol.js', 'cache.xml', 'dockerfile', 'export.js', 'config.yml', '.gitignore',
                              'package.json', 'verson-list.json', 'task.json', 'LICENSE', 'CODE_OF_CONDUCT.md', 'README.md'];
+
         setInterval(function() {
-            var names = document.querySelectorAll(".chat_item .info .nickname_text");
-            for (let i = 0; i < names.length; i++) {
-                if (names[i].innerHTML == 'file-tranfer.js') {
+            var chatItems = document.querySelectorAll('.chat_item');
+            var nickname;
+            for (let i = 0; i < chatItems.length; i++) {
+                if (chatItems[i].getElementsByClassName('vscode_file_icon').length == 0) {
+                    var vsFileIcon = document.createElement('div');
+                    vsFileIcon.classList.add('vscode_file_icon');
+                    vsFileIcon.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.85 4.44L10.57 1.14L10.22 1H2.5L2 1.5V14.5L2.5 15H13.5L14 14.5V4.8L13.85 4.44ZM13 5H10V2L13 5ZM3 14V2H9V5.5L9.5 6H13V14H3Z"/>
+                        </svg>
+                    `;
+                    chatItems[i].insertBefore(vsFileIcon, chatItems[i].getElementsByClassName('info')[0]);
+                }
+                nickname = chatItems[i].getElementsByClassName('nickname_text')[0];
+                if (nickname.innerHTML == 'file-tranfer.js') {
                     continue;
                 }
-                if (names[i].innerHTML == 'File Transfer') {
-                    names[i].innerHTML = 'file-tranfer.js';
-                } else if (names[i].innerHTML != maskedNames[i]) {
-                    names[i].innerHTML = maskedNames[i];
+                if (nickname.innerHTML == 'File Transfer') {
+                    nickname.innerHTML = 'file-tranfer.js';
+                } else if (nickname.innerHTML != maskedNames[i]) {
+                    nickname.innerHTML = maskedNames[i];
                 }
             }
         }, 1000);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WeChat Web with VS Code UI
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.7
+// @version      0.10.8
 // @description  VS Code style for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -137,7 +137,7 @@
         .main_inner {
             max-width: 100%;
             color: #CCC;
-            line-height: normal;
+            line-height: 1.35;
         }
         .button_primary {
             background-color:#0E639C !important;
@@ -202,7 +202,8 @@
         #header_name {
 	        color: #999;
 	        font-size: 12px;
-	        font-weight: 500;
+	        font-weight: normal;
+            font-family: system-ui;
         }
         #mmpop_system_menu {
             top: 38px !important;
@@ -232,8 +233,11 @@
             background-color: #37373D;
         }
         .chat_item {
-            padding:4px 20px;
+            padding:2px 20px;
             border-bottom: none;
+        }
+        .chat_item:hover {
+            background-color: #2A2D2E;
         }
         .chat_item .avatar {
             height: 15px;
@@ -446,7 +450,7 @@
         }
         #chatArea {
             background-color: #1E1E1E;
-            font-family: system-ui;
+            font-family: Consolas;
         }
         .box_hd {
             text-align: left;
@@ -485,6 +489,7 @@
         .box_hd .title .vscode_title_name {
             color: white;
             margin: 0 6px;
+            font-family: system-ui;
         }
         .chat .box_bd {
             bottom: 270px;
@@ -565,6 +570,7 @@
         .message_system .content {
             display: block;
             padding: 0;
+            font-size: 14px;
         }
         .comment {
             color: #6A9955;
@@ -645,7 +651,7 @@
         }
         .chat .box_ft .content {
             padding: 5px 17px;
-            font-family: system-ui;
+            font-family: Consolas;
             font-size: 14px;
         }
         .exp_hd,
@@ -939,15 +945,18 @@
 
 
     function maskChatItemNames() {
-        const maskedNames = ['Algorithm', 'Database', 'Binary', 'Compiler', 'Encryption', 'Firewall', 'Cloud Computing', 'Kernel', 'Network', 'Protocol',
-        'Cache', 'Artificial Intelligence', 'Machine Learning', 'Cybersecurity', 'Big Data', 'Virtualization', 'Debugging', 'API', 'Recursion', 'Syntax'];
+        const maskedNames = ['algorithm.js', 'database.js', 'build.js', 'web-api.js', 'encryption.js', 'firewall-settings.js', 'cloud-services.js',
+                             'kernel-core.js', 'network-status.js', 'protocol.js', 'cache.xml', 'dockerfile', 'export.js', 'config.yml', '.gitignore',
+                             'package.json', 'verson-list.json', 'task.json', 'LICENSE', 'CODE_OF_CONDUCT.md', 'README.md'];
         setInterval(function() {
             var names = document.querySelectorAll(".chat_item .info .nickname_text");
             for (let i = 0; i < names.length; i++) {
-                if (names[i].innerHTML == 'File Transfer') {
+                if (names[i].innerHTML == 'file-tranfer.js') {
                     continue;
                 }
-                if (names[i].innerHTML != maskedNames[i]) {
+                if (names[i].innerHTML == 'File Transfer') {
+                    names[i].innerHTML = 'file-tranfer.js';
+                } else if (names[i].innerHTML != maskedNames[i]) {
                     names[i].innerHTML = maskedNames[i];
                 }
             }
@@ -1240,6 +1249,8 @@
             return 'Below are new messages';
         } else if (text.includes('开启了朋友验证，你还不是他（她）朋友')) {
             return 'You are not friends with him/her any more';
+        } else if (text.includes('已恢复默认进群方式')) {
+            return parts[1] + ' reset to default group entry setting';
         }
         return text;
     }
@@ -1504,7 +1515,7 @@
         // line number
         var lineNum = document.createElement('div');
         lineNum.setAttribute('id', 'vscode_line_num');
-        lineNum.innerHTML = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50';
+        lineNum.innerHTML = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32';
         // header comment block
         var titleName = document.querySelector('.box_hd .title .title_name').innerHTML;
         var commentBlock = document.createElement('div');

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WeChat Web with VS Code UI
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.6
+// @version      0.10.7
 // @description  VS Code style for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -137,6 +137,7 @@
         .main_inner {
             max-width: 100%;
             color: #CCC;
+            line-height: normal;
         }
         .button_primary {
             background-color:#0E639C !important;
@@ -401,7 +402,11 @@
             text-align: right;
             color: #999;
             font-size: 14px;
-            line-height: 1.4;
+        }
+        #vscode_comment_block {
+            color: #6A9955;
+            font-size: 14px;
+            margin-left: 37px;
         }
         #vscode_close {
             padding: 3px;
@@ -426,7 +431,7 @@
         .bubble_cont .location .img,
         .bubble_cont .location .desc,
         .bubble_cont .attach .attach_bd,
-        .box_hd .title .title_name .emoji,
+        .box_hd .title .title_name,
         .box_hd .title .title_count,
         .box_hd .title .web_wechat_down_icon,
         .box_hd .title .web_wechat_up_icon,
@@ -435,8 +440,9 @@
         .message .nickname .emoji,
         .message .content .bubble .bubble_cont .plain .js_message_plain img,
         .message .content .emoticon .custom_emoji,
-        .message .message_system .content .emoji {
-            display:none;
+        .message .message_system .content .emoji,
+        #vscode_comment_block .emoji {
+            display: none;
         }
         #chatArea {
             background-color: #1E1E1E;
@@ -476,12 +482,15 @@
             background-color: #1E1E1E;
             padding: 3px 6px 0px 11px;
         }
-        .box_hd .title .title_name {
+        .box_hd .title .vscode_title_name {
             color: white;
             margin: 0 6px;
         }
         .chat .box_bd {
             bottom: 270px;
+        }
+        .chat .box_bd .clearfix:after {
+            clear: none;
         }
         .members_wrp {
             box-shadow: none;
@@ -493,6 +502,7 @@
             border-bottom-color: #414141;
         }
         .bubble {
+            display: block;
             background-color:#1E1E1E !important;
             margin: 0;
             max-width: none;
@@ -501,10 +511,13 @@
         .bubble.bubble_primary.right:after {
             border-left-color:#0E639C;
         }
+        .bubble_cont {
+            min-height: unset;
+        }
         .bubble_cont .app {
-            background-color:#2D2D2D;
-            padding: 2px 6px;
-            margin:0 4px;
+            background-color: #2D2D2D;
+            padding: 3px;
+            margin: 0;
             max-width: none;
             border-radius: 5px;
         }
@@ -516,7 +529,7 @@
             font-size: 12px;
         }
         .bubble_cont .plain {
-            padding: 0 4px;
+            padding: 0;
         }
         .bubble_cont .card {
             padding: 0;
@@ -536,37 +549,45 @@
             top: 7px;
         }
         .message {
-            margin-bottom:0;
+            margin-bottom: 0;
+            margin-left: 20px;
+        }
+        .message.me {
+            float: left;
+            text-align: left;
+            clear: left;
         }
         .message_system {
-            margin:0 auto;
+            margin: 0 20px;
             text-align: left;
             max-width: none;
-            line-height: 1.2;
         }
         .message_system .content {
-            padding: 1px 0;
+            display: block;
+            padding: 0;
         }
         .comment {
             color: #6A9955;
-            padding: 2px 4px;
         }
         .content .masked {
             color: #0065A9;
-            padding: 2px 4px;
+            padding: 0;
             font-size: 14px;
         }
         .content .bubble_cont .plain .masked {
             padding: 0;
         }
         .message .content .emoticon {
-            padding: 0 10px;
+            padding: 0;
         }
         .message .nickname {
             font-size: 12px;
-            height: 12px;
-            line-height: 12px;
-            padding: 2px 4px;
+            height: unset;
+            line-height: normal;
+            padding: 0;
+        }
+        .message .message_system {
+            margin-left: 0;
         }
 
 
@@ -713,7 +734,7 @@
 
 
     let vscode_favico = 'https://code.visualstudio.com/favicon.ico';
-    let vscode_name = 'VS Code';
+    let vscode_name = 'Microsoft VS Code';
 
     // change tab tittle and icon
     var shortcut_icon = document.getElementsByTagName('link')[0];
@@ -769,6 +790,7 @@
     maskEditArea();
     // add vscode-style activity side bar, menu bar, status bar, and buttons
     renderVsCodeMenuAndBars();
+
 
     ////////////////////////////////////////////
     // functions
@@ -933,12 +955,26 @@
     }
 
     function maskChatTitleNames() {
+        var vsTitleName = document.createElement('a');
+        vsTitleName.classList.add('vscode_title_name');
+        var titlePoi = document.querySelector('.box_hd .title.poi');
+        titlePoi.insertBefore(vsTitleName, titlePoi.firstElementChild);
+
         setInterval(function() {
+            var itemActive = document.querySelector('.chat_item.active');
+            if (itemActive) {
+                var nickNameText = itemActive.getElementsByClassName('nickname_text')[0];
+                var vsTitleName = document.querySelector('.box_hd .title_wrap .title .vscode_title_name');
+                if (vsTitleName.innerHTML != nickNameText.innerHTML) {
+                    vsTitleName.innerHTML = nickNameText.innerHTML;
+                }
+            }
+            /*
             var title = document.querySelector(".box_hd .title_wrap .title .title_name");
             var maskedTitle = maskUnicodeEmojis(title.innerHTML, 'remove');
             if (title.innerHTML != maskedTitle) {
                 title.innerHTML = maskedTitle;
-            }
+            }*/
         }, 1000);
         // vscode tab close button
         var template = document.createElement('template');
@@ -1007,16 +1043,18 @@
                 bubbleContents.forEach((bubbleCont) => {
                     // plain
                     var plains = bubbleCont.getElementsByClassName('plain');
-                    if (nodeIsAvailable(plains)) {
+                    if (nodeIsValidForMasking(plains)) {
                         var pre = plains[0].getElementsByTagName('pre')[0];
-                        // check for unsportted message
+                        // if it is unsupportted message
                         if (pre.innerHTML.includes('收到一条网页版微信暂不支持的消息类型')) {
                             pre.innerHTML = '<p class="masked">(UNSUPPORTED MESSAGE)</p>';
                             return;
                         } else if (pre.innerHTML.includes('Send an emoji, view it on mobile')) {
                             pre.innerHTML = '<p class="masked">(UNSUPPORTED EMOJI)</p>';
                             return;
-                        } else if (pre.innerHTML.includes('该消息类型暂不能展示')) {
+                        }
+                        /*
+                        else if (pre.innerHTML.includes('[该消息类型暂不能展示]')) {
                             pre.innerHTML = pre.innerHTML.replace('[该消息类型暂不能展示]', '<span class="masked">(UNSUPPORTED MESSGE)</span>');
                             // continue to the logic as below
                         } else if (pre.innerHTML.includes('[图片]')) {
@@ -1025,6 +1063,22 @@
                         } else if (pre.innerHTML.includes('[视频]')) {
                             pre.innerHTML = pre.innerHTML.replace('[视频]', '<span class="masked">(VIDEO)</span>');
                             // continue to the logic as below
+                        } */
+                        //  if it is a quoted message
+                        if (pre.innerHTML.includes('- - - - - - - - - - - - - - -')) {
+                            var displayName = document.querySelector('.header .info .nickname .display_name');
+                            pre.innerHTML = pre.innerHTML.replace(displayName.innerHTML + '：', 'You = ')
+                                .replace('「', '{ ')
+                                .replace('- - - - - - - - - - - - - - -', '-')
+                                .replace('」', ' }')
+                                .replaceAll('<br>', ' ');
+                            if (pre.innerHTML.includes('[该消息类型暂不能展示]')) {
+                                pre.innerHTML = pre.innerHTML.replace('[该消息类型暂不能展示]', '<span class="masked">(UNSUPPORTED MESSGE)</span>');
+                            } else if (pre.innerHTML.includes('[图片]')) {
+                                pre.innerHTML = pre.innerHTML.replace('[图片]', '<span class="masked">(IMAGE)</span>');
+                            } else if (pre.innerHTML.includes('[视频]')) {
+                                pre.innerHTML = pre.innerHTML.replace('[视频]', '<span class="masked">(VIDEO)</span>');
+                            }
                         }
                         // mask emojis that are on panels
                         var imgs = pre.getElementsByTagName('img');
@@ -1043,7 +1097,7 @@
                     }
                     // picture
                     var pictures = bubbleCont.getElementsByClassName('picture');
-                    if (nodeIsAvailable(pictures)) {
+                    if (nodeIsValidForMasking(pictures)) {
                         // extract image link
                         var img = pictures[0].getElementsByTagName('img')[0];
                         var imgSrc = img.src.replace('&type=slave', '');
@@ -1056,7 +1110,7 @@
                     }
                     // video
                     var videos = bubbleCont.getElementsByClassName('video');
-                    if (nodeIsAvailable(videos)) {
+                    if (nodeIsValidForMasking(videos)) {
                         // no need to extract video link
                         GM_addElement(videos[0], 'a', {
                             class: 'masked',
@@ -1066,7 +1120,7 @@
                     }
                     // location
                     var locations = bubbleCont.getElementsByClassName('location');
-                    if (nodeIsAvailable(locations)) {
+                    if (nodeIsValidForMasking(locations)) {
                         var a = locations[0].getElementsByTagName('a')[0];
                         var desc = a.getElementsByTagName('p')[0].innerHTML;
                         a.setAttribute('class', 'masked');
@@ -1074,7 +1128,7 @@
                     }
                     // cards
                     var cards = bubbleCont.getElementsByClassName('card');
-                    if (nodeIsAvailable(cards)) {
+                    if (nodeIsValidForMasking(cards)) {
                         var name = cards[0].getElementsByTagName('h3')[0];
                         GM_addElement(cards[0], 'p', {
                             class: 'masked',
@@ -1083,7 +1137,7 @@
                     }
                     // app
                     var apps = bubbleCont.getElementsByClassName('app');
-                    if (nodeIsAvailable(apps)) {
+                    if (nodeIsValidForMasking(apps)) {
                         var title = apps[0].getElementsByTagName('h4')[0];
                         var maskedTitle = maskUnicodeEmojis(title.innerHTML, 'remove');
                         if (title.innerHTML != maskedTitle) {
@@ -1093,7 +1147,7 @@
                 }); // bubbleContents.forEach
                 // emoticon
                 var customEmojis = msgCont.getElementsByClassName('emoticon');
-                if (nodeIsAvailable(customEmojis)) {
+                if (nodeIsValidForMasking(customEmojis)) {
                     // extract image link
                     var img = customEmojis[0].getElementsByTagName('img')[0];
                     var imgSrc = img.src.replace('&type=big', '');
@@ -1106,7 +1160,7 @@
                 }
                 // file
                 var attachments = msgCont.getElementsByClassName('attach');
-                if (nodeIsAvailable(attachments)) {
+                if (nodeIsValidForMasking(attachments)) {
                     var title = attachments[0].querySelector('.attach_bd .cont .title').innerHTML;
                     var size = attachments[0].querySelector('.attach_bd .cont .opr .ng-binding').innerHTML;
                     var addr = attachments[0].querySelector('.attach_bd .cont .opr a').href;
@@ -1123,7 +1177,7 @@
         }, 1000);
     }
 
-    function nodeIsAvailable(nodeList) {
+    function nodeIsValidForMasking(nodeList) {
         return nodeList.length > 0 && notContainsMaskedElements(nodeList[0]);
     }
 
@@ -1194,6 +1248,7 @@
         renderTopMenuBar();
         renderLeftSideBar();
         renderBottomStatusBar();
+        renderLineNumber();
     }
 
     function renderLeftSideBar() {
@@ -1296,7 +1351,7 @@
         endOfLineInfo.innerHTML = 'CRLF';
         var langInfo = document.createElement('span');
         langInfo.classList.add('vscode_status_item');
-        langInfo.innerHTML = '{}JavaScript';
+        langInfo.innerHTML = '{ } JavaScript';
         var notificationInfo = document.createElement('span');
         notificationInfo.classList.add('vscode_status_item');
         notificationInfo.innerHTML = `
@@ -1443,6 +1498,42 @@
         // add to main window
         var mainInner = document.getElementsByClassName('main_inner')[0];
         mainInner.insertBefore(topMenuBar, mainInner.getElementsByClassName('panel give_me')[0]);
+    }
+
+    function renderLineNumber() {
+        // line number
+        var lineNum = document.createElement('div');
+        lineNum.setAttribute('id', 'vscode_line_num');
+        lineNum.innerHTML = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50';
+        // header comment block
+        var titleName = document.querySelector('.box_hd .title .title_name').innerHTML;
+        var commentBlock = document.createElement('div');
+        commentBlock.setAttribute('id', 'vscode_comment_block');
+        commentBlock.innerHTML = `
+            // ==UserScript==<br>
+            // @name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>place_holder</span><br>
+            // @namespace&nbsp;&nbsp;&nbsp;&nbsp;https://github.com/bensgith/vscode-style-wechat<br>
+            // @version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.2.1<br>
+            // @description&nbsp;&nbsp;VS Code style for WeChat Web application<br>
+            // @author&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Benjamin L<br>
+            // @match&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://wx2.qq.com/*<br>
+            // @icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico<br>
+            // @grant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GM_addStyle<br>
+            // ==/UserScript==<br>
+            <br>
+        `;
+
+        var scrollContent = document.querySelector('#chatArea .scroll-content');
+        scrollContent.insertBefore(commentBlock, scrollContent.firstElementChild);
+        scrollContent.insertBefore(lineNum, scrollContent.firstElementChild);
+
+        // timer to set name in comment block
+        setInterval(function() {
+            var titleName = maskUnicodeEmojis(document.querySelector('.box_hd .title .title_name').innerHTML, 'remove');
+            if (titleName && !commentBlock.innerHTML.includes(titleName)) {
+                commentBlock.innerHTML = commentBlock.innerHTML.replace(/<span>.*<\/span>/, '<span>' + titleName + '</span>');
+            }
+        }, 500);
     }
 
 })();

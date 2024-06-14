@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.10
+// @version      0.10.11
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -186,7 +186,7 @@
             display: none;
         }
         .header {
-            padding: 0 12px 0 20px;
+            padding: 4px 12px 0 20px;
         }
         .header .info .nickname .opt {
             float: right;
@@ -214,7 +214,7 @@
             width: 265px;
         }
         .panel.give_me .nav_view {
-            top: 100px;
+            top: 104px;
             font-family: system-ui;
         }
         .panel.give_me .system_menu {
@@ -233,21 +233,25 @@
             background-color: #37373D;
         }
         .chat_item {
-            padding:2px 60px;
+            display: flex;
+            height: 24px;
+            align-items: center;
+            padding: 0 26px;
             border-bottom: none;
         }
         .chat_item:hover {
             background-color: #2A2D2E;
         }
         .chat_item.active {
-            background:#37373D;
+            color: white !important;
+            background: #04395E;
+            border: solid 1px #007FD4;
         }
         .chat_item .info .nickname {
-            color: #CCC;
+            color: unset;
         }
         .vscode_file_icon {
             display: flex;
-            float: left;
             margin-right: 6px;
         }
         .web_wechat_reddot {
@@ -275,10 +279,35 @@
         .vscode_collapsable_folder:hover {
             background-color: #2A2D2E;
         }
-        .vscode_icon {
+        .vscode_border_top {
+            border-top: solid 1px #414141;
+        }
+        .vscode_chevron_icon {
             display: flex;
             align-items: center;
-            margin: 0 3px;
+            margin: 0 2px;
+        }
+        .vscode_directory_line {
+            display: block;
+            height: 24px;
+            width: 24px;
+            border-left: solid 1px rgba(255, 255, 255, 0.25);
+        }
+        .vscode_timeline_item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 13px;
+            height: 24px;
+            padding: 0 10px;
+        }
+        .vscode_timeline_item:hover {
+            background-color: #2A2D2E;
+        }
+        .vscode_git_commit_msg {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* VS Code menu & bars */
@@ -962,7 +991,7 @@
 
 
     function maskChatItemNames() {
-        const maskedNames = ['algorithm.js', 'database.js', 'build.js', 'web-api.js', 'encryption.js', 'firewall-settings.js', 'cloud-services.js',
+        const fakeFilenames = ['algorithm.js', 'database.js', 'build.js', 'web-api.js', 'encryption.js', 'firewall-settings.js', 'cloud-services.js',
                              'kernel-core.js', 'network-status.js', 'protocol.js', 'cache.xml', 'dockerfile', 'export.js', 'config.yml', '.gitignore',
                              'package.json', 'verson-list.json', 'task.json', 'LICENSE', 'CODE_OF_CONDUCT.md', 'README.md'];
 
@@ -970,7 +999,14 @@
             var chatItems = document.querySelectorAll('.chat_item');
             var nickname;
             for (let i = 0; i < chatItems.length; i++) {
-                if (chatItems[i].getElementsByClassName('vscode_file_icon').length == 0) {
+                if (chatItems[i].getElementsByClassName('vscode_directory_line').length == 0 &&
+                    chatItems[i].getElementsByClassName('vscode_file_icon').length == 0) {
+                    var info = chatItems[i].getElementsByClassName('info')[0];
+                    // add file directory vertical line
+                    var vsDirLine = document.createElement('div');
+                    vsDirLine.classList.add('vscode_directory_line');
+                    chatItems[i].insertBefore(vsDirLine, info);
+                    // add file icon
                     var vsFileIcon = document.createElement('div');
                     vsFileIcon.classList.add('vscode_file_icon');
                     vsFileIcon.innerHTML = `
@@ -978,7 +1014,7 @@
                             <path d="M13.85 4.44L10.57 1.14L10.22 1H2.5L2 1.5V14.5L2.5 15H13.5L14 14.5V4.8L13.85 4.44ZM13 5H10V2L13 5ZM3 14V2H9V5.5L9.5 6H13V14H3Z"/>
                         </svg>
                     `;
-                    chatItems[i].insertBefore(vsFileIcon, chatItems[i].getElementsByClassName('info')[0]);
+                    chatItems[i].insertBefore(vsFileIcon, info);
                 }
                 nickname = chatItems[i].getElementsByClassName('nickname_text')[0];
                 if (nickname.innerHTML == 'file-tranfer.js') {
@@ -986,8 +1022,8 @@
                 }
                 if (nickname.innerHTML == 'File Transfer') {
                     nickname.innerHTML = 'file-tranfer.js';
-                } else if (nickname.innerHTML != maskedNames[i]) {
-                    nickname.innerHTML = maskedNames[i];
+                } else if (nickname.innerHTML != fakeFilenames[i]) {
+                    nickname.innerHTML = fakeFilenames[i];
                 }
             }
         }, 1000);
@@ -1587,10 +1623,11 @@
     }
 
     function renderSidePanel() {
+        // open editor
         var vsOpenEditor = document.createElement('template');
         vsOpenEditor.innerHTML = `
         <div class="vscode_collapsable">
-            <div class="vscode_icon">
+            <div class="vscode_chevron_icon">
         		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
         			<path fill-rule="evenodd" clip-rule="evenodd" d="M10.0719 8.02397L5.7146 3.66666L6.33332 3.04794L11 7.71461V8.33333L6.33332 13L5.7146 12.3813L10.0719 8.02397Z"></path>
         		</svg>
@@ -1598,10 +1635,11 @@
             <h6>OPEN EDITORS</h6>
         </div>
         `;
+        // project name
         var vsProjectName = document.createElement('template');
         vsProjectName.innerHTML = `
-        <div class="vscode_collapsable">
-            <div class="vscode_icon">
+        <div class="vscode_collapsable vscode_border_top">
+            <div class="vscode_chevron_icon">
         		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
         			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.97612 10.0719L12.3334 5.7146L12.9521 6.33332L8.28548 11L7.66676 11L3.0001 6.33332L3.61882 5.7146L7.97612 10.0719Z"></path>
         		</svg>
@@ -1612,12 +1650,12 @@
         var vsProjectFolder = document.createElement('template');
         vsProjectFolder.innerHTML = `
         <div class="vscode_collapsable_folder">
-            <div class="vscode_icon">
+            <div class="vscode_chevron_icon">
         		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
         			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.97612 10.0719L12.3334 5.7146L12.9521 6.33332L8.28548 11L7.66676 11L3.0001 6.33332L3.61882 5.7146L7.97612 10.0719Z"></path>
         		</svg>
         	</div>
-            <div class="vscode_icon">
+            <div class="vscode_file_icon">
         		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1.5 14H12.5L12.98 13.63L15.61 6.63L15.13 6H14V3.5L13.5 3H7.70996L6.84998 2.15002L6.5 2H1.5L1 2.5V13.5L1.5 14ZM2 3H6.29004L7.15002 3.84998L7.5 4H13V6H8.5L8.15002 6.15002L7.29004 7H3.5L3.03003 7.33997L2.03003 10.42L2 3ZM12.13 13H2.18994L3.85999 8H7.5L7.84998 7.84998L8.70996 7H14.5L12.13 13Z"/>
                 </svg>
@@ -1631,10 +1669,11 @@
         leftPanel.insertBefore(vsProjectName.content, navView);
         leftPanel.insertBefore(vsProjectFolder.content, navView);
 
+        // outline
         var vsOutline = document.createElement('template');
         vsOutline.innerHTML = `
-        <div class="vscode_collapsable">
-            <div class="vscode_icon">
+        <div class="vscode_collapsable vscode_border_top">
+            <div class="vscode_chevron_icon">
         		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
         			<path fill-rule="evenodd" clip-rule="evenodd" d="M10.0719 8.02397L5.7146 3.66666L6.33332 3.04794L11 7.71461V8.33333L6.33332 13L5.7146 12.3813L10.0719 8.02397Z"></path>
         		</svg>
@@ -1642,20 +1681,51 @@
             <h6>OUTLINE</h6>
         </div>
         `;
+        // timeline
         var vsTimeline = document.createElement('template');
         vsTimeline.innerHTML = `
-        <div class="vscode_collapsable">
-            <div class="vscode_icon">
+        <div class="vscode_collapsable vscode_border_top">
+            <div class="vscode_chevron_icon">
         		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
-        			<path fill-rule="evenodd" clip-rule="evenodd" d="M10.0719 8.02397L5.7146 3.66666L6.33332 3.04794L11 7.71461V8.33333L6.33332 13L5.7146 12.3813L10.0719 8.02397Z"></path>
+        			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.97612 10.0719L12.3334 5.7146L12.9521 6.33332L8.28548 11L7.66676 11L3.0001 6.33332L3.61882 5.7146L7.97612 10.0719Z"></path>
         		</svg>
         	</div>
             <h6>TIMELINE</h6>
         </div>
         `;
+        // timeline subitems
+        var vsGitCommitMsgs = [
+            'add collapsable bars in left panel',
+            'add VS Code file icon to chat items',
+            'Style and logic adjustment',
+            'add VS Code style comment block',
+            'More emoji handling',
+            'migrated from @bensgith/tampermonkey-scripts',
+            'Update README.md',
+            'Initial commit'
+        ];
+        var commitMsg;
+        var timelineItemContainer = document.createElement('div');
+        for (let i = 0; i < vsGitCommitMsgs.length; i++) {
+            commitMsg = vsGitCommitMsgs[i];
+            var gitCommitIcon = document.createElement('template');
+            gitCommitIcon.innerHTML = `
+            <div class="vscode_timeline_item">
+                <div class="vscode_file_icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.9788 5C10.443 4.45199 9.73865 4.09982 8.97876 4V0H7.97876V4C7.16572 4.12245 6.42174 4.52718 5.87729 5.14331C5.33284 5.75944 5.02267 6.54757 5.00119 7.36951C4.97972 8.19144 5.24832 8.99471 5.75986 9.63843C6.2714 10.2821 6.99323 10.7253 7.79877 10.89H7.97876V14.89H8.97876V10.89C9.26824 10.8535 9.55107 10.7761 9.81876 10.66C10.4607 10.399 11.0082 9.94912 11.3888 9.37C11.772 8.79546 11.9772 8.12068 11.9788 7.43005C11.9779 6.52007 11.6187 5.64698 10.9788 5V5ZM10.2788 9.23999C9.80838 9.70763 9.17204 9.97006 8.50876 9.96997C8.01463 9.9703 7.53148 9.82427 7.12034 9.55017C6.70919 9.27608 6.38851 8.8863 6.19877 8.43005C6.05515 8.08876 5.98945 7.71974 6.00647 7.34985C6.02349 6.97997 6.12281 6.61853 6.29715 6.29187C6.4715 5.96521 6.71649 5.68144 7.01432 5.46143C7.31214 5.24141 7.6553 5.09067 8.01877 5.02002C8.18177 5.00528 8.34576 5.00528 8.50876 5.02002C8.85172 5.01265 9.19241 5.07732 9.50876 5.20996C9.96501 5.39971 10.3548 5.72045 10.6289 6.13159C10.903 6.54273 11.0491 7.02589 11.0488 7.52002C11.0371 7.85 10.9604 8.17444 10.8231 8.47473C10.6858 8.77503 10.4907 9.04528 10.2488 9.27002L10.2788 9.23999Z"/>
+                    </svg>
+                </div>
+                <div class="vscode_git_commit_msg">${commitMsg}</div>
+            </div>
+            `;
+            timelineItemContainer.appendChild(gitCommitIcon.content);
+        }
+
         var bottomPlaceHolder = leftPanel.querySelector('.bottom-placeholder');
         bottomPlaceHolder.appendChild(vsOutline.content);
         bottomPlaceHolder.appendChild(vsTimeline.content);
+        bottomPlaceHolder.appendChild(timelineItemContainer);
     }
 
 })();

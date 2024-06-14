@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.11
+// @version      0.10.12
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -199,7 +199,7 @@
         .header .info .nickname .opt svg:hover {
             background-color: #323234;
         }
-        #header_name {
+        #vscode_header_name {
 	        color: #999;
 	        font-size: 12px;
 	        font-weight: normal;
@@ -722,7 +722,7 @@
             border-bottom-color: #414141;
             border-right-color: #414141;
         }
-        #vscode_cli_hint {
+        #vscode_cli_info {
             margin-bottom: 10px;
         }
         #vscode_cli_starter {
@@ -785,17 +785,16 @@
     GM_addStyle(css);
 
 
-    let vscode_favico = 'https://code.visualstudio.com/favicon.ico';
-    let vscode_name = 'Microsoft VS Code';
+    let vscodeFavico = 'https://code.visualstudio.com/favicon.ico';
+    let vscodeName = 'Microsoft VS Code';
 
-    // change tab tittle and icon
-    var shortcut_icon = document.getElementsByTagName('link')[0];
-    shortcut_icon.href = vscode_favico;
+    // change favicon
+    document.getElementsByTagName('link')[0].href = vscodeFavico;
     // set title every 0.5 second, never end
     setInterval(function() {
         var titleNode = document.getElementsByTagName('title')[0];
-        if (titleNode.innerHTML != vscode_name) {
-            titleNode.innerHTML = vscode_name;
+        if (titleNode.innerHTML != vscodeName) {
+            titleNode.innerHTML = vscodeName;
         }
     }, 500);
 
@@ -811,8 +810,8 @@
             }
             var association = document.getElementsByClassName('association')[0];
             var associationImg = association.getElementsByClassName('img')[0];
-            if (associationImg.src != vscode_favico) {
-                associationImg.src = vscode_favico;
+            if (associationImg.src != vscodeFavico) {
+                associationImg.src = vscodeFavico;
             }
             var waitingConfirm = association.getElementsByClassName('waiting_confirm')[0];
             if (waitingConfirm.innerHTML != 'Confirm login on mobile') {
@@ -848,20 +847,20 @@
     // functions
     ////////////////////////////////////////////
     function maskAvatarAndNickName() {
-        if (!document.getElementById('header_name')) {
-            var newSpan = document.createElement('span');
-            newSpan.setAttribute('id', 'header_name');
-            newSpan.textContent = 'EXPLORER';
+        if (!document.getElementById('vscode_header_name')) {
+            var vsHeaderName = document.createElement('span');
+            vsHeaderName.setAttribute('id', 'vscode_header_name');
+            vsHeaderName.textContent = 'EXPLORER';
             var nickname = document.querySelector('.header .info .nickname');
             var opt = nickname.getElementsByClassName('opt')[0];
             opt.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 8C4 8.19778 3.94135 8.39112 3.83147 8.55557C3.72159 8.72002 3.56541 8.84819 3.38268 8.92388C3.19996 8.99957 2.99889 9.01937 2.80491 8.98079C2.61093 8.9422 2.43275 8.84696 2.29289 8.70711C2.15304 8.56725 2.0578 8.38907 2.01922 8.19509C1.98063 8.00111 2.00043 7.80004 2.07612 7.61732C2.15181 7.43459 2.27998 7.27841 2.44443 7.16853C2.60888 7.05865 2.80222 7 3 7C3.26522 7 3.51957 7.10536 3.70711 7.29289C3.89464 7.48043 4 7.73478 4 8Z" fill="#999"></path>
-                    <path d="M9 8C9 8.19778 8.94135 8.39112 8.83147 8.55557C8.72159 8.72002 8.56541 8.84819 8.38268 8.92388C8.19996 8.99957 7.99889 9.01937 7.80491 8.98079C7.61093 8.9422 7.43275 8.84696 7.29289 8.70711C7.15304 8.56725 7.0578 8.38907 7.01922 8.19509C6.98063 8.00111 7.00043 7.80004 7.07612 7.61732C7.15181 7.43459 7.27998 7.27841 7.44443 7.16853C7.60888 7.05865 7.80222 7 8 7C8.26522 7 8.51957 7.10536 8.70711 7.29289C8.89464 7.48043 9 7.73478 9 8Z" fill="#999"></path>
-                    <path d="M14 8C14 8.19778 13.9414 8.39112 13.8315 8.55557C13.7216 8.72002 13.5654 8.84819 13.3827 8.92388C13.2 8.99957 12.9989 9.01937 12.8049 8.98079C12.6109 8.9422 12.4327 8.84696 12.2929 8.70711C12.153 8.56725 12.0578 8.38907 12.0192 8.19509C11.9806 8.00111 12.0004 7.80004 12.0761 7.61732C12.1518 7.43459 12.28 7.27841 12.4444 7.16853C12.6089 7.05865 12.8022 7 13 7C13.2652 7 13.5196 7.10536 13.7071 7.29289C13.8946 7.48043 14 7.73478 14 8Z" fill="#999"></path>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="#999" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 8C4 8.19778 3.94135 8.39112 3.83147 8.55557C3.72159 8.72002 3.56541 8.84819 3.38268 8.92388C3.19996 8.99957 2.99889 9.01937 2.80491 8.98079C2.61093 8.9422 2.43275 8.84696 2.29289 8.70711C2.15304 8.56725 2.0578 8.38907 2.01922 8.19509C1.98063 8.00111 2.00043 7.80004 2.07612 7.61732C2.15181 7.43459 2.27998 7.27841 2.44443 7.16853C2.60888 7.05865 2.80222 7 3 7C3.26522 7 3.51957 7.10536 3.70711 7.29289C3.89464 7.48043 4 7.73478 4 8Z"></path>
+                    <path d="M9 8C9 8.19778 8.94135 8.39112 8.83147 8.55557C8.72159 8.72002 8.56541 8.84819 8.38268 8.92388C8.19996 8.99957 7.99889 9.01937 7.80491 8.98079C7.61093 8.9422 7.43275 8.84696 7.29289 8.70711C7.15304 8.56725 7.0578 8.38907 7.01922 8.19509C6.98063 8.00111 7.00043 7.80004 7.07612 7.61732C7.15181 7.43459 7.27998 7.27841 7.44443 7.16853C7.60888 7.05865 7.80222 7 8 7C8.26522 7 8.51957 7.10536 8.70711 7.29289C8.89464 7.48043 9 7.73478 9 8Z"></path>
+                    <path d="M14 8C14 8.19778 13.9414 8.39112 13.8315 8.55557C13.7216 8.72002 13.5654 8.84819 13.3827 8.92388C13.2 8.99957 12.9989 9.01937 12.8049 8.98079C12.6109 8.9422 12.4327 8.84696 12.2929 8.70711C12.153 8.56725 12.0578 8.38907 12.0192 8.19509C11.9806 8.00111 12.0004 7.80004 12.0761 7.61732C12.1518 7.43459 12.28 7.27841 12.4444 7.16853C12.6089 7.05865 12.8022 7 13 7C13.2652 7 13.5196 7.10536 13.7071 7.29289C13.8946 7.48043 14 7.73478 14 8Z"></path>
                 </svg>
             `;
-            nickname.insertBefore(newSpan, opt);
+            nickname.insertBefore(vsHeaderName, opt);
         }
     }
 
@@ -971,9 +970,9 @@
 
     function maskEditArea() {
         var content = document.getElementsByClassName('content ng-isolate-scope')[0];
-        if (!document.getElementById('vscode_cli_hint')) {
+        if (!document.getElementById('vscode_cli_info')) {
             var cliHint = document.createElement('p');
-            cliHint.setAttribute('id', 'vscode_cli_hint');
+            cliHint.setAttribute('id', 'vscode_cli_info');
             cliHint.innerHTML = `
                 Microsoft Windows [Version 10.0.22631.3593]
                 <br>
@@ -1150,7 +1149,7 @@
                         //  if it is a quoted message
                         if (pre.innerHTML.includes('- - - - - - - - - - - - - - -')) {
                             var displayName = document.querySelector('.header .info .nickname .display_name');
-                            pre.innerHTML = pre.innerHTML.replace(displayName.innerHTML + '：', 'You = ')
+                            pre.innerHTML = pre.innerHTML.replace(displayName.innerHTML + '：', 'You: ')
                                 .replace('「', '{ ')
                                 .replace('- - - - - - - - - - - - - - -', '-')
                                 .replace('」', ' }')
@@ -1298,17 +1297,6 @@
             text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
         }
         return text;
-    }
-
-    function removeMyNameInQuotedMessage(text) {
-        var displayName;
-        var checkDisplayName = setInterval(function() {
-            displayName = document.querySelector('.header .info .nickname .display_name');
-            if (displayName.innerHTML) {
-                clearInterval(checkDisplayName);
-            }
-        }, 500);
-        return text.replace(displayName.innerHTML, '');
     }
 
     function translateIntoEnglish(text) {
@@ -1695,6 +1683,8 @@
         `;
         // timeline subitems
         var vsGitCommitMsgs = [
+            'update bad variable names and etc',
+            'add subitems in timeline panel',
             'add collapsable bars in left panel',
             'add VS Code file icon to chat items',
             'Style and logic adjustment',

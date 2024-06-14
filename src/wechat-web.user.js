@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.12
+// @version      0.10.13
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -458,6 +458,7 @@
             margin-left: 43px;
         }
         #vscode_close {
+            display: flex;
             padding: 3px;
             border-radius: 3px;
         }
@@ -842,6 +843,8 @@
     // add vscode-style activity side bar, menu bar, status bar, and buttons
     renderVsCodeMenuAndBars();
 
+    showReplyPanel();
+
 
     ////////////////////////////////////////////
     // functions
@@ -1060,9 +1063,11 @@
         // vscode tab close button
         var vsClose = document.createElement('template');
         vsClose.innerHTML = `
-            <svg id="vscode_close" width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+        <div id="vscode_close">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 8.70711L11.6465 12.3536L12.3536 11.6465L8.70714 8.00001L12.3536 4.35356L11.6465 3.64645L8.00004 7.2929L4.35359 3.64645L3.64648 4.35356L7.29293 8.00001L3.64648 11.6465L4.35359 12.3536L8.00004 8.70711Z"/>
             </svg>
+        </div>
         `;
         titlePoi.appendChild(vsClose.content);
         // vscode tab action button
@@ -1683,6 +1688,7 @@
         `;
         // timeline subitems
         var vsGitCommitMsgs = [
+            'always show reply panel',
             'update bad variable names and etc',
             'add subitems in timeline panel',
             'add collapsable bars in left panel',
@@ -1716,6 +1722,11 @@
         bottomPlaceHolder.appendChild(vsOutline.content);
         bottomPlaceHolder.appendChild(vsTimeline.content);
         bottomPlaceHolder.appendChild(timelineItemContainer);
+    }
+
+    function showReplyPanel() {
+        var replyPanel = document.getElementsByClassName('box_ft ng-scope ng-hide')[0];
+        replyPanel.classList.remove('ng-hide');
     }
 
 })();

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         WeChat Web with VS Code UI
+// @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.9
-// @description  VS Code style for WeChat Web application
+// @version      0.10.10
+// @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
 // @icon         https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico
@@ -186,7 +186,7 @@
             display: none;
         }
         .header {
-            padding: 6px 12px 6px 20px;
+            padding: 0 12px 0 20px;
         }
         .header .info .nickname .opt {
             float: right;
@@ -214,7 +214,7 @@
             width: 265px;
         }
         .panel.give_me .nav_view {
-            top: 40px;
+            top: 100px;
             font-family: system-ui;
         }
         .panel.give_me .system_menu {
@@ -233,7 +233,7 @@
             background-color: #37373D;
         }
         .chat_item {
-            padding:2px 20px;
+            padding:2px 60px;
             border-bottom: none;
         }
         .chat_item:hover {
@@ -245,7 +245,8 @@
         .chat_item .info .nickname {
             color: #CCC;
         }
-        .chat_item .vscode_file_icon {
+        .vscode_file_icon {
+            display: flex;
             float: left;
             margin-right: 6px;
         }
@@ -256,6 +257,28 @@
         .web_wechat_reddot_middle {
             background: url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
             background-position: -451px -380px;
+        }
+        .vscode_collapsable {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            height: 22px;
+        }
+        .vscode_collapsable_folder {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding-left: 19px;
+            font-size: 14px;
+            height: 22px;
+        }
+        .vscode_collapsable_folder:hover {
+            background-color: #2A2D2E;
+        }
+        .vscode_icon {
+            display: flex;
+            align-items: center;
+            margin: 0 3px;
         }
 
         /* VS Code menu & bars */
@@ -394,8 +417,7 @@
         }
         #vscode_line_num {
             float: left;
-            height: 100%;
-            inline-size: 17px;
+            inline-size: 23px;
             overflow-wrap: normal;
             text-align: right;
             color: #999;
@@ -404,7 +426,7 @@
         #vscode_comment_block {
             color: #6A9955;
             font-size: 14px;
-            margin-left: 37px;
+            margin-left: 43px;
         }
         #vscode_close {
             padding: 3px;
@@ -482,7 +504,7 @@
         }
         .box_hd .title .vscode_title_name {
             color: white;
-            margin: 0 6px;
+            margin-right: 6px;
             font-family: system-ui;
         }
         .chat .box_bd {
@@ -517,7 +539,7 @@
             background-color: #2D2D2D;
             padding: 3px;
             margin: 0;
-            max-width: none;
+            max-width: fit-content;
             border-radius: 5px;
         }
         .bubble_cont .app .title {
@@ -583,7 +605,7 @@
         .message .nickname {
             font-size: 12px;
             height: unset;
-            line-height: normal;
+            line-height: 1.35;
             padding: 0;
         }
         .message .message_system {
@@ -972,35 +994,42 @@
     }
 
     function maskChatTitleNames() {
+        // title name
         var vsTitleName = document.createElement('a');
         vsTitleName.classList.add('vscode_title_name');
         var titlePoi = document.querySelector('.box_hd .title.poi');
         titlePoi.insertBefore(vsTitleName, titlePoi.firstElementChild);
 
+        // file icon
+        var vsFileIcon = document.createElement('div');
+        vsFileIcon.classList.add('vscode_file_icon');
+        titlePoi.insertBefore(vsFileIcon, titlePoi.firstElementChild);
+
         setInterval(function() {
             var itemActive = document.querySelector('.chat_item.active');
             if (itemActive) {
+                if (!vsFileIcon.innerHTML) {
+                    vsFileIcon.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.85 4.44L10.57 1.14L10.22 1H2.5L2 1.5V14.5L2.5 15H13.5L14 14.5V4.8L13.85 4.44ZM13 5H10V2L13 5ZM3 14V2H9V5.5L9.5 6H13V14H3Z"/>
+                        </svg>
+                    `;
+                }
                 var nickNameText = itemActive.getElementsByClassName('nickname_text')[0];
                 var vsTitleName = document.querySelector('.box_hd .title_wrap .title .vscode_title_name');
                 if (vsTitleName.innerHTML != nickNameText.innerHTML) {
                     vsTitleName.innerHTML = nickNameText.innerHTML;
                 }
             }
-            /*
-            var title = document.querySelector(".box_hd .title_wrap .title .title_name");
-            var maskedTitle = maskUnicodeEmojis(title.innerHTML, 'remove');
-            if (title.innerHTML != maskedTitle) {
-                title.innerHTML = maskedTitle;
-            }*/
         }, 1000);
         // vscode tab close button
-        var template = document.createElement('template');
-        template.innerHTML = `
+        var vsClose = document.createElement('template');
+        vsClose.innerHTML = `
             <svg id="vscode_close" width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.00004 8.70711L11.6465 12.3536L12.3536 11.6465L8.70714 8.00001L12.3536 4.35356L11.6465 3.64645L8.00004 7.2929L4.35359 3.64645L3.64648 4.35356L7.29293 8.00001L3.64648 11.6465L4.35359 12.3536L8.00004 8.70711Z"/>
             </svg>
         `;
-        document.getElementsByClassName('title poi')[0].appendChild(template.content);
+        titlePoi.appendChild(vsClose.content);
         // vscode tab action button
         var actions = document.createElement('div');
         actions.setAttribute('id', 'vscode_tab_actions');
@@ -1017,10 +1046,11 @@
                 <path d="M14 8C14 8.19778 13.9414 8.39112 13.8315 8.55557C13.7216 8.72002 13.5654 8.84819 13.3827 8.92388C13.2 8.99957 12.9989 9.01937 12.8049 8.98079C12.6109 8.9422 12.4327 8.84696 12.2929 8.70711C12.153 8.56725 12.0578 8.38907 12.0192 8.19509C11.9806 8.00111 12.0004 7.80004 12.0761 7.61732C12.1518 7.43459 12.28 7.27841 12.4444 7.16853C12.6089 7.05865 12.8022 7 13 7C13.2652 7 13.5196 7.10536 13.7071 7.29289C13.8946 7.48043 14 7.73478 14 8Z"></path>
             </svg>`
         ];
+        var svgTemp;
         svgs.forEach((svg) => {
-            template = document.createElement('template');
-            template.innerHTML = svg;
-            actions.appendChild(template.content);
+            svgTemp = document.createElement('template');
+            svgTemp.innerHTML = svg;
+            actions.appendChild(svgTemp.content);
         });
         var titleWrap = document.querySelector(".box_hd .title_wrap");
         titleWrap.appendChild(actions);
@@ -1266,6 +1296,7 @@
     function renderVsCodeMenuAndBars() {
         renderTopMenuBar();
         renderLeftSideBar();
+        renderSidePanel();
         renderBottomStatusBar();
         renderLineNumber();
     }
@@ -1553,6 +1584,78 @@
                 commentBlock.innerHTML = commentBlock.innerHTML.replace(/<span>.*<\/span>/, '<span>' + titleName + '</span>');
             }
         }, 500);
+    }
+
+    function renderSidePanel() {
+        var vsOpenEditor = document.createElement('template');
+        vsOpenEditor.innerHTML = `
+        <div class="vscode_collapsable">
+            <div class="vscode_icon">
+        		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+        			<path fill-rule="evenodd" clip-rule="evenodd" d="M10.0719 8.02397L5.7146 3.66666L6.33332 3.04794L11 7.71461V8.33333L6.33332 13L5.7146 12.3813L10.0719 8.02397Z"></path>
+        		</svg>
+        	</div>
+            <h6>OPEN EDITORS</h6>
+        </div>
+        `;
+        var vsProjectName = document.createElement('template');
+        vsProjectName.innerHTML = `
+        <div class="vscode_collapsable">
+            <div class="vscode_icon">
+        		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+        			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.97612 10.0719L12.3334 5.7146L12.9521 6.33332L8.28548 11L7.66676 11L3.0001 6.33332L3.61882 5.7146L7.97612 10.0719Z"></path>
+        		</svg>
+        	</div>
+            <h6>MICROSOFT-VSCODE</h6>
+        </div>
+        `;
+        var vsProjectFolder = document.createElement('template');
+        vsProjectFolder.innerHTML = `
+        <div class="vscode_collapsable_folder">
+            <div class="vscode_icon">
+        		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+        			<path fill-rule="evenodd" clip-rule="evenodd" d="M7.97612 10.0719L12.3334 5.7146L12.9521 6.33332L8.28548 11L7.66676 11L3.0001 6.33332L3.61882 5.7146L7.97612 10.0719Z"></path>
+        		</svg>
+        	</div>
+            <div class="vscode_icon">
+        		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.5 14H12.5L12.98 13.63L15.61 6.63L15.13 6H14V3.5L13.5 3H7.70996L6.84998 2.15002L6.5 2H1.5L1 2.5V13.5L1.5 14ZM2 3H6.29004L7.15002 3.84998L7.5 4H13V6H8.5L8.15002 6.15002L7.29004 7H3.5L3.03003 7.33997L2.03003 10.42L2 3ZM12.13 13H2.18994L3.85999 8H7.5L7.84998 7.84998L8.70996 7H14.5L12.13 13Z"/>
+                </svg>
+        	</div>
+            <span>scripts</span>
+        </div>
+        `;
+        var leftPanel = document.getElementsByClassName('panel give_me')[0];
+        var navView = leftPanel.querySelector('.nav_view');
+        leftPanel.insertBefore(vsOpenEditor.content, navView);
+        leftPanel.insertBefore(vsProjectName.content, navView);
+        leftPanel.insertBefore(vsProjectFolder.content, navView);
+
+        var vsOutline = document.createElement('template');
+        vsOutline.innerHTML = `
+        <div class="vscode_collapsable">
+            <div class="vscode_icon">
+        		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+        			<path fill-rule="evenodd" clip-rule="evenodd" d="M10.0719 8.02397L5.7146 3.66666L6.33332 3.04794L11 7.71461V8.33333L6.33332 13L5.7146 12.3813L10.0719 8.02397Z"></path>
+        		</svg>
+        	</div>
+            <h6>OUTLINE</h6>
+        </div>
+        `;
+        var vsTimeline = document.createElement('template');
+        vsTimeline.innerHTML = `
+        <div class="vscode_collapsable">
+            <div class="vscode_icon">
+        		<svg width="16" height="16" viewBox="0 0 16 16" fill="#FFF" xmlns="http://www.w3.org/2000/svg">
+        			<path fill-rule="evenodd" clip-rule="evenodd" d="M10.0719 8.02397L5.7146 3.66666L6.33332 3.04794L11 7.71461V8.33333L6.33332 13L5.7146 12.3813L10.0719 8.02397Z"></path>
+        		</svg>
+        	</div>
+            <h6>TIMELINE</h6>
+        </div>
+        `;
+        var bottomPlaceHolder = leftPanel.querySelector('.bottom-placeholder');
+        bottomPlaceHolder.appendChild(vsOutline.content);
+        bottomPlaceHolder.appendChild(vsTimeline.content);
     }
 
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.13
+// @version      0.10.14
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -78,14 +78,14 @@
                 ['emoji1f382', 'Cake'], ['emoji1f34f', 'Apple'], ['emoji2708', 'Plane'], ['emoji1f680', 'RocketShip'], ['emoji1f6b2', 'Bike'],
                 ['emoji1f684', 'BulletTrain'], ['emoji26a0', 'Warning'], ['emoji1f3c1', 'Flag'], ['emoji1f6b9', 'Men'], ['emoji1f6ba', 'Women'],
                 ['emoji2b55', 'O'], ['emoji2716', 'X_1'], ['emoji274c', 'X_2'], ['emojia9', 'Copyright'], ['emojiae', 'RegisteredTM'], ['emoji2122', 'Trademark'],
-                // extra (not in qq face or emoji panel)
+                // extra (not in qq face or emoji panel, maybe from Apple?)
                 ['emoji1f1e81f1f3', 'China'], ['emoji1f1fa1f1f8', 'America'], ['emoji1f1ec1f1e7', 'Canada'], ['emoji1f3ac', 'Film'], ['emoji1f3c4', 'Surfing'],
                 ['emoji1f33f', 'FourLeafClover_1'], ['emoji1f340', 'FourLeafClover_2'], ['emoji1f483', 'Dancer'], ['emoji1f49c', 'PurpleHeart'], ['emoji1f49e', 'SparklingHeart'],
                 ['emoji1f490', 'Bouquet'], ['emoji1f4e7', 'LoveLetter_1'], ['emoji1f48c', 'LoveLetter_2'], ['emoji1f4d2', 'TextBook'], ['emoji2733', 'EightSpokedAsterisk'],
                 ['emoji1f6a8', 'RotatingLight'], ['emoji1f338', 'PinkFlower'], ['emoji1f33c', 'YellowFlower'], ['emoji1f496', 'PinkSparklingHeart'], ['emoji1f17e', 'RedSquareO'],
                 ['emoji1f23a', 'BusinessOpen'], ['emoji1f308', 'Rainbow'], ['emoji1f4f1', 'MobilePhone'], ['emoji1f3a3', 'BlueFish'], ['emoji1f3e1', 'House'],
                 ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
-                ['emoji1f236', 'You']
+                ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall']
             ]
         );
 
@@ -100,12 +100,14 @@
             ['🎊', 'confetti_ball'], ['★', 'star'], ['☼', 'sunny'], ['🏙️', 'cityscape'],
             ['📍', 'round_pushpin'],['🌘', 'waning_crescent_moon'], ['⛱️', 'parasol_on_ground'],
             ['✅', 'white_check_mark'], ['💯', '100'], ['🖥️', 'desktop_computer'], ['➕', 'heavy_plus_sign'], ['✔️', 'heavy_check_mark'],
+            ['☑️', 'ballot_box_with_check'],
             ['💮', 'white_flower'], ['💸', 'money_with_wings'], ['💴', 'yen'],
             ['🐼', 'panda_face'], ['🦐', 'shrimp'], ['🐲', 'dragon_face'], ['🐋', 'whale2'], ['🦋', 'butterfly'],
             ['🧸', 'teddy_bear'], ['🦅', 'eagle'],
             ['📬', 'mailbox_with_mail'], ['✍', 'writing_hand'], ['🤍', 'white_heart'], ['⌛', 'hourglass'],
+            ['🧡', 'orange_heart'], ['🖤', 'black_heart'],
             // https://emojipedia.org (not in cheat sheet)
-            ['🪪', 'identification_card'], ['🥹', 'face_holding_back_tears']
+            ['🪪', 'identification_card'], ['🥹', 'face_holding_back_tears'], ['✚', 'black_cross']
         ]
     );
 

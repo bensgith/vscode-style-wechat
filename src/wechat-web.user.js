@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.15
+// @version      0.10.16
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -846,7 +846,10 @@
             font-family: system-ui;
         }
         .chat .box_bd {
-            bottom: 270px;
+            bottom: 270px; /* 180px */
+        }
+        .chat .unread-bottom {
+            bottom: 286px; /* 196px */
         }
         .chat .box_bd .clearfix:after {
             clear: none;
@@ -1653,7 +1656,7 @@
         renderLeftSideBar();
         renderSidePanel();
         renderBottomStatusBar();
-        renderLineNumber();
+        renderCommentBlockAndLineNumber();
     }
 
     function renderLeftSideBar() {
@@ -1905,11 +1908,12 @@
         mainInner.insertBefore(topMenuBar, mainInner.getElementsByClassName('panel give_me')[0]);
     }
 
-    function renderLineNumber() {
+    function renderCommentBlockAndLineNumber() {
         // line number
         var lineNum = document.createElement('div');
         lineNum.setAttribute('id', 'vscode_line_num');
-        lineNum.innerHTML = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32';
+        lineNum.innerHTML = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24';
+
         // header comment block
         var titleName = document.querySelector('.box_hd .title .title_name').innerHTML;
         var commentBlock = document.createElement('div');
@@ -1937,6 +1941,41 @@
             var titleName = maskUnicodeEmojis(document.querySelector('.box_hd .title .title_name').innerHTML, 'remove');
             if (titleName && !commentBlock.innerHTML.includes(titleName)) {
                 commentBlock.innerHTML = commentBlock.innerHTML.replace(/<span>.*<\/span>/, '<span>' + titleName + '</span>');
+            }
+        }, 500);
+
+        // timer to update line number dynamically
+        var totalLineNum = 24;
+        var lastHeight = 0;
+        var diffLineNum = 0;
+        var diffLineNumHtml = '';
+        var topPlaceHolder = scrollContent.getElementsByClassName('top-placeholder')[0];
+        var topPlaceHolderHeight = 0;
+        var lastActiveName, currentActiveChatItem, activeName;
+        setInterval(function() {
+            currentActiveChatItem = document.querySelector('.chat_item.active');
+            if (currentActiveChatItem) {
+                activeName = currentActiveChatItem.getElementsByClassName('nickname_text')[0];
+                // reset flags
+                if (lastActiveName != activeName) {
+                    lastHeight = 0;
+                    lastActiveName = activeName;
+                    topPlaceHolderHeight = 0;
+                    lineNum.innerHTML = '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24';
+                    totalLineNum = 24;
+                }
+                // get current height
+                topPlaceHolderHeight = parseInt(topPlaceHolder.style.height.replace('px', ''));
+                if (lastHeight < topPlaceHolderHeight) {
+                    diffLineNum = Math.round((topPlaceHolderHeight - lastHeight) / 18.9) + 10;
+                    for (let i = 1; i <= diffLineNum; i++) {
+                        diffLineNumHtml = diffLineNumHtml + ' ' + (totalLineNum + i);
+                    }
+                    lineNum.innerHTML = lineNum.innerHTML + ' ' + diffLineNumHtml;
+                    totalLineNum = totalLineNum + diffLineNum;
+                    lastHeight = topPlaceHolderHeight;
+                    diffLineNumHtml = '';
+                }
             }
         }, 500);
     }

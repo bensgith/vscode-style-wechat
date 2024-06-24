@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.16
+// @version      0.10.17
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
+// @match        https://wx.qq.com/*
 // @icon         https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico
 // @grant        GM_addStyle
 // @grant        GM_addElement
@@ -86,7 +87,8 @@
                 ['emoji1f23a', 'BusinessOpen'], ['emoji1f308', 'Rainbow'], ['emoji1f4f1', 'MobilePhone'], ['emoji1f3a3', 'BlueFish'], ['emoji1f3e1', 'House'],
                 ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
                 ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall'],
-                ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands']
+                ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands'], ['emoji1f392', 'Bag'],
+                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette']
             ]
         );
 
@@ -789,6 +791,9 @@
         .bubble_cont .location .img,
         .bubble_cont .location .desc,
         .bubble_cont .attach .attach_bd,
+        .bubble_cont .voice .web_wechat_voice_gray,
+        .bubble_cont .voice .web_wechat_voice_gray_playing,
+        .bubble_cont .voice .duration,
         .box_hd .title .title_name,
         .box_hd .title .title_count,
         .box_hd .title .web_wechat_down_icon,
@@ -905,6 +910,14 @@
             min-height: unset;
             min-width: unset;
             max-width: unset;
+        }
+        .bubble_cont .voice {
+            padding: 0;
+            width: auto;
+            max-width: unset;
+        }
+        .bubble_cont a {
+            color: #CCC;
         }
         .bubble:after,
         .bubble:before {
@@ -1577,6 +1590,18 @@
                             textContent: '(' + title + ' | ' + size + ')'
                         });
                     }
+                }
+                // if it is voice
+                var voices = msgCont.getElementsByClassName('voice');
+                if (nodeIsValidForMasking(voices)) {
+                    voices[0].removeAttribute('style');
+                    var duration = voices[0].querySelector('.duration').firstElementChild;
+                    console.log(duration.nodeType);
+                    console.log(duration.tagName);
+                    GM_addElement(voices[0], 'p', {
+                        class: 'masked',
+                        textContent: '(VOICE: ' + duration + ')'
+                    });
                 }
             });
         }, 1000);

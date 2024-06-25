@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.18
+// @version      0.10.19
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -13,423 +13,6 @@
 
 (function() {
     'use strict';
-
-    const qqface_names_map = new Map(
-            [
-                ['qqemoji0', 'Smile'], ['qqemoji1', 'Grimace'], ['qqemoji2', 'Drool'], ['qqemoji3', 'Scowl'], ['qqemoji4', 'CoolGuy'],
-                ['qqemoji5', 'Sob'], ['qqemoji6', 'Shy'], ['qqemoji7', 'Silent'], ['qqemoji8', 'Sleep'], ['qqemoji9', 'Cry'],
-                ['qqemoji10', 'Awkward'], ['qqemoji11', 'Angry'], ['qqemoji12', 'Tongue'], ['qqemoji13', 'Grin'], ['qqemoji14', 'Surprise'],
-                ['qqemoji15', 'Frown'], ['qqemoji16', 'Ruthless'], ['qqemoji17', 'Blush'], ['qqemoji18', 'Scream'], ['qqemoji19', 'Puke'],
-                ['qqemoji20', 'Chuckle'], ['qqemoji21', 'Joyful'], ['qqemoji22', 'Slight'], ['qqemoji23', 'Smug'], ['qqemoji24', 'Hungry'],
-                ['qqemoji25', 'Drowsy'], ['qqemoji26', 'Panic'], ['qqemoji27', 'Sweat'], ['qqemoji28', 'Laugh'], ['qqemoji29', 'Commando'],
-                ['qqemoji30', 'Determined'], ['qqemoji31', 'Scold'], ['qqemoji32', 'Shocked'], ['qqemoji33', 'Shhh'], ['qqemoji34', 'Dizzy'],
-                ['qqemoji35', 'Tormented'], ['qqemoji36', 'Toasted'], ['qqemoji37', 'Skull'], ['qqemoji38', 'Hammer'], ['qqemoji39', 'Wave'],
-                ['qqemoji40', 'Speechless_1'], ['qqemoji41', 'NosePick'], ['qqemoji42', 'Clap'], ['qqemoji43', 'Shame'], ['qqemoji44', 'Trick'],
-                ['qqemoji45', 'Bah！L'], ['qqemoji46', 'Bah！R'], ['qqemoji47', 'Yawn'], ['qqemoji48', 'Pooh-pooh'], ['qqemoji49', 'Shrunken'],
-                ['qqemoji50', 'TearingUp'], ['qqemoji51', 'Sly'], ['qqemoji52', 'Kiss'], ['qqemoji53', 'Wrath'], ['qqemoji54', 'Whimper'],
-                ['qqemoji55', 'Cleaver'], ['qqemoji56', 'Watermelon'], ['qqemoji57', 'Beer'], ['qqemoji58', 'Basketball'], ['qqemoji59', 'PingPong'],
-                ['qqemoji60', 'Coffee'], ['qqemoji61', 'Rice'], ['qqemoji62', 'Pig'], ['qqemoji63', 'Rose'], ['qqemoji64', 'Wilt'], ['qqemoji65', 'Lips'],
-                ['qqemoji66', 'Heart'], ['qqemoji67', 'BrokenHeart'], ['qqemoji68', 'Cake'], ['qqemoji69', 'Lightning'], ['qqemoji70', 'Bomb'],
-                ['qqemoji71', 'Dagger'], ['qqemoji72', 'Soccer'], ['qqemoji73', 'Ladybug'], ['qqemoji74', 'Poop'], ['qqemoji75', 'Moon'],
-                ['qqemoji76', 'Sun'], ['qqemoji77', 'Gift'], ['qqemoji78', 'Hug'], ['qqemoji79', 'ThumbsUp'], ['qqemoji80', 'ThumbsDown'],
-                ['qqemoji81', 'Shake'], ['qqemoji82', 'Peace'], ['qqemoji83', 'Fight'], ['qqemoji84', 'Beckon'], ['qqemoji85', 'Fist'],
-                ['qqemoji86', 'Pinky'], ['qqemoji87', 'RockOn'], ['qqemoji88', 'Nuh-uh'], ['qqemoji89', 'OK'], ['qqemoji90', 'InLove'],
-                ['qqemoji91', 'Blowkiss'], ['qqemoji92', 'Waddle'], ['qqemoji93', 'Tremble'], ['qqemoji94', 'Aaagh!'], ['qqemoji95', 'Twirl'],
-                ['qqemoji96', 'Kotow'], ['qqemoji97', 'Dramatic'], ['qqemoji98', 'JumpRope'], ['qqemoji99', 'Surrender'], ['qqemoji100', 'Hooray'],
-                ['qqemoji101', 'Meditate'], ['qqemoji102', 'Smooch'], ['qqemoji103', 'TaiChi L'], ['qqemoji104', 'TaiChi R'],
-                // from emoji panel
-                ['qqemoji105', 'Hey'], ['qqemoji106', 'Facepalm'], ['qqemoji107', 'Smirk'], ['qqemoji108', 'Smart'], ['qqemoji109', 'Concerned'],
-                ['qqemoji110', 'Yeah!'], ['qqemoji112', 'Packet'], ['qqemoji111', 'Chicken']
-            ]
-        );
-
-    const emoji_names_map = new Map(
-            [
-                ['emoji1f604', 'Laugh'], ['emoji1f637', 'Sick'], ['emoji1f639', 'Lol_1'], ['emoji1f602', 'Lol_2'], ['emoji1f61d', 'Tongue'],
-                ['emoji1f633', 'Blush'], ['emoji1f631', 'Terror'], ['emoji1f64d', 'LetDown'], ['emoji1f612', 'Speechless_2'], ['emoji1f47b', 'Ghost'],
-                ['emoji1f4aa', 'Strong'], ['emoji1f389', 'Party'], ['emoji1f4e6', 'Gift'], ['emoji1f60a', 'Happy'], ['emoji1f63a', 'BigSmile'],
-                ['emoji263a', 'Glowing'], ['emoji1f609', 'Wink'], ['emoji1f63b', 'Drool'], ['emoji1f63d', 'Smooch'], ['emoji1f61a', 'Kiss'],
-                ['emoji1f63c', 'Grin'], ['emoji1f60c', 'Satisfied'], ['emoji1f61c', 'Tease'], ['emoji1f60f', 'CoolGuy'], ['emoji1f613', 'Sweat'],
-                ['emoji1f61e', 'Low'], ['emoji1f4ab', 'Ugh'], ['emoji1f625', 'Anxious'], ['emoji1f630', 'Worried'], ['emoji1f628', 'Shocked'],
-                ['emoji1f62b', 'D’oh!'], ['emoji1f63f', 'Tear'], ['emoji1f62d', 'Cry'], ['emoji1f632', 'Dizzy'], ['emoji1f620', 'Upset'],
-                ['emoji1f64e', 'Angry'], ['emoji1f62a', 'Zzz'], ['emoji1f47f', 'Demon'], ['emoji1f47d', 'Alien'], ['emoji2764', 'Heart'],
-                ['emoji1f494', 'BrokenHeart'], ['emoji1f498', 'Cupid'], ['emoji2747', 'Twinkle'], ['emoji1f31f', 'Star'], ['emoji2755', '!_1'],
-                ['emoji2757', '!_2'], ['emoji2754', '?'], ['emoji1f4a4', 'Asleep'], ['emoji1f4a7', 'Drops'], ['emoji1f3b5', 'Music'],
-                ['emoji1f525', 'Fire'], ['emoji1f4a9', 'Poop'], ['emoji1f44d', 'ThumbsUp'], ['emoji1f44e', 'ThumbsDown'], ['emoji1f44a', 'Fist'],
-                ['emoji270c', 'Peace'], ['emoji1f446', 'Up'], ['emoji1f447', 'Down'], ['emoji1f449', 'Right'], ['emoji1f448', 'Left'],
-                ['emoji261d', '#1'], ['emoji1f48f', 'Kissing'], ['emoji1f491', 'Couple'], ['emoji1f466', 'Boy'], ['emoji1f467', 'Girl'],
-                ['emoji1f469', 'Lady'], ['emoji1f468', 'Man'], ['emoji1f47c', 'Angel'], ['emoji1f480', 'Skull'], ['emoji1f48b', 'Lips'],
-                ['emoji2600', 'Sun'], ['emoji2614', 'Rain'], ['emoji2601', 'Cloud'], ['emoji26c4', 'Snowman'], ['emoji1f31b', 'Moon'],
-                ['emoji26a1', 'Lightning'], ['emoji1f30a', 'Waves'], ['emoji1f431', 'Cat'], ['emoji1f436', 'Doggy'], ['emoji1f42d', 'Mouse'],
-                ['emoji1f439', 'Hamster'], ['emoji1f430', 'Rabbit'], ['emoji1f43a', 'Dog'], ['emoji1f438', 'Frog'], ['emoji1f42f', 'Tiger'],
-                ['emoji1f428', 'Koala'], ['emoji1f43b', 'Bear'], ['emoji1f43d', 'Pig'], ['emoji1f42e', 'Cow'], ['emoji1f417', 'Boar'],
-                ['emoji1f435', 'Monkey'], ['emoji1f434', 'Horse'], ['emoji1f40d', 'Snake'], ['emoji1f426', 'Pigeon'], ['emoji1f414', 'Chicken'],
-                ['emoji1f427', 'Penguin'], ['emoji1f41b', 'Caterpillar'], ['emoji1f419', 'Octopus'], ['emoji1f420', 'Fish'], ['emoji1f433', 'Whale'],
-                ['emoji1f42c', 'Dolphin'], ['emoji1f339', 'Rose'], ['emoji1f33a', 'Flower'], ['emoji1f334', 'Palm'], ['emoji1f335', 'Cactus'],
-                ['emoji1f49d', 'CandyBox'], ['emoji1f383', 'Jack-o-lantern'], ['emoji1f385', 'Santa'], ['emoji1f384', 'XmasTree'], ['emoji1f514', 'Bell'],
-                ['emoji1f388', 'Balloon'], ['emoji1f4bf', 'CD'], ['emoji1f4f7', 'Camera'], ['emoji1f4f9', 'FilmCamera'], ['emoji1f4bb', 'Computer'],
-                ['emoji1f4fa', 'TV'], ['emoji1f4de', 'Phone'], ['emoji1f513', 'Unlocked'], ['emoji1f510', 'Locked'], ['emoji1f511', 'Key'],
-                ['emoji1f528', 'Judgement'], ['emoji1f4a1', 'LightBulb'], ['emoji1f4eb', 'Mail'], ['emoji1f6c0', 'Wash'], ['emoji1f4b5', 'Money'],
-                ['emoji1f4a3', 'Bomb'], ['emoji1f52b', 'Pistol'], ['emoji1f48a', 'Pill'], ['emoji1f3c8', 'Football'], ['emoji1f3c0', 'Basketball'],
-                ['emoji26bd', 'Soccer'], ['emoji26be', 'Baseball'], ['emoji26f3', 'Golf'], ['emoji1f3c6', 'Trophy'], ['emoji1f47e', 'Invader'],
-                ['emoji1f3a4', 'Singing'], ['emoji1f3b8', 'Guitar'], ['emoji1f459', 'Bikini'], ['emoji1f451', 'Crown'], ['emoji1f302', 'Umbrella'],
-                ['emoji1f45c', 'Purse'], ['emoji1f484', 'Lipstick'], ['emoji1f48d', 'Ring'], ['emoji1f48e', 'Gem'], ['emoji2615', 'Coffee'],
-                ['emoji1f37a', 'Beer'], ['emoji1f37b', 'Toast'], ['emoji1f379', 'Martini'], ['emoji1f354', 'Burger'], ['emoji1f35f', 'Fries'],
-                ['emoji1f35d', 'Sphaghetti'], ['emoji1f363', 'Sushi'], ['emoji1f35c', 'Noodles'], ['emoji1f373', 'Eggs'], ['emoji1f366', 'IceCream'],
-                ['emoji1f382', 'Cake'], ['emoji1f34f', 'Apple'], ['emoji2708', 'Plane'], ['emoji1f680', 'RocketShip'], ['emoji1f6b2', 'Bike'],
-                ['emoji1f684', 'BulletTrain'], ['emoji26a0', 'Warning'], ['emoji1f3c1', 'Flag'], ['emoji1f6b9', 'Men'], ['emoji1f6ba', 'Women'],
-                ['emoji2b55', 'O'], ['emoji2716', 'X_1'], ['emoji274c', 'X_2'], ['emojia9', 'Copyright'], ['emojiae', 'RegisteredTM'], ['emoji2122', 'Trademark'],
-                // extra (not in qq face or emoji panel, maybe from Apple?)
-                ['emoji1f1e81f1f3', 'China'], ['emoji1f1fa1f1f8', 'America'], ['emoji1f1ec1f1e7', 'Canada'], ['emoji1f3ac', 'Film'], ['emoji1f3c4', 'Surfing'],
-                ['emoji1f33f', 'FourLeafClover_1'], ['emoji1f340', 'FourLeafClover_2'], ['emoji1f483', 'Dancer'], ['emoji1f49c', 'PurpleHeart'], ['emoji1f49e', 'SparklingHeart'],
-                ['emoji1f490', 'Bouquet'], ['emoji1f4e7', 'LoveLetter_1'], ['emoji1f48c', 'LoveLetter_2'], ['emoji1f4d2', 'TextBook'], ['emoji2733', 'EightSpokedAsterisk'],
-                ['emoji1f6a8', 'RotatingLight'], ['emoji1f338', 'PinkFlower'], ['emoji1f33c', 'YellowFlower'], ['emoji1f496', 'PinkSparklingHeart'], ['emoji1f17e', 'RedSquareO'],
-                ['emoji1f23a', 'BusinessOpen'], ['emoji1f308', 'Rainbow'], ['emoji1f4f1', 'MobilePhone'], ['emoji1f3a3', 'BlueFish'], ['emoji1f3e1', 'House'],
-                ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
-                ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall'],
-                ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands'], ['emoji1f392', 'Bag'],
-                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1']
-            ]
-        );
-
-    //https://github.com/ikatyang/emoji-cheat-sheet
-    const unicode_emoji_map = new Map(
-        [
-            /*
-            ['🥺', 'pleading_face'], ['🤣', 'rofl'], ['😬', 'grimacing'], ['🤑', 'money_mouth_face'], ['🤫', 'shushing_face'], ['🥰', 'smiling_face_with_three_hearts'],
-            ['🤩', 'star_struck'], ['😮', 'open_mouth'], ['😦', 'frowning'], ['😯', 'hushed'], ['🙃', 'upside_down_face'],
-            ['0️⃣', 'zero'], ['1️⃣', 'one'], ['2️⃣', 'two'], ['3️⃣', 'three'], ['4️⃣', 'four'],
-            ['5️⃣', 'five'], ['6️⃣', 'six'], ['7️⃣', 'seven'], ['8️⃣', 'eight'], ['9️⃣', 'nine'],
-            ['🌎', 'earth_americas'], ['🌍', 'earth_africa'], ['🌏', 'earth_asia'],
-            ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'], ['🇲🇾', 'malaysia'],
-            ['🎊', 'confetti_ball'], ['★', 'star'], ['☼', 'sunny'], ['🏙️', 'cityscape'], ['🍭', 'lollipop'],
-            ['📍', 'round_pushpin'],['🌘', 'waning_crescent_moon'], ['⛱️', 'parasol_on_ground'],
-            ['✅', 'white_check_mark'], ['💯', '100'], ['🖥️', 'desktop_computer'], ['➕', 'heavy_plus_sign'], ['✔️', 'heavy_check_mark'],
-            ['☑️', 'ballot_box_with_check'],
-            ['💮', 'white_flower'], ['💸', 'money_with_wings'], ['💴', 'yen'],
-            ['🐼', 'panda_face'], ['🦐', 'shrimp'], ['🐲', 'dragon_face'], ['🐋', 'whale2'], ['🦋', 'butterfly'],
-            ['🧸', 'teddy_bear'], ['🦅', 'eagle'],
-            ['📬', 'mailbox_with_mail'], ['✍', 'writing_hand'], ['🤍', 'white_heart'], ['⌛', 'hourglass'],
-            ['🧡', 'orange_heart'], ['🖤', 'black_heart'],
-            ['🔆', 'high_brightness'], ['🤿', 'diving_mask'], ['🧧', 'red_envelope'], ['🏂', 'snowboarder'], ['🥽', 'goggles'],
-            // https://emojipedia.org (not in cheat sheet)
-            ['🪪', 'identification_card'], ['🥹', 'face_holding_back_tears'], ['✚', 'black_cross']
-            */
-
-            // generated by emoji_mapping_generator.py
-            // Smileys & Emotion
-            ['😀', 'grinning_face'], ['😃', 'grinning_face_with_big_eyes'], ['😄', 'grinning_face_with_smiling_eyes'], ['😁', 'beaming_face_with_smiling_eyes'], ['😆', 'grinning_squinting_face'],
-            ['😅', 'grinning_face_with_sweat'], ['🤣', 'rolling_on_the_floor_laughing'], ['😂', 'face_with_tears_of_joy'], ['🙂', 'slightly_smiling_face'], ['🙃', 'upside-down_face'],
-            ['🫠', 'melting_face'], ['😉', 'winking_face'], ['😊', 'smiling_face_with_smiling_eyes'], ['😇', 'smiling_face_with_halo'], ['🥰', 'smiling_face_with_hearts'],
-            ['😍', 'smiling_face_with_heart-eyes'], ['🤩', 'star-struck'], ['😘', 'face_blowing_a_kiss'], ['😗', 'kissing_face'], ['☺', 'smiling_face'],
-            ['😚', 'kissing_face_with_closed_eyes'], ['😙', 'kissing_face_with_smiling_eyes'], ['🥲', 'smiling_face_with_tear'], ['😋', 'face_savoring_food'], ['😛', 'face_with_tongue'],
-            ['😜', 'winking_face_with_tongue'], ['🤪', 'zany_face'], ['😝', 'squinting_face_with_tongue'], ['🤑', 'money-mouth_face'], ['🤗', 'smiling_face_with_open_hands'],
-            ['🤭', 'face_with_hand_over_mouth'], ['🫢', 'face_with_open_eyes_and_hand_over_mouth'], ['🫣', 'face_with_peeking_eye'], ['🤫', 'shushing_face'], ['🤔', 'thinking_face'],
-            ['🫡', 'saluting_face'], ['🤐', 'zipper-mouth_face'], ['🤨', 'face_with_raised_eyebrow'], ['😐', 'neutral_face'], ['😑', 'expressionless_face'],
-            ['😶', 'face_without_mouth'], ['🫥', 'dotted_line_face'], ['😏', 'smirking_face'], ['😒', 'unamused_face'], ['🙄', 'face_with_rolling_eyes'],
-            ['😬', 'grimacing_face'], ['🤥', 'lying_face'], ['🫨', 'shaking_face'], ['😌', 'relieved_face'], ['😔', 'pensive_face'],
-            ['😪', 'sleepy_face'], ['🤤', 'drooling_face'], ['😴', 'sleeping_face'], ['😷', 'face_with_medical_mask'], ['🤒', 'face_with_thermometer'],
-            ['🤕', 'face_with_head-bandage'], ['🤢', 'nauseated_face'], ['🤮', 'face_vomiting'], ['🤧', 'sneezing_face'], ['🥵', 'hot_face'],
-            ['🥶', 'cold_face'], ['🥴', 'woozy_face'], ['😵', 'face_with_crossed-out_eyes'], ['🤯', 'exploding_head'], ['🤠', 'cowboy_hat_face'],
-            ['🥳', 'partying_face'], ['🥸', 'disguised_face'], ['😎', 'smiling_face_with_sunglasses'], ['🤓', 'nerd_face'], ['🧐', 'face_with_monocle'],
-            ['😕', 'confused_face'], ['🫤', 'face_with_diagonal_mouth'], ['😟', 'worried_face'], ['🙁', 'slightly_frowning_face'], ['☹', 'frowning_face'],
-            ['😮', 'face_with_open_mouth'], ['😯', 'hushed_face'], ['😲', 'astonished_face'], ['😳', 'flushed_face'], ['🥺', 'pleading_face'],
-            ['🥹', 'face_holding_back_tears'], ['😦', 'frowning_face_with_open_mouth'], ['😧', 'anguished_face'], ['😨', 'fearful_face'], ['😰', 'anxious_face_with_sweat'],
-            ['😥', 'sad_but_relieved_face'], ['😢', 'crying_face'], ['😭', 'loudly_crying_face'], ['😱', 'face_screaming_in_fear'], ['😖', 'confounded_face'],
-            ['😣', 'persevering_face'], ['😞', 'disappointed_face'], ['😓', 'downcast_face_with_sweat'], ['😩', 'weary_face'], ['😫', 'tired_face'],
-            ['🥱', 'yawning_face'], ['😤', 'face_with_steam_from_nose'], ['😡', 'enraged_face'], ['😠', 'angry_face'], ['🤬', 'face_with_symbols_on_mouth'],
-            ['😈', 'smiling_face_with_horns'], ['👿', 'angry_face_with_horns'], ['💀', 'skull'], ['☠', 'skull_and_crossbones'], ['💩', 'pile_of_poo'],
-            ['🤡', 'clown_face'], ['👹', 'ogre'], ['👺', 'goblin'], ['👻', 'ghost'], ['👽', 'alien'],
-            ['👾', 'alien_monster'], ['🤖', 'robot'], ['😺', 'grinning_cat'], ['😸', 'grinning_cat_with_smiling_eyes'], ['😹', 'cat_with_tears_of_joy'],
-            ['😻', 'smiling_cat_with_heart-eyes'], ['😼', 'cat_with_wry_smile'], ['😽', 'kissing_cat'], ['🙀', 'weary_cat'], ['😿', 'crying_cat'],
-            ['😾', 'pouting_cat'], ['🙈', 'see-no-evil_monkey'], ['🙉', 'hear-no-evil_monkey'], ['🙊', 'speak-no-evil_monkey'], ['💌', 'love_letter'],
-            ['💘', 'heart_with_arrow'], ['💝', 'heart_with_ribbon'], ['💖', 'sparkling_heart'], ['💗', 'growing_heart'], ['💓', 'beating_heart'],
-            ['💞', 'revolving_hearts'], ['💕', 'two_hearts'], ['💟', 'heart_decoration'], ['❣', 'heart_exclamation'], ['💔', 'broken_heart'],
-            ['❤', 'red_heart'], ['🩷', 'pink_heart'], ['🧡', 'orange_heart'], ['💛', 'yellow_heart'], ['💚', 'green_heart'],
-            ['💙', 'blue_heart'], ['🩵', 'light_blue_heart'], ['💜', 'purple_heart'], ['🤎', 'brown_heart'], ['🖤', 'black_heart'],
-            ['🩶', 'grey_heart'], ['🤍', 'white_heart'], ['💋', 'kiss_mark'], ['💯', 'hundred_points'], ['💢', 'anger_symbol'],
-            ['💥', 'collision'], ['💫', 'dizzy'], ['💦', 'sweat_droplets'], ['💨', 'dashing_away'], ['🕳', 'hole'],
-            ['💬', 'speech_balloon'], ['🗨', 'left_speech_bubble'], ['🗯', 'right_anger_bubble'], ['💭', 'thought_balloon'], ['💤', 'ZZZ'],
-
-            // People & Body
-            ['👋', 'waving_hand'], ['🤚', 'raised_back_of_hand'], ['🖐', 'hand_with_fingers_splayed'], ['✋', 'raised_hand'], ['🖖', 'vulcan_salute'],
-            ['🫱', 'rightwards_hand'], ['🫲', 'leftwards_hand'], ['🫳', 'palm_down_hand'], ['🫴', 'palm_up_hand'], ['🫷', 'leftwards_pushing_hand'],
-            ['🫸', 'rightwards_pushing_hand'], ['👌', 'OK_hand'], ['🤌', 'pinched_fingers'], ['🤏', 'pinching_hand'], ['✌', 'victory_hand'],
-            ['🤞', 'crossed_fingers'], ['🫰', 'hand_with_index_finger_and_thumb_crossed'], ['🤟', 'love-you_gesture'], ['🤘', 'sign_of_the_horns'], ['🤙', 'call_me_hand'],
-            ['👈', 'backhand_index_pointing_left'], ['👉', 'backhand_index_pointing_right'], ['👆', 'backhand_index_pointing_up'], ['🖕', 'middle_finger'], ['👇', 'backhand_index_pointing_down'],
-            ['☝', 'index_pointing_up'], ['🫵', 'index_pointing_at_the_viewer'], ['👍', 'thumbs_up'], ['👎', 'thumbs_down'], ['✊', 'raised_fist'],
-            ['👊', 'oncoming_fist'], ['🤛', 'left-facing_fist'], ['🤜', 'right-facing_fist'], ['👏', 'clapping_hands'], ['🙌', 'raising_hands'],
-            ['🫶', 'heart_hands'], ['👐', 'open_hands'], ['🤲', 'palms_up_together'], ['🤝', 'handshake'], ['🙏', 'folded_hands'],
-            ['✍', 'writing_hand'], ['💅', 'nail_polish'], ['🤳', 'selfie'], ['💪', 'flexed_biceps'], ['🦾', 'mechanical_arm'],
-            ['🦿', 'mechanical_leg'], ['🦵', 'leg'], ['🦶', 'foot'], ['👂', 'ear'], ['🦻', 'ear_with_hearing_aid'],
-            ['👃', 'nose'], ['🧠', 'brain'], ['🫀', 'anatomical_heart'], ['🫁', 'lungs'], ['🦷', 'tooth'],
-            ['🦴', 'bone'], ['👀', 'eyes'], ['👁', 'eye'], ['👅', 'tongue'], ['👄', 'mouth'],
-            ['🫦', 'biting_lip'], ['👶', 'baby'], ['🧒', 'child'], ['👦', 'boy'], ['👧', 'girl'],
-            ['🧑', 'person'], ['👱', 'person_blond_hair'], ['👨', 'man'], ['🧔', 'person_beard'], ['👩', 'woman'],
-            ['🧓', 'older_person'], ['👴', 'old_man'], ['👵', 'old_woman'], ['🙍', 'person_frowning'], ['🙎', 'person_pouting'],
-            ['🙅', 'person_gesturing_NO'], ['🙆', 'person_gesturing_OK'], ['💁', 'person_tipping_hand'], ['🙋', 'person_raising_hand'], ['🧏', 'deaf_person'],
-            ['🙇', 'person_bowing'], ['🤦', 'person_facepalming'], ['🤷', 'person_shrugging'], ['👮', 'police_officer'], ['🕵', 'detective'],
-            ['💂', 'guard'], ['🥷', 'ninja'], ['👷', 'construction_worker'], ['🫅', 'person_with_crown'], ['🤴', 'prince'],
-            ['👸', 'princess'], ['👳', 'person_wearing_turban'], ['👲', 'person_with_skullcap'], ['🧕', 'woman_with_headscarf'], ['🤵', 'person_in_tuxedo'],
-            ['👰', 'person_with_veil'], ['🤰', 'pregnant_woman'], ['🫃', 'pregnant_man'], ['🫄', 'pregnant_person'], ['🤱', 'breast-feeding'],
-            ['👼', 'baby_angel'], ['🎅', 'Santa_Claus'], ['🤶', 'Mrs._Claus'], ['🦸', 'superhero'], ['🦹', 'supervillain'],
-            ['🧙', 'mage'], ['🧚', 'fairy'], ['🧛', 'vampire'], ['🧜', 'merperson'], ['🧝', 'elf'],
-            ['🧞', 'genie'], ['🧟', 'zombie'], ['🧌', 'troll'], ['💆', 'person_getting_massage'], ['💇', 'person_getting_haircut'],
-            ['🚶', 'person_walking'], ['🧍', 'person_standing'], ['🧎', 'person_kneeling'], ['🏃', 'person_running'], ['💃', 'woman_dancing'],
-            ['🕺', 'man_dancing'], ['🕴', 'person_in_suit_levitating'], ['👯', 'people_with_bunny_ears'], ['🧖', 'person_in_steamy_room'], ['🧗', 'person_climbing'],
-            ['🤺', 'person_fencing'], ['🏇', 'horse_racing'], ['⛷', 'skier'], ['🏂', 'snowboarder'], ['🏌', 'person_golfing'],
-            ['🏄', 'person_surfing'], ['🚣', 'person_rowing_boat'], ['🏊', 'person_swimming'], ['⛹', 'person_bouncing_ball'], ['🏋', 'person_lifting_weights'],
-            ['🚴', 'person_biking'], ['🚵', 'person_mountain_biking'], ['🤸', 'person_cartwheeling'], ['🤼', 'people_wrestling'], ['🤽', 'person_playing_water_polo'],
-            ['🤾', 'person_playing_handball'], ['🤹', 'person_juggling'], ['🧘', 'person_in_lotus_position'], ['🛀', 'person_taking_bath'], ['🛌', 'person_in_bed'],
-            ['👭', 'women_holding_hands'], ['👫', 'woman_and_man_holding_hands'], ['👬', 'men_holding_hands'], ['💏', 'kiss'], ['💑', 'couple_with_heart'],
-            ['🗣', 'speaking_head'], ['👤', 'bust_in_silhouette'], ['👥', 'busts_in_silhouette'], ['🫂', 'people_hugging'], ['👪', 'family'],
-            ['👣', 'footprints'],
-            // Component
-            ['🦰', 'red_hair'], ['🦱', 'curly_hair'], ['🦳', 'white_hair'], ['🦲', 'bald'],
-            // Animals & Nature
-            ['🐵', 'monkey_face'], ['🐒', 'monkey'], ['🦍', 'gorilla'], ['🦧', 'orangutan'], ['🐶', 'dog_face'],
-            ['🐕', 'dog'], ['🦮', 'guide_dog'], ['🐩', 'poodle'], ['🐺', 'wolf'], ['🦊', 'fox'],
-            ['🦝', 'raccoon'], ['🐱', 'cat_face'], ['🐈', 'cat'], ['🦁', 'lion'], ['🐯', 'tiger_face'],
-            ['🐅', 'tiger'], ['🐆', 'leopard'], ['🐴', 'horse_face'], ['🫎', 'moose'], ['🫏', 'donkey'],
-            ['🐎', 'horse'], ['🦄', 'unicorn'], ['🦓', 'zebra'], ['🦌', 'deer'], ['🦬', 'bison'],
-            ['🐮', 'cow_face'], ['🐂', 'ox'], ['🐃', 'water_buffalo'], ['🐄', 'cow'], ['🐷', 'pig_face'],
-            ['🐖', 'pig'], ['🐗', 'boar'], ['🐽', 'pig_nose'], ['🐏', 'ram'], ['🐑', 'ewe'],
-            ['🐐', 'goat'], ['🐪', 'camel'], ['🐫', 'two-hump_camel'], ['🦙', 'llama'], ['🦒', 'giraffe'],
-            ['🐘', 'elephant'], ['🦣', 'mammoth'], ['🦏', 'rhinoceros'], ['🦛', 'hippopotamus'], ['🐭', 'mouse_face'],
-            ['🐁', 'mouse'], ['🐀', 'rat'], ['🐹', 'hamster'], ['🐰', 'rabbit_face'], ['🐇', 'rabbit'],
-            ['🐿', 'chipmunk'], ['🦫', 'beaver'], ['🦔', 'hedgehog'], ['🦇', 'bat'], ['🐻', 'bear'],
-            ['🐨', 'koala'], ['🐼', 'panda'], ['🦥', 'sloth'], ['🦦', 'otter'], ['🦨', 'skunk'],
-            ['🦘', 'kangaroo'], ['🦡', 'badger'], ['🐾', 'paw_prints'], ['🦃', 'turkey'], ['🐔', 'chicken'],
-            ['🐓', 'rooster'], ['🐣', 'hatching_chick'], ['🐤', 'baby_chick'], ['🐥', 'front-facing_baby_chick'], ['🐦', 'bird'],
-            ['🐧', 'penguin'], ['🕊', 'dove'], ['🦅', 'eagle'], ['🦆', 'duck'], ['🦢', 'swan'],
-            ['🦉', 'owl'], ['🦤', 'dodo'], ['🪶', 'feather'], ['🦩', 'flamingo'], ['🦚', 'peacock'],
-            ['🦜', 'parrot'], ['🪽', 'wing'], ['🪿', 'goose'], ['🐸', 'frog'], ['🐊', 'crocodile'],
-            ['🐢', 'turtle'], ['🦎', 'lizard'], ['🐍', 'snake'], ['🐲', 'dragon_face'], ['🐉', 'dragon'],
-            ['🦕', 'sauropod'], ['🦖', 'T-Rex'], ['🐳', 'spouting_whale'], ['🐋', 'whale'], ['🐬', 'dolphin'],
-            ['🦭', 'seal'], ['🐟', 'fish'], ['🐠', 'tropical_fish'], ['🐡', 'blowfish'], ['🦈', 'shark'],
-            ['🐙', 'octopus'], ['🐚', 'spiral_shell'], ['🪸', 'coral'], ['🪼', 'jellyfish'], ['🐌', 'snail'],
-            ['🦋', 'butterfly'], ['🐛', 'bug'], ['🐜', 'ant'], ['🐝', 'honeybee'], ['🪲', 'beetle'],
-            ['🐞', 'lady_beetle'], ['🦗', 'cricket'], ['🪳', 'cockroach'], ['🕷', 'spider'], ['🕸', 'spider_web'],
-            ['🦂', 'scorpion'], ['🦟', 'mosquito'], ['🪰', 'fly'], ['🪱', 'worm'], ['🦠', 'microbe'],
-            ['💐', 'bouquet'], ['🌸', 'cherry_blossom'], ['💮', 'white_flower'], ['🪷', 'lotus'], ['🏵', 'rosette'],
-            ['🌹', 'rose'], ['🥀', 'wilted_flower'], ['🌺', 'hibiscus'], ['🌻', 'sunflower'], ['🌼', 'blossom'],
-            ['🌷', 'tulip'], ['🪻', 'hyacinth'], ['🌱', 'seedling'], ['🪴', 'potted_plant'], ['🌲', 'evergreen_tree'],
-            ['🌳', 'deciduous_tree'], ['🌴', 'palm_tree'], ['🌵', 'cactus'], ['🌾', 'sheaf_of_rice'], ['🌿', 'herb'],
-            ['☘', 'shamrock'], ['🍀', 'four_leaf_clover'], ['🍁', 'maple_leaf'], ['🍂', 'fallen_leaf'], ['🍃', 'leaf_fluttering_in_wind'],
-            ['🪹', 'empty_nest'], ['🪺', 'nest_with_eggs'], ['🍄', 'mushroom'],
-            // Food & Drink
-            ['🍇', 'grapes'], ['🍈', 'melon'], ['🍉', 'watermelon'], ['🍊', 'tangerine'], ['🍋', 'lemon'],
-            ['🍌', 'banana'], ['🍍', 'pineapple'], ['🥭', 'mango'], ['🍎', 'red_apple'], ['🍏', 'green_apple'],
-            ['🍐', 'pear'], ['🍑', 'peach'], ['🍒', 'cherries'], ['🍓', 'strawberry'], ['🫐', 'blueberries'],
-            ['🥝', 'kiwi_fruit'], ['🍅', 'tomato'], ['🫒', 'olive'], ['🥥', 'coconut'], ['🥑', 'avocado'],
-            ['🍆', 'eggplant'], ['🥔', 'potato'], ['🥕', 'carrot'], ['🌽', 'ear_of_corn'], ['🌶', 'hot_pepper'],
-            ['🫑', 'bell_pepper'], ['🥒', 'cucumber'], ['🥬', 'leafy_green'], ['🥦', 'broccoli'], ['🧄', 'garlic'],
-            ['🧅', 'onion'], ['🥜', 'peanuts'], ['🫘', 'beans'], ['🌰', 'chestnut'], ['🫚', 'ginger_root'],
-            ['🫛', 'pea_pod'], ['🍞', 'bread'], ['🥐', 'croissant'], ['🥖', 'baguette_bread'], ['🫓', 'flatbread'],
-            ['🥨', 'pretzel'], ['🥯', 'bagel'], ['🥞', 'pancakes'], ['🧇', 'waffle'], ['🧀', 'cheese_wedge'],
-            ['🍖', 'meat_on_bone'], ['🍗', 'poultry_leg'], ['🥩', 'cut_of_meat'], ['🥓', 'bacon'], ['🍔', 'hamburger'],
-            ['🍟', 'french_fries'], ['🍕', 'pizza'], ['🌭', 'hot_dog'], ['🥪', 'sandwich'], ['🌮', 'taco'],
-            ['🌯', 'burrito'], ['🫔', 'tamale'], ['🥙', 'stuffed_flatbread'], ['🧆', 'falafel'], ['🥚', 'egg'],
-            ['🍳', 'cooking'], ['🥘', 'shallow_pan_of_food'], ['🍲', 'pot_of_food'], ['🫕', 'fondue'], ['🥣', 'bowl_with_spoon'],
-            ['🥗', 'green_salad'], ['🍿', 'popcorn'], ['🧈', 'butter'], ['🧂', 'salt'], ['🥫', 'canned_food'],
-            ['🍱', 'bento_box'], ['🍘', 'rice_cracker'], ['🍙', 'rice_ball'], ['🍚', 'cooked_rice'], ['🍛', 'curry_rice'],
-            ['🍜', 'steaming_bowl'], ['🍝', 'spaghetti'], ['🍠', 'roasted_sweet_potato'], ['🍢', 'oden'], ['🍣', 'sushi'],
-            ['🍤', 'fried_shrimp'], ['🍥', 'fish_cake_with_swirl'], ['🥮', 'moon_cake'], ['🍡', 'dango'], ['🥟', 'dumpling'],
-            ['🥠', 'fortune_cookie'], ['🥡', 'takeout_box'], ['🦀', 'crab'], ['🦞', 'lobster'], ['🦐', 'shrimp'],
-            ['🦑', 'squid'], ['🦪', 'oyster'], ['🍦', 'soft_ice_cream'], ['🍧', 'shaved_ice'], ['🍨', 'ice_cream'],
-            ['🍩', 'doughnut'], ['🍪', 'cookie'], ['🎂', 'birthday_cake'], ['🍰', 'shortcake'], ['🧁', 'cupcake'],
-            ['🥧', 'pie'], ['🍫', 'chocolate_bar'], ['🍬', 'candy'], ['🍭', 'lollipop'], ['🍮', 'custard'],
-            ['🍯', 'honey_pot'], ['🍼', 'baby_bottle'], ['🥛', 'glass_of_milk'], ['☕', 'hot_beverage'], ['🫖', 'teapot'],
-            ['🍵', 'teacup_without_handle'], ['🍶', 'sake'], ['🍾', 'bottle_with_popping_cork'], ['🍷', 'wine_glass'], ['🍸', 'cocktail_glass'],
-            ['🍹', 'tropical_drink'], ['🍺', 'beer_mug'], ['🍻', 'clinking_beer_mugs'], ['🥂', 'clinking_glasses'], ['🥃', 'tumbler_glass'],
-            ['🫗', 'pouring_liquid'], ['🥤', 'cup_with_straw'], ['🧋', 'bubble_tea'], ['🧃', 'beverage_box'], ['🧉', 'mate'],
-            ['🧊', 'ice'], ['🥢', 'chopsticks'], ['🍽', 'fork_and_knife_with_plate'], ['🍴', 'fork_and_knife'], ['🥄', 'spoon'],
-            ['🔪', 'kitchen_knife'], ['🫙', 'jar'], ['🏺', 'amphora'],
-            // Travel & Places
-            ['🌍', 'globe_showing_Europe-Africa'], ['🌎', 'globe_showing_Americas'], ['🌏', 'globe_showing_Asia-Australia'], ['🌐', 'globe_with_meridians'], ['🗺', 'world_map'],
-            ['🗾', 'map_of_Japan'], ['🧭', 'compass'], ['🏔', 'snow-capped_mountain'], ['⛰', 'mountain'], ['🌋', 'volcano'],
-            ['🗻', 'mount_fuji'], ['🏕', 'camping'], ['🏖', 'beach_with_umbrella'], ['🏜', 'desert'], ['🏝', 'desert_island'],
-            ['🏞', 'national_park'], ['🏟', 'stadium'], ['🏛', 'classical_building'], ['🏗', 'building_construction'], ['🧱', 'brick'],
-            ['🪨', 'rock'], ['🪵', 'wood'], ['🛖', 'hut'], ['🏘', 'houses'], ['🏚', 'derelict_house'],
-            ['🏠', 'house'], ['🏡', 'house_with_garden'], ['🏢', 'office_building'], ['🏣', 'Japanese_post_office'], ['🏤', 'post_office'],
-            ['🏥', 'hospital'], ['🏦', 'bank'], ['🏨', 'hotel'], ['🏩', 'love_hotel'], ['🏪', 'convenience_store'],
-            ['🏫', 'school'], ['🏬', 'department_store'], ['🏭', 'factory'], ['🏯', 'Japanese_castle'], ['🏰', 'castle'],
-            ['💒', 'wedding'], ['🗼', 'Tokyo_tower'], ['🗽', 'Statue_of_Liberty'], ['⛪', 'church'], ['🕌', 'mosque'],
-            ['🛕', 'hindu_temple'], ['🕍', 'synagogue'], ['⛩', 'shinto_shrine'], ['🕋', 'kaaba'], ['⛲', 'fountain'],
-            ['⛺', 'tent'], ['🌁', 'foggy'], ['🌃', 'night_with_stars'], ['🏙', 'cityscape'], ['🌄', 'sunrise_over_mountains'],
-            ['🌅', 'sunrise'], ['🌆', 'cityscape_at_dusk'], ['🌇', 'sunset'], ['🌉', 'bridge_at_night'], ['♨', 'hot_springs'],
-            ['🎠', 'carousel_horse'], ['🛝', 'playground_slide'], ['🎡', 'ferris_wheel'], ['🎢', 'roller_coaster'], ['💈', 'barber_pole'],
-            ['🎪', 'circus_tent'], ['🚂', 'locomotive'], ['🚃', 'railway_car'], ['🚄', 'high-speed_train'], ['🚅', 'bullet_train'],
-            ['🚆', 'train'], ['🚇', 'metro'], ['🚈', 'light_rail'], ['🚉', 'station'], ['🚊', 'tram'],
-            ['🚝', 'monorail'], ['🚞', 'mountain_railway'], ['🚋', 'tram_car'], ['🚌', 'bus'], ['🚍', 'oncoming_bus'],
-            ['🚎', 'trolleybus'], ['🚐', 'minibus'], ['🚑', 'ambulance'], ['🚒', 'fire_engine'], ['🚓', 'police_car'],
-            ['🚔', 'oncoming_police_car'], ['🚕', 'taxi'], ['🚖', 'oncoming_taxi'], ['🚗', 'automobile'], ['🚘', 'oncoming_automobile'],
-            ['🚙', 'sport_utility_vehicle'], ['🛻', 'pickup_truck'], ['🚚', 'delivery_truck'], ['🚛', 'articulated_lorry'], ['🚜', 'tractor'],
-            ['🏎', 'racing_car'], ['🏍', 'motorcycle'], ['🛵', 'motor_scooter'], ['🦽', 'manual_wheelchair'], ['🦼', 'motorized_wheelchair'],
-            ['🛺', 'auto_rickshaw'], ['🚲', 'bicycle'], ['🛴', 'kick_scooter'], ['🛹', 'skateboard'], ['🛼', 'roller_skate'],
-            ['🚏', 'bus_stop'], ['🛣', 'motorway'], ['🛤', 'railway_track'], ['🛢', 'oil_drum'], ['⛽', 'fuel_pump'],
-            ['🛞', 'wheel'], ['🚨', 'police_car_light'], ['🚥', 'horizontal_traffic_light'], ['🚦', 'vertical_traffic_light'], ['🛑', 'stop_sign'],
-            ['🚧', 'construction'], ['⚓', 'anchor'], ['🛟', 'ring_buoy'], ['⛵', 'sailboat'], ['🛶', 'canoe'],
-            ['🚤', 'speedboat'], ['🛳', 'passenger_ship'], ['⛴', 'ferry'], ['🛥', 'motor_boat'], ['🚢', 'ship'],
-            ['✈', 'airplane'], ['🛩', 'small_airplane'], ['🛫', 'airplane_departure'], ['🛬', 'airplane_arrival'], ['🪂', 'parachute'],
-            ['💺', 'seat'], ['🚁', 'helicopter'], ['🚟', 'suspension_railway'], ['🚠', 'mountain_cableway'], ['🚡', 'aerial_tramway'],
-            ['🛰', 'satellite'], ['🚀', 'rocket'], ['🛸', 'flying_saucer'], ['🛎', 'bellhop_bell'], ['🧳', 'luggage'],
-            ['⌛', 'hourglass_done'], ['⏳', 'hourglass_not_done'], ['⌚', 'watch'], ['⏰', 'alarm_clock'], ['⏱', 'stopwatch'],
-            ['⏲', 'timer_clock'], ['🕰', 'mantelpiece_clock'], ['🕛', 'twelve_o’clock'], ['🕧', 'twelve-thirty'], ['🕐', 'one_o’clock'],
-            ['🕜', 'one-thirty'], ['🕑', 'two_o’clock'], ['🕝', 'two-thirty'], ['🕒', 'three_o’clock'], ['🕞', 'three-thirty'],
-            ['🕓', 'four_o’clock'], ['🕟', 'four-thirty'], ['🕔', 'five_o’clock'], ['🕠', 'five-thirty'], ['🕕', 'six_o’clock'],
-            ['🕡', 'six-thirty'], ['🕖', 'seven_o’clock'], ['🕢', 'seven-thirty'], ['🕗', 'eight_o’clock'], ['🕣', 'eight-thirty'],
-            ['🕘', 'nine_o’clock'], ['🕤', 'nine-thirty'], ['🕙', 'ten_o’clock'], ['🕥', 'ten-thirty'], ['🕚', 'eleven_o’clock'],
-            ['🕦', 'eleven-thirty'], ['🌑', 'new_moon'], ['🌒', 'waxing_crescent_moon'], ['🌓', 'first_quarter_moon'], ['🌔', 'waxing_gibbous_moon'],
-            ['🌕', 'full_moon'], ['🌖', 'waning_gibbous_moon'], ['🌗', 'last_quarter_moon'], ['🌘', 'waning_crescent_moon'], ['🌙', 'crescent_moon'],
-            ['🌚', 'new_moon_face'], ['🌛', 'first_quarter_moon_face'], ['🌜', 'last_quarter_moon_face'], ['🌡', 'thermometer'], ['☀', 'sun'],
-            ['🌝', 'full_moon_face'], ['🌞', 'sun_with_face'], ['🪐', 'ringed_planet'], ['⭐', 'star'], ['🌟', 'glowing_star'],
-            ['🌠', 'shooting_star'], ['🌌', 'milky_way'], ['☁', 'cloud'], ['⛅', 'sun_behind_cloud'], ['⛈', 'cloud_with_lightning_and_rain'],
-            ['🌤', 'sun_behind_small_cloud'], ['🌥', 'sun_behind_large_cloud'], ['🌦', 'sun_behind_rain_cloud'], ['🌧', 'cloud_with_rain'], ['🌨', 'cloud_with_snow'],
-            ['🌩', 'cloud_with_lightning'], ['🌪', 'tornado'], ['🌫', 'fog'], ['🌬', 'wind_face'], ['🌀', 'cyclone'],
-            ['🌈', 'rainbow'], ['🌂', 'closed_umbrella'], ['☂', 'umbrella'], ['☔', 'umbrella_with_rain_drops'], ['⛱', 'umbrella_on_ground'],
-            ['⚡', 'high_voltage'], ['❄', 'snowflake'], ['☃', 'snowman'], ['⛄', 'snowman_without_snow'], ['☄', 'comet'],
-            ['🔥', 'fire'], ['💧', 'droplet'], ['🌊', 'water_wave'],
-            // Activities
-            ['🎃', 'jack-o-lantern'], ['🎄', 'Christmas_tree'], ['🎆', 'fireworks'], ['🎇', 'sparkler'], ['🧨', 'firecracker'],
-            ['✨', 'sparkles'], ['🎈', 'balloon'], ['🎉', 'party_popper'], ['🎊', 'confetti_ball'], ['🎋', 'tanabata_tree'],
-            ['🎍', 'pine_decoration'], ['🎎', 'Japanese_dolls'], ['🎏', 'carp_streamer'], ['🎐', 'wind_chime'], ['🎑', 'moon_viewing_ceremony'],
-            ['🧧', 'red_envelope'], ['🎀', 'ribbon'], ['🎁', 'wrapped_gift'], ['🎗', 'reminder_ribbon'], ['🎟', 'admission_tickets'],
-            ['🎫', 'ticket'], ['🎖', 'military_medal'], ['🏆', 'trophy'], ['🏅', 'sports_medal'], ['🥇', '1st_place_medal'],
-            ['🥈', '2nd_place_medal'], ['🥉', '3rd_place_medal'], ['⚽', 'soccer_ball'], ['⚾', 'baseball'], ['🥎', 'softball'],
-            ['🏀', 'basketball'], ['🏐', 'volleyball'], ['🏈', 'american_football'], ['🏉', 'rugby_football'], ['🎾', 'tennis'],
-            ['🥏', 'flying_disc'], ['🎳', 'bowling'], ['🏏', 'cricket_game'], ['🏑', 'field_hockey'], ['🏒', 'ice_hockey'],
-            ['🥍', 'lacrosse'], ['🏓', 'ping_pong'], ['🏸', 'badminton'], ['🥊', 'boxing_glove'], ['🥋', 'martial_arts_uniform'],
-            ['🥅', 'goal_net'], ['⛳', 'flag_in_hole'], ['⛸', 'ice_skate'], ['🎣', 'fishing_pole'], ['🤿', 'diving_mask'],
-            ['🎽', 'running_shirt'], ['🎿', 'skis'], ['🛷', 'sled'], ['🥌', 'curling_stone'], ['🎯', 'bullseye'],
-            ['🪀', 'yo-yo'], ['🪁', 'kite'], ['🔫', 'water_pistol'], ['🎱', 'pool_8_ball'], ['🔮', 'crystal_ball'],
-            ['🪄', 'magic_wand'], ['🎮', 'video_game'], ['🕹', 'joystick'], ['🎰', 'slot_machine'], ['🎲', 'game_die'],
-            ['🧩', 'puzzle_piece'], ['🧸', 'teddy_bear'], ['🪅', 'piñata'], ['🪩', 'mirror_ball'], ['🪆', 'nesting_dolls'],
-            ['♠', 'spade_suit'], ['♥', 'heart_suit'], ['♦', 'diamond_suit'], ['♣', 'club_suit'], ['♟', 'chess_pawn'],
-            ['🃏', 'joker'], ['🀄', 'mahjong_red_dragon'], ['🎴', 'flower_playing_cards'], ['🎭', 'performing_arts'], ['🖼', 'framed_picture'],
-            ['🎨', 'artist_palette'], ['🧵', 'thread'], ['🪡', 'sewing_needle'], ['🧶', 'yarn'], ['🪢', 'knot'],
-
-            // Objects
-            ['👓', 'glasses'], ['🕶', 'sunglasses'], ['🥽', 'goggles'], ['🥼', 'lab_coat'], ['🦺', 'safety_vest'],
-            ['👔', 'necktie'], ['👕', 't-shirt'], ['👖', 'jeans'], ['🧣', 'scarf'], ['🧤', 'gloves'],
-            ['🧥', 'coat'], ['🧦', 'socks'], ['👗', 'dress'], ['👘', 'kimono'], ['🥻', 'sari'],
-            ['🩱', 'one-piece_swimsuit'], ['🩲', 'briefs'], ['🩳', 'shorts'], ['👙', 'bikini'], ['👚', 'woman’s_clothes'],
-            ['🪭', 'folding_hand_fan'], ['👛', 'purse'], ['👜', 'handbag'], ['👝', 'clutch_bag'], ['🛍', 'shopping_bags'],
-            ['🎒', 'backpack'], ['🩴', 'thong_sandal'], ['👞', 'man’s_shoe'], ['👟', 'running_shoe'], ['🥾', 'hiking_boot'],
-            ['🥿', 'flat_shoe'], ['👠', 'high-heeled_shoe'], ['👡', 'woman’s_sandal'], ['🩰', 'ballet_shoes'], ['👢', 'woman’s_boot'],
-            ['🪮', 'hair_pick'], ['👑', 'crown'], ['👒', 'woman’s_hat'], ['🎩', 'top_hat'], ['🎓', 'graduation_cap'],
-            ['🧢', 'billed_cap'], ['🪖', 'military_helmet'], ['⛑', 'rescue_worker’s_helmet'], ['📿', 'prayer_beads'], ['💄', 'lipstick'],
-            ['💍', 'ring'], ['💎', 'gem_stone'], ['🔇', 'muted_speaker'], ['🔈', 'speaker_low_volume'], ['🔉', 'speaker_medium_volume'],
-            ['🔊', 'speaker_high_volume'], ['📢', 'loudspeaker'], ['📣', 'megaphone'], ['📯', 'postal_horn'], ['🔔', 'bell'],
-            ['🔕', 'bell_with_slash'], ['🎼', 'musical_score'], ['🎵', 'musical_note'], ['🎶', 'musical_notes'], ['🎙', 'studio_microphone'],
-            ['🎚', 'level_slider'], ['🎛', 'control_knobs'], ['🎤', 'microphone'], ['🎧', 'headphone'], ['📻', 'radio'],
-            ['🎷', 'saxophone'], ['🪗', 'accordion'], ['🎸', 'guitar'], ['🎹', 'musical_keyboard'], ['🎺', 'trumpet'],
-            ['🎻', 'violin'], ['🪕', 'banjo'], ['🥁', 'drum'], ['🪘', 'long_drum'], ['🪇', 'maracas'],
-            ['🪈', 'flute'], ['📱', 'mobile_phone'], ['📲', 'mobile_phone_with_arrow'], ['☎', 'telephone'], ['📞', 'telephone_receiver'],
-            ['📟', 'pager'], ['📠', 'fax_machine'], ['🔋', 'battery'], ['🪫', 'low_battery'], ['🔌', 'electric_plug'],
-            ['💻', 'laptop'], ['🖥', 'desktop_computer'], ['🖨', 'printer'], ['⌨', 'keyboard'], ['🖱', 'computer_mouse'],
-            ['🖲', 'trackball'], ['💽', 'computer_disk'], ['💾', 'floppy_disk'], ['💿', 'optical_disk'], ['📀', 'dvd'],
-            ['🧮', 'abacus'], ['🎥', 'movie_camera'], ['🎞', 'film_frames'], ['📽', 'film_projector'], ['🎬', 'clapper_board'],
-            ['📺', 'television'], ['📷', 'camera'], ['📸', 'camera_with_flash'], ['📹', 'video_camera'], ['📼', 'videocassette'],
-            ['🔍', 'magnifying_glass_tilted_left'], ['🔎', 'magnifying_glass_tilted_right'], ['🕯', 'candle'], ['💡', 'light_bulb'], ['🔦', 'flashlight'],
-            ['🏮', 'red_paper_lantern'], ['🪔', 'diya_lamp'], ['📔', 'notebook_with_decorative_cover'], ['📕', 'closed_book'], ['📖', 'open_book'],
-            ['📗', 'green_book'], ['📘', 'blue_book'], ['📙', 'orange_book'], ['📚', 'books'], ['📓', 'notebook'],
-            ['📒', 'ledger'], ['📃', 'page_with_curl'], ['📜', 'scroll'], ['📄', 'page_facing_up'], ['📰', 'newspaper'],
-            ['🗞', 'rolled-up_newspaper'], ['📑', 'bookmark_tabs'], ['🔖', 'bookmark'], ['🏷', 'label'], ['💰', 'money_bag'],
-            ['🪙', 'coin'], ['💴', 'yen_banknote'], ['💵', 'dollar_banknote'], ['💶', 'euro_banknote'], ['💷', 'pound_banknote'],
-            ['💸', 'money_with_wings'], ['💳', 'credit_card'], ['🧾', 'receipt'], ['💹', 'chart_increasing_with_yen'], ['✉', 'envelope'],
-            ['📧', 'e-mail'], ['📨', 'incoming_envelope'], ['📩', 'envelope_with_arrow'], ['📤', 'outbox_tray'], ['📥', 'inbox_tray'],
-            ['📦', 'package'], ['📫', 'closed_mailbox_with_raised_flag'], ['📪', 'closed_mailbox_with_lowered_flag'], ['📬', 'open_mailbox_with_raised_flag'], ['📭', 'open_mailbox_with_lowered_flag'],
-            ['📮', 'postbox'], ['🗳', 'ballot_box_with_ballot'], ['✏', 'pencil'], ['✒', 'black_nib'], ['🖋', 'fountain_pen'],
-            ['🖊', 'pen'], ['🖌', 'paintbrush'], ['🖍', 'crayon'], ['📝', 'memo'], ['💼', 'briefcase'],
-            ['📁', 'file_folder'], ['📂', 'open_file_folder'], ['🗂', 'card_index_dividers'], ['📅', 'calendar'], ['📆', 'tear-off_calendar'],
-            ['🗒', 'spiral_notepad'], ['🗓', 'spiral_calendar'], ['📇', 'card_index'], ['📈', 'chart_increasing'], ['📉', 'chart_decreasing'],
-            ['📊', 'bar_chart'], ['📋', 'clipboard'], ['📌', 'pushpin'], ['📍', 'round_pushpin'], ['📎', 'paperclip'],
-            ['🖇', 'linked_paperclips'], ['📏', 'straight_ruler'], ['📐', 'triangular_ruler'], ['✂', 'scissors'], ['🗃', 'card_file_box'],
-            ['🗄', 'file_cabinet'], ['🗑', 'wastebasket'], ['🔒', 'locked'], ['🔓', 'unlocked'], ['🔏', 'locked_with_pen'],
-            ['🔐', 'locked_with_key'], ['🔑', 'key'], ['🗝', 'old_key'], ['🔨', 'hammer'], ['🪓', 'axe'],
-            ['⛏', 'pick'], ['⚒', 'hammer_and_pick'], ['🛠', 'hammer_and_wrench'], ['🗡', 'dagger'], ['⚔', 'crossed_swords'],
-            ['💣', 'bomb'], ['🪃', 'boomerang'], ['🏹', 'bow_and_arrow'], ['🛡', 'shield'], ['🪚', 'carpentry_saw'],
-            ['🔧', 'wrench'], ['🪛', 'screwdriver'], ['🔩', 'nut_and_bolt'], ['⚙', 'gear'], ['🗜', 'clamp'],
-            ['⚖', 'balance_scale'], ['🦯', 'white_cane'], ['🔗', 'link'], ['⛓', 'chains'], ['🪝', 'hook'],
-            ['🧰', 'toolbox'], ['🧲', 'magnet'], ['🪜', 'ladder'], ['⚗', 'alembic'], ['🧪', 'test_tube'],
-            ['🧫', 'petri_dish'], ['🧬', 'dna'], ['🔬', 'microscope'], ['🔭', 'telescope'], ['📡', 'satellite_antenna'],
-            ['💉', 'syringe'], ['🩸', 'drop_of_blood'], ['💊', 'pill'], ['🩹', 'adhesive_bandage'], ['🩼', 'crutch'],
-            ['🩺', 'stethoscope'], ['🩻', 'x-ray'], ['🚪', 'door'], ['🛗', 'elevator'], ['🪞', 'mirror'],
-            ['🪟', 'window'], ['🛏', 'bed'], ['🛋', 'couch_and_lamp'], ['🪑', 'chair'], ['🚽', 'toilet'],
-            ['🪠', 'plunger'], ['🚿', 'shower'], ['🛁', 'bathtub'], ['🪤', 'mouse_trap'], ['🪒', 'razor'],
-            ['🧴', 'lotion_bottle'], ['🧷', 'safety_pin'], ['🧹', 'broom'], ['🧺', 'basket'], ['🧻', 'roll_of_paper'],
-            ['🪣', 'bucket'], ['🧼', 'soap'], ['🫧', 'bubbles'], ['🪥', 'toothbrush'], ['🧽', 'sponge'],
-            ['🧯', 'fire_extinguisher'], ['🛒', 'shopping_cart'], ['🚬', 'cigarette'], ['⚰', 'coffin'], ['🪦', 'headstone'],
-            ['⚱', 'funeral_urn'], ['🧿', 'nazar_amulet'], ['🪬', 'hamsa'], ['🗿', 'moai'], ['🪧', 'placard'],
-            ['🪪', 'identification_card'],
-            // Symbols
-            ['🏧', 'ATM_sign'], ['🚮', 'litter_in_bin_sign'], ['🚰', 'potable_water'], ['♿', 'wheelchair_symbol'], ['🚹', 'men’s_room'],
-            ['🚺', 'women’s_room'], ['🚻', 'restroom'], ['🚼', 'baby_symbol'], ['🚾', 'water_closet'], ['🛂', 'passport_control'],
-            ['🛃', 'customs'], ['🛄', 'baggage_claim'], ['🛅', 'left_luggage'], ['⚠', 'warning'], ['🚸', 'children_crossing'],
-            ['⛔', 'no_entry'], ['🚫', 'prohibited'], ['🚳', 'no_bicycles'], ['🚭', 'no_smoking'], ['🚯', 'no_littering'],
-            ['🚱', 'non-potable_water'], ['🚷', 'no_pedestrians'], ['📵', 'no_mobile_phones'], ['🔞', 'no_one_under_eighteen'], ['☢', 'radioactive'],
-            ['☣', 'biohazard'], ['⬆', 'up_arrow'], ['↗', 'up-right_arrow'], ['➡', 'right_arrow'], ['↘', 'down-right_arrow'],
-            ['⬇', 'down_arrow'], ['↙', 'down-left_arrow'], ['⬅', 'left_arrow'], ['↖', 'up-left_arrow'], ['↕', 'up-down_arrow'],
-            ['↔', 'left-right_arrow'], ['↩', 'right_arrow_curving_left'], ['↪', 'left_arrow_curving_right'], ['⤴', 'right_arrow_curving_up'], ['⤵', 'right_arrow_curving_down'],
-            ['🔃', 'clockwise_vertical_arrows'], ['🔄', 'counterclockwise_arrows_button'], ['🔙', 'BACK_arrow'], ['🔚', 'END_arrow'], ['🔛', 'ON!_arrow'],
-            ['🔜', 'SOON_arrow'], ['🔝', 'TOP_arrow'], ['🛐', 'place_of_worship'], ['⚛', 'atom_symbol'], ['🕉', 'om'],
-            ['✡', 'star_of_David'], ['☸', 'wheel_of_dharma'], ['☯', 'yin_yang'], ['✝', 'latin_cross'], ['☦', 'orthodox_cross'],
-            ['☪', 'star_and_crescent'], ['☮', 'peace_symbol'], ['🕎', 'menorah'], ['🔯', 'dotted_six-pointed_star'], ['🪯', 'khanda'],
-            ['♈', 'Aries'], ['♉', 'Taurus'], ['♊', 'Gemini'], ['♋', 'Cancer'], ['♌', 'Leo'],
-            ['♍', 'Virgo'], ['♎', 'Libra'], ['♏', 'Scorpio'], ['♐', 'Sagittarius'], ['♑', 'Capricorn'],
-            ['♒', 'Aquarius'], ['♓', 'Pisces'], ['⛎', 'Ophiuchus'], ['🔀', 'shuffle_tracks_button'], ['🔁', 'repeat_button'],
-            ['🔂', 'repeat_single_button'], ['▶', 'play_button'], ['⏩', 'fast-forward_button'], ['⏭', 'next_track_button'], ['⏯', 'play_or_pause_button'],
-            ['◀', 'reverse_button'], ['⏪', 'fast_reverse_button'], ['⏮', 'last_track_button'], ['🔼', 'upwards_button'], ['⏫', 'fast_up_button'],
-            ['🔽', 'downwards_button'], ['⏬', 'fast_down_button'], ['⏸', 'pause_button'], ['⏹', 'stop_button'], ['⏺', 'record_button'],
-            ['⏏', 'eject_button'], ['🎦', 'cinema'], ['🔅', 'dim_button'], ['🔆', 'bright_button'], ['📶', 'antenna_bars'],
-            ['🛜', 'wireless'], ['📳', 'vibration_mode'], ['📴', 'mobile_phone_off'], ['♀', 'female_sign'], ['♂', 'male_sign'],
-            ['⚧', 'transgender_symbol'], ['✖', 'multiply'], ['➕', 'plus'], ['➖', 'minus'], ['➗', 'divide'],
-            ['🟰', 'heavy_equals_sign'], ['♾', 'infinity'], ['‼', 'double_exclamation_mark'], ['⁉', 'exclamation_question_mark'], ['❓', 'red_question_mark'],
-            ['❔', 'white_question_mark'], ['❕', 'white_exclamation_mark'], ['❗', 'red_exclamation_mark'], ['〰', 'wavy_dash'], ['💱', 'currency_exchange'],
-            ['💲', 'heavy_dollar_sign'], ['⚕', 'medical_symbol'], ['♻', 'recycling_symbol'], ['⚜', 'fleur-de-lis'], ['🔱', 'trident_emblem'],
-            ['📛', 'name_badge'], ['🔰', 'Japanese_symbol_for_beginner'], ['⭕', 'hollow_red_circle'], ['✅', 'check_mark_button'], ['☑', 'check_box_with_check'],
-            ['✔', 'check_mark'], ['❌', 'cross_mark'], ['❎', 'cross_mark_button'], ['➰', 'curly_loop'], ['➿', 'double_curly_loop'],
-            ['〽', 'part_alternation_mark'], ['✳', 'eight-spoked_asterisk'], ['✴', 'eight-pointed_star'], ['❇', 'sparkle'], ['©', 'copyright'],
-            ['®', 'registered'], ['™', 'trade_mark'], ['🔟', 'keycap_10'], ['🔠', 'input_latin_uppercase'], ['🔡', 'input_latin_lowercase'],
-            ['🔢', 'input_numbers'], ['🔣', 'input_symbols'], ['🔤', 'input_latin_letters'], ['🅰', 'A_button_(blood_type)'], ['🆎', 'AB_button_(blood_type)'],
-            ['🅱', 'B_button_(blood_type)'], ['🆑', 'CL_button'], ['🆒', 'COOL_button'], ['🆓', 'FREE_button'], ['ℹ', 'information'],
-            ['🆔', 'ID_button'], ['Ⓜ', 'circled_M'], ['🆕', 'NEW_button'], ['🆖', 'NG_button'], ['🅾', 'O_button_(blood_type)'],
-            ['🆗', 'OK_button'], ['🅿', 'P_button'], ['🆘', 'SOS_button'], ['🆙', 'UP!_button'], ['🆚', 'VS_button'],
-            ['🈁', 'Japanese_“here”_button'], ['🈂', 'Japanese_“service_charge”_button'], ['🈷', 'Japanese_“monthly_amount”_button'], ['🈶', 'Japanese_“not_free_of_charge”_button'], ['🈯', 'Japanese_“reserved”_button'],
-            ['🉐', 'Japanese_“bargain”_button'], ['🈹', 'Japanese_“discount”_button'], ['🈚', 'Japanese_“free_of_charge”_button'], ['🈲', 'Japanese_“prohibited”_button'], ['🉑', 'Japanese_“acceptable”_button'],
-            ['🈸', 'Japanese_“application”_button'], ['🈴', 'Japanese_“passing_grade”_button'], ['🈳', 'Japanese_“vacancy”_button'], ['㊗', 'Japanese_“congratulations”_button'], ['㊙', 'Japanese_“secret”_button'],
-            ['🈺', 'Japanese_“open_for_business”_button'], ['🈵', 'Japanese_“no_vacancy”_button'], ['🔴', 'red_circle'], ['🟠', 'orange_circle'], ['🟡', 'yellow_circle'],
-            ['🟢', 'green_circle'], ['🔵', 'blue_circle'], ['🟣', 'purple_circle'], ['🟤', 'brown_circle'], ['⚫', 'black_circle'],
-            ['⚪', 'white_circle'], ['🟥', 'red_square'], ['🟧', 'orange_square'], ['🟨', 'yellow_square'], ['🟩', 'green_square'],
-            ['🟦', 'blue_square'], ['🟪', 'purple_square'], ['🟫', 'brown_square'], ['⬛', 'black_large_square'], ['⬜', 'white_large_square'],
-            ['◼', 'black_medium_square'], ['◻', 'white_medium_square'], ['◾', 'black_medium-small_square'], ['◽', 'white_medium-small_square'], ['▪', 'black_small_square'],
-            ['▫', 'white_small_square'], ['🔶', 'large_orange_diamond'], ['🔷', 'large_blue_diamond'], ['🔸', 'small_orange_diamond'], ['🔹', 'small_blue_diamond'],
-            ['🔺', 'red_triangle_pointed_up'], ['🔻', 'red_triangle_pointed_down'], ['💠', 'diamond_with_a_dot'], ['🔘', 'radio_button'], ['🔳', 'white_square_button'],
-            ['🔲', 'black_square_button'],
-            // Flags
-            ['🏁', 'chequered_flag'], ['🚩', 'triangular_flag'], ['🎌', 'crossed_flags'], ['🏴', 'black_flag'], ['🏳', 'white_flag'],
-
-            // manually added due to OverflowError: Python int too large to convert to C int
-            ['0️⃣', 'zero'], ['1️⃣', 'one'], ['2️⃣', 'two'], ['3️⃣', 'three'], ['4️⃣', 'four'],
-            ['5️⃣', 'five'], ['6️⃣', 'six'], ['7️⃣', 'seven'], ['8️⃣', 'eight'], ['9️⃣', 'nine'],
-            ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'], ['🇲🇾', 'malaysia'],
-            ['🌎', 'earth_americas'], ['🌍', 'earth_africa'], ['🌏', 'earth_asia'],
-
-        ]
-    );
-
-    const chinese_text_emoji_map = new Map(
-        [
-            ['[破涕为笑]', 'Lol_cn'], ['[破涕為笑]', 'Lol_trcn'], ['[裂开]', 'ChappedFace_cn'], ['[庆祝]', 'Celebrating_cn'], ['[囧]', 'Jiong_cn'],
-            ['[笑脸]', 'Smile_cn'], ['[生病]', 'Sick_cn'], ['[脸红]', 'Shy_cn'], ['[恐惧]', 'Panic_cn'], ['[失望]', 'Dispointed_cn'],
-            ['[无语]', 'Speechless_cn'], ['[吃瓜]', 'EatingWatermelon_cn'], ['[加油]', 'WorkHard_cn'], ['[汗]', 'Speechless_cn'], ['[天啊]', 'OMG_cn'],
-            ['[Emm]', 'Emm'], ['[社会社会]', 'SocialSocial_cn'], ['[旺柴]', 'Doge_cn'], ['[好的]', 'OK_cn'], ['[打脸]', 'SlapOnFace_cn'],
-            ['[哇]', 'Wow_cn'], ['[翻白眼]', 'RollingEyes_cn'], ['[666]', '666'], ['[让我看看]', 'LetMeSee_cn'], ['[讓我看看]', 'LetMeSee_trcn'], ['[叹气]', 'Sigh_cn'],
-            ['[苦涩]', 'Bitter_cn'], ['[合十]', 'Namaste_cn'], ['[發]', 'FaCai_cn'], ['[福]', 'Lucky_cn'], ['[烟花]', 'Fireworks_cn'],
-            ['[爆竹]', 'Firecracker_cn']
-        ]
-    );
 
     var css = `
         /* Common elements */
@@ -1603,41 +1186,6 @@
         return node.getElementsByClassName(className).length == 0;
     }
 
-    function getEmojiText(key) {
-        if (key.startsWith('qqemoji')) {
-            return qqface_names_map.get(key);
-        } else if (key.startsWith('emoji')) {
-            return emoji_names_map.get(key);
-        }
-        return unicode_emoji_map.get(key);
-    }
-
-    function maskUnicodeEmojis(text, mode = 'replace') {
-        if (mode == 'replace') {
-            for (let [key, value] of unicode_emoji_map) {
-                text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
-            }
-        } else if (mode == 'remove') {
-            for (let [key, value] of unicode_emoji_map) {
-                text = text.replaceAll(key, '');
-            }
-            for (let [key, value] of chinese_text_emoji_map) {
-                text = text.replaceAll(key, '');
-            }
-            if (!text) {
-                text = maskUnicodeEmojis(text, 'replace');
-            }
-        }
-        return text;
-    }
-
-    function maskTextEmojis(text) {
-        for (let [key, value] of chinese_text_emoji_map) {
-            text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
-        }
-        return text;
-    }
-
     function translateIntoEnglish(text) {
         var parts = text.split('\"');
         if (text.includes('邀请') && text.endsWith('加入了群聊')) {
@@ -2123,6 +1671,436 @@
     function showReplyPanel() {
         var replyPanel = document.getElementsByClassName('box_ft ng-scope ng-hide')[0];
         replyPanel.classList.remove('ng-hide');
+    }
+
+    const chinese_text_emoji_map = new Map(
+        [
+            ['[破涕为笑]', 'Lol_cn'], ['[破涕為笑]', 'Lol_trcn'], ['[裂开]', 'ChappedFace_cn'], ['[庆祝]', 'Celebrating_cn'], ['[囧]', 'Jiong_cn'],
+            ['[笑脸]', 'Smile_cn'], ['[生病]', 'Sick_cn'], ['[脸红]', 'Shy_cn'], ['[恐惧]', 'Panic_cn'], ['[失望]', 'Dispointed_cn'],
+            ['[无语]', 'Speechless_cn'], ['[吃瓜]', 'EatingWatermelon_cn'], ['[加油]', 'WorkHard_cn'], ['[汗]', 'Speechless_cn'], ['[天啊]', 'OMG_cn'],
+            ['[Emm]', 'Emm'], ['[社会社会]', 'SocialSocial_cn'], ['[旺柴]', 'Doge_cn'], ['[好的]', 'OK_cn'], ['[打脸]', 'SlapOnFace_cn'],
+            ['[哇]', 'Wow_cn'], ['[翻白眼]', 'RollingEyes_cn'], ['[666]', '666'], ['[让我看看]', 'LetMeSee_cn'], ['[讓我看看]', 'LetMeSee_trcn'], ['[叹气]', 'Sigh_cn'],
+            ['[苦涩]', 'Bitter_cn'], ['[合十]', 'Namaste_cn'], ['[發]', 'FaCai_cn'], ['[福]', 'Lucky_cn'], ['[烟花]', 'Fireworks_cn'],
+            ['[爆竹]', 'Firecracker_cn']
+        ]
+    );
+
+    function maskTextEmojis(text) {
+        for (let [key, value] of chinese_text_emoji_map) {
+            text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
+        }
+        return text;
+    }
+    
+    function getEmojiText(key) {
+        const qqface_names_map = new Map(
+            [
+                ['qqemoji0', 'Smile'], ['qqemoji1', 'Grimace'], ['qqemoji2', 'Drool'], ['qqemoji3', 'Scowl'], ['qqemoji4', 'CoolGuy'],
+                ['qqemoji5', 'Sob'], ['qqemoji6', 'Shy'], ['qqemoji7', 'Silent'], ['qqemoji8', 'Sleep'], ['qqemoji9', 'Cry'],
+                ['qqemoji10', 'Awkward'], ['qqemoji11', 'Angry'], ['qqemoji12', 'Tongue'], ['qqemoji13', 'Grin'], ['qqemoji14', 'Surprise'],
+                ['qqemoji15', 'Frown'], ['qqemoji16', 'Ruthless'], ['qqemoji17', 'Blush'], ['qqemoji18', 'Scream'], ['qqemoji19', 'Puke'],
+                ['qqemoji20', 'Chuckle'], ['qqemoji21', 'Joyful'], ['qqemoji22', 'Slight'], ['qqemoji23', 'Smug'], ['qqemoji24', 'Hungry'],
+                ['qqemoji25', 'Drowsy'], ['qqemoji26', 'Panic'], ['qqemoji27', 'Sweat'], ['qqemoji28', 'Laugh'], ['qqemoji29', 'Commando'],
+                ['qqemoji30', 'Determined'], ['qqemoji31', 'Scold'], ['qqemoji32', 'Shocked'], ['qqemoji33', 'Shhh'], ['qqemoji34', 'Dizzy'],
+                ['qqemoji35', 'Tormented'], ['qqemoji36', 'Toasted'], ['qqemoji37', 'Skull'], ['qqemoji38', 'Hammer'], ['qqemoji39', 'Wave'],
+                ['qqemoji40', 'Speechless_1'], ['qqemoji41', 'NosePick'], ['qqemoji42', 'Clap'], ['qqemoji43', 'Shame'], ['qqemoji44', 'Trick'],
+                ['qqemoji45', 'Bah！L'], ['qqemoji46', 'Bah！R'], ['qqemoji47', 'Yawn'], ['qqemoji48', 'Pooh-pooh'], ['qqemoji49', 'Shrunken'],
+                ['qqemoji50', 'TearingUp'], ['qqemoji51', 'Sly'], ['qqemoji52', 'Kiss'], ['qqemoji53', 'Wrath'], ['qqemoji54', 'Whimper'],
+                ['qqemoji55', 'Cleaver'], ['qqemoji56', 'Watermelon'], ['qqemoji57', 'Beer'], ['qqemoji58', 'Basketball'], ['qqemoji59', 'PingPong'],
+                ['qqemoji60', 'Coffee'], ['qqemoji61', 'Rice'], ['qqemoji62', 'Pig'], ['qqemoji63', 'Rose'], ['qqemoji64', 'Wilt'], ['qqemoji65', 'Lips'],
+                ['qqemoji66', 'Heart'], ['qqemoji67', 'BrokenHeart'], ['qqemoji68', 'Cake'], ['qqemoji69', 'Lightning'], ['qqemoji70', 'Bomb'],
+                ['qqemoji71', 'Dagger'], ['qqemoji72', 'Soccer'], ['qqemoji73', 'Ladybug'], ['qqemoji74', 'Poop'], ['qqemoji75', 'Moon'],
+                ['qqemoji76', 'Sun'], ['qqemoji77', 'Gift'], ['qqemoji78', 'Hug'], ['qqemoji79', 'ThumbsUp'], ['qqemoji80', 'ThumbsDown'],
+                ['qqemoji81', 'Shake'], ['qqemoji82', 'Peace'], ['qqemoji83', 'Fight'], ['qqemoji84', 'Beckon'], ['qqemoji85', 'Fist'],
+                ['qqemoji86', 'Pinky'], ['qqemoji87', 'RockOn'], ['qqemoji88', 'Nuh-uh'], ['qqemoji89', 'OK'], ['qqemoji90', 'InLove'],
+                ['qqemoji91', 'Blowkiss'], ['qqemoji92', 'Waddle'], ['qqemoji93', 'Tremble'], ['qqemoji94', 'Aaagh!'], ['qqemoji95', 'Twirl'],
+                ['qqemoji96', 'Kotow'], ['qqemoji97', 'Dramatic'], ['qqemoji98', 'JumpRope'], ['qqemoji99', 'Surrender'], ['qqemoji100', 'Hooray'],
+                ['qqemoji101', 'Meditate'], ['qqemoji102', 'Smooch'], ['qqemoji103', 'TaiChi L'], ['qqemoji104', 'TaiChi R'],
+                // from emoji panel
+                ['qqemoji105', 'Hey'], ['qqemoji106', 'Facepalm'], ['qqemoji107', 'Smirk'], ['qqemoji108', 'Smart'], ['qqemoji109', 'Concerned'],
+                ['qqemoji110', 'Yeah!'], ['qqemoji112', 'Packet'], ['qqemoji111', 'Chicken']
+            ]
+        );
+
+        const emoji_names_map = new Map(
+            [
+                ['emoji1f604', 'Laugh'], ['emoji1f637', 'Sick'], ['emoji1f639', 'Lol_1'], ['emoji1f602', 'Lol_2'], ['emoji1f61d', 'Tongue'],
+                ['emoji1f633', 'Blush'], ['emoji1f631', 'Terror'], ['emoji1f64d', 'LetDown'], ['emoji1f612', 'Speechless_2'], ['emoji1f47b', 'Ghost'],
+                ['emoji1f4aa', 'Strong'], ['emoji1f389', 'Party'], ['emoji1f4e6', 'Gift'], ['emoji1f60a', 'Happy'], ['emoji1f63a', 'BigSmile'],
+                ['emoji263a', 'Glowing'], ['emoji1f609', 'Wink'], ['emoji1f63b', 'Drool'], ['emoji1f63d', 'Smooch'], ['emoji1f61a', 'Kiss'],
+                ['emoji1f63c', 'Grin'], ['emoji1f60c', 'Satisfied'], ['emoji1f61c', 'Tease'], ['emoji1f60f', 'CoolGuy'], ['emoji1f613', 'Sweat'],
+                ['emoji1f61e', 'Low'], ['emoji1f4ab', 'Ugh'], ['emoji1f625', 'Anxious'], ['emoji1f630', 'Worried'], ['emoji1f628', 'Shocked'],
+                ['emoji1f62b', 'D’oh!'], ['emoji1f63f', 'Tear'], ['emoji1f62d', 'Cry'], ['emoji1f632', 'Dizzy'], ['emoji1f620', 'Upset'],
+                ['emoji1f64e', 'Angry'], ['emoji1f62a', 'Zzz'], ['emoji1f47f', 'Demon'], ['emoji1f47d', 'Alien'], ['emoji2764', 'Heart'],
+                ['emoji1f494', 'BrokenHeart'], ['emoji1f498', 'Cupid'], ['emoji2747', 'Twinkle'], ['emoji1f31f', 'Star'], ['emoji2755', '!_1'],
+                ['emoji2757', '!_2'], ['emoji2754', '?'], ['emoji1f4a4', 'Asleep'], ['emoji1f4a7', 'Drops'], ['emoji1f3b5', 'Music'],
+                ['emoji1f525', 'Fire'], ['emoji1f4a9', 'Poop'], ['emoji1f44d', 'ThumbsUp'], ['emoji1f44e', 'ThumbsDown'], ['emoji1f44a', 'Fist'],
+                ['emoji270c', 'Peace'], ['emoji1f446', 'Up'], ['emoji1f447', 'Down'], ['emoji1f449', 'Right'], ['emoji1f448', 'Left'],
+                ['emoji261d', '#1'], ['emoji1f48f', 'Kissing'], ['emoji1f491', 'Couple'], ['emoji1f466', 'Boy'], ['emoji1f467', 'Girl'],
+                ['emoji1f469', 'Lady'], ['emoji1f468', 'Man'], ['emoji1f47c', 'Angel'], ['emoji1f480', 'Skull'], ['emoji1f48b', 'Lips'],
+                ['emoji2600', 'Sun'], ['emoji2614', 'Rain'], ['emoji2601', 'Cloud'], ['emoji26c4', 'Snowman'], ['emoji1f31b', 'Moon'],
+                ['emoji26a1', 'Lightning'], ['emoji1f30a', 'Waves'], ['emoji1f431', 'Cat'], ['emoji1f436', 'Doggy'], ['emoji1f42d', 'Mouse'],
+                ['emoji1f439', 'Hamster'], ['emoji1f430', 'Rabbit'], ['emoji1f43a', 'Dog'], ['emoji1f438', 'Frog'], ['emoji1f42f', 'Tiger'],
+                ['emoji1f428', 'Koala'], ['emoji1f43b', 'Bear'], ['emoji1f43d', 'Pig'], ['emoji1f42e', 'Cow'], ['emoji1f417', 'Boar'],
+                ['emoji1f435', 'Monkey'], ['emoji1f434', 'Horse'], ['emoji1f40d', 'Snake'], ['emoji1f426', 'Pigeon'], ['emoji1f414', 'Chicken'],
+                ['emoji1f427', 'Penguin'], ['emoji1f41b', 'Caterpillar'], ['emoji1f419', 'Octopus'], ['emoji1f420', 'Fish'], ['emoji1f433', 'Whale'],
+                ['emoji1f42c', 'Dolphin'], ['emoji1f339', 'Rose'], ['emoji1f33a', 'Flower'], ['emoji1f334', 'Palm'], ['emoji1f335', 'Cactus'],
+                ['emoji1f49d', 'CandyBox'], ['emoji1f383', 'Jack-o-lantern'], ['emoji1f385', 'Santa'], ['emoji1f384', 'XmasTree'], ['emoji1f514', 'Bell'],
+                ['emoji1f388', 'Balloon'], ['emoji1f4bf', 'CD'], ['emoji1f4f7', 'Camera'], ['emoji1f4f9', 'FilmCamera'], ['emoji1f4bb', 'Computer'],
+                ['emoji1f4fa', 'TV'], ['emoji1f4de', 'Phone'], ['emoji1f513', 'Unlocked'], ['emoji1f510', 'Locked'], ['emoji1f511', 'Key'],
+                ['emoji1f528', 'Judgement'], ['emoji1f4a1', 'LightBulb'], ['emoji1f4eb', 'Mail'], ['emoji1f6c0', 'Wash'], ['emoji1f4b5', 'Money'],
+                ['emoji1f4a3', 'Bomb'], ['emoji1f52b', 'Pistol'], ['emoji1f48a', 'Pill'], ['emoji1f3c8', 'Football'], ['emoji1f3c0', 'Basketball'],
+                ['emoji26bd', 'Soccer'], ['emoji26be', 'Baseball'], ['emoji26f3', 'Golf'], ['emoji1f3c6', 'Trophy'], ['emoji1f47e', 'Invader'],
+                ['emoji1f3a4', 'Singing'], ['emoji1f3b8', 'Guitar'], ['emoji1f459', 'Bikini'], ['emoji1f451', 'Crown'], ['emoji1f302', 'Umbrella'],
+                ['emoji1f45c', 'Purse'], ['emoji1f484', 'Lipstick'], ['emoji1f48d', 'Ring'], ['emoji1f48e', 'Gem'], ['emoji2615', 'Coffee'],
+                ['emoji1f37a', 'Beer'], ['emoji1f37b', 'Toast'], ['emoji1f379', 'Martini'], ['emoji1f354', 'Burger'], ['emoji1f35f', 'Fries'],
+                ['emoji1f35d', 'Sphaghetti'], ['emoji1f363', 'Sushi'], ['emoji1f35c', 'Noodles'], ['emoji1f373', 'Eggs'], ['emoji1f366', 'IceCream'],
+                ['emoji1f382', 'Cake'], ['emoji1f34f', 'Apple'], ['emoji2708', 'Plane'], ['emoji1f680', 'RocketShip'], ['emoji1f6b2', 'Bike'],
+                ['emoji1f684', 'BulletTrain'], ['emoji26a0', 'Warning'], ['emoji1f3c1', 'Flag'], ['emoji1f6b9', 'Men'], ['emoji1f6ba', 'Women'],
+                ['emoji2b55', 'O'], ['emoji2716', 'X_1'], ['emoji274c', 'X_2'], ['emojia9', 'Copyright'], ['emojiae', 'RegisteredTM'], ['emoji2122', 'Trademark'],
+                // extra (not in qq face or emoji panel, maybe from Apple?)
+                ['emoji1f1e81f1f3', 'China'], ['emoji1f1fa1f1f8', 'America'], ['emoji1f1ec1f1e7', 'Canada'], ['emoji1f3ac', 'Film'], ['emoji1f3c4', 'Surfing'],
+                ['emoji1f33f', 'FourLeafClover_1'], ['emoji1f340', 'FourLeafClover_2'], ['emoji1f483', 'Dancer'], ['emoji1f49c', 'PurpleHeart'], ['emoji1f49e', 'SparklingHeart'],
+                ['emoji1f490', 'Bouquet'], ['emoji1f4e7', 'LoveLetter_1'], ['emoji1f48c', 'LoveLetter_2'], ['emoji1f4d2', 'TextBook'], ['emoji2733', 'EightSpokedAsterisk'],
+                ['emoji1f6a8', 'RotatingLight'], ['emoji1f338', 'PinkFlower'], ['emoji1f33c', 'YellowFlower'], ['emoji1f496', 'PinkSparklingHeart'], ['emoji1f17e', 'RedSquareO'],
+                ['emoji1f23a', 'BusinessOpen'], ['emoji1f308', 'Rainbow'], ['emoji1f4f1', 'MobilePhone'], ['emoji1f3a3', 'BlueFish'], ['emoji1f3e1', 'House'],
+                ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
+                ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall'],
+                ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands'], ['emoji1f392', 'Bag'],
+                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1']
+            ]
+        );
+
+        if (key.startsWith('qqemoji')) {
+            return qqface_names_map.get(key);
+        } else if (key.startsWith('emoji')) {
+            return emoji_names_map.get(key);
+        }
+        return undefined;
+    }
+
+    function maskUnicodeEmojis(text, mode = 'replace') {
+        //https://github.com/ikatyang/emoji-cheat-sheet
+        const unicode_emoji_map = new Map(
+            [
+                // generated by emoji_mapping_generator.py
+                // Smileys & Emotion
+                ['😀', 'grinning_face'], ['😃', 'grinning_face_with_big_eyes'], ['😄', 'grinning_face_with_smiling_eyes'], ['😁', 'beaming_face_with_smiling_eyes'], ['😆', 'grinning_squinting_face'],
+                ['😅', 'grinning_face_with_sweat'], ['🤣', 'rolling_on_the_floor_laughing'], ['😂', 'face_with_tears_of_joy'], ['🙂', 'slightly_smiling_face'], ['🙃', 'upside-down_face'],
+                ['🫠', 'melting_face'], ['😉', 'winking_face'], ['😊', 'smiling_face_with_smiling_eyes'], ['😇', 'smiling_face_with_halo'], ['🥰', 'smiling_face_with_hearts'],
+                ['😍', 'smiling_face_with_heart-eyes'], ['🤩', 'star-struck'], ['😘', 'face_blowing_a_kiss'], ['😗', 'kissing_face'], ['☺', 'smiling_face'],
+                ['😚', 'kissing_face_with_closed_eyes'], ['😙', 'kissing_face_with_smiling_eyes'], ['🥲', 'smiling_face_with_tear'], ['😋', 'face_savoring_food'], ['😛', 'face_with_tongue'],
+                ['😜', 'winking_face_with_tongue'], ['🤪', 'zany_face'], ['😝', 'squinting_face_with_tongue'], ['🤑', 'money-mouth_face'], ['🤗', 'smiling_face_with_open_hands'],
+                ['🤭', 'face_with_hand_over_mouth'], ['🫢', 'face_with_open_eyes_and_hand_over_mouth'], ['🫣', 'face_with_peeking_eye'], ['🤫', 'shushing_face'], ['🤔', 'thinking_face'],
+                ['🫡', 'saluting_face'], ['🤐', 'zipper-mouth_face'], ['🤨', 'face_with_raised_eyebrow'], ['😐', 'neutral_face'], ['😑', 'expressionless_face'],
+                ['😶', 'face_without_mouth'], ['🫥', 'dotted_line_face'], ['😏', 'smirking_face'], ['😒', 'unamused_face'], ['🙄', 'face_with_rolling_eyes'],
+                ['😬', 'grimacing_face'], ['🤥', 'lying_face'], ['🫨', 'shaking_face'], ['😌', 'relieved_face'], ['😔', 'pensive_face'],
+                ['😪', 'sleepy_face'], ['🤤', 'drooling_face'], ['😴', 'sleeping_face'], ['😷', 'face_with_medical_mask'], ['🤒', 'face_with_thermometer'],
+                ['🤕', 'face_with_head-bandage'], ['🤢', 'nauseated_face'], ['🤮', 'face_vomiting'], ['🤧', 'sneezing_face'], ['🥵', 'hot_face'],
+                ['🥶', 'cold_face'], ['🥴', 'woozy_face'], ['😵', 'face_with_crossed-out_eyes'], ['🤯', 'exploding_head'], ['🤠', 'cowboy_hat_face'],
+                ['🥳', 'partying_face'], ['🥸', 'disguised_face'], ['😎', 'smiling_face_with_sunglasses'], ['🤓', 'nerd_face'], ['🧐', 'face_with_monocle'],
+                ['😕', 'confused_face'], ['🫤', 'face_with_diagonal_mouth'], ['😟', 'worried_face'], ['🙁', 'slightly_frowning_face'], ['☹', 'frowning_face'],
+                ['😮', 'face_with_open_mouth'], ['😯', 'hushed_face'], ['😲', 'astonished_face'], ['😳', 'flushed_face'], ['🥺', 'pleading_face'],
+                ['🥹', 'face_holding_back_tears'], ['😦', 'frowning_face_with_open_mouth'], ['😧', 'anguished_face'], ['😨', 'fearful_face'], ['😰', 'anxious_face_with_sweat'],
+                ['😥', 'sad_but_relieved_face'], ['😢', 'crying_face'], ['😭', 'loudly_crying_face'], ['😱', 'face_screaming_in_fear'], ['😖', 'confounded_face'],
+                ['😣', 'persevering_face'], ['😞', 'disappointed_face'], ['😓', 'downcast_face_with_sweat'], ['😩', 'weary_face'], ['😫', 'tired_face'],
+                ['🥱', 'yawning_face'], ['😤', 'face_with_steam_from_nose'], ['😡', 'enraged_face'], ['😠', 'angry_face'], ['🤬', 'face_with_symbols_on_mouth'],
+                ['😈', 'smiling_face_with_horns'], ['👿', 'angry_face_with_horns'], ['💀', 'skull'], ['☠', 'skull_and_crossbones'], ['💩', 'pile_of_poo'],
+                ['🤡', 'clown_face'], ['👹', 'ogre'], ['👺', 'goblin'], ['👻', 'ghost'], ['👽', 'alien'],
+                ['👾', 'alien_monster'], ['🤖', 'robot'], ['😺', 'grinning_cat'], ['😸', 'grinning_cat_with_smiling_eyes'], ['😹', 'cat_with_tears_of_joy'],
+                ['😻', 'smiling_cat_with_heart-eyes'], ['😼', 'cat_with_wry_smile'], ['😽', 'kissing_cat'], ['🙀', 'weary_cat'], ['😿', 'crying_cat'],
+                ['😾', 'pouting_cat'], ['🙈', 'see-no-evil_monkey'], ['🙉', 'hear-no-evil_monkey'], ['🙊', 'speak-no-evil_monkey'], ['💌', 'love_letter'],
+                ['💘', 'heart_with_arrow'], ['💝', 'heart_with_ribbon'], ['💖', 'sparkling_heart'], ['💗', 'growing_heart'], ['💓', 'beating_heart'],
+                ['💞', 'revolving_hearts'], ['💕', 'two_hearts'], ['💟', 'heart_decoration'], ['❣', 'heart_exclamation'], ['💔', 'broken_heart'],
+                ['❤', 'red_heart'], ['🩷', 'pink_heart'], ['🧡', 'orange_heart'], ['💛', 'yellow_heart'], ['💚', 'green_heart'],
+                ['💙', 'blue_heart'], ['🩵', 'light_blue_heart'], ['💜', 'purple_heart'], ['🤎', 'brown_heart'], ['🖤', 'black_heart'],
+                ['🩶', 'grey_heart'], ['🤍', 'white_heart'], ['💋', 'kiss_mark'], ['💯', 'hundred_points'], ['💢', 'anger_symbol'],
+                ['💥', 'collision'], ['💫', 'dizzy'], ['💦', 'sweat_droplets'], ['💨', 'dashing_away'], ['🕳', 'hole'],
+                ['💬', 'speech_balloon'], ['🗨', 'left_speech_bubble'], ['🗯', 'right_anger_bubble'], ['💭', 'thought_balloon'], ['💤', 'ZZZ'],
+
+                // People & Body
+                ['👋', 'waving_hand'], ['🤚', 'raised_back_of_hand'], ['🖐', 'hand_with_fingers_splayed'], ['✋', 'raised_hand'], ['🖖', 'vulcan_salute'],
+                ['🫱', 'rightwards_hand'], ['🫲', 'leftwards_hand'], ['🫳', 'palm_down_hand'], ['🫴', 'palm_up_hand'], ['🫷', 'leftwards_pushing_hand'],
+                ['🫸', 'rightwards_pushing_hand'], ['👌', 'OK_hand'], ['🤌', 'pinched_fingers'], ['🤏', 'pinching_hand'], ['✌', 'victory_hand'],
+                ['🤞', 'crossed_fingers'], ['🫰', 'hand_with_index_finger_and_thumb_crossed'], ['🤟', 'love-you_gesture'], ['🤘', 'sign_of_the_horns'], ['🤙', 'call_me_hand'],
+                ['👈', 'backhand_index_pointing_left'], ['👉', 'backhand_index_pointing_right'], ['👆', 'backhand_index_pointing_up'], ['🖕', 'middle_finger'], ['👇', 'backhand_index_pointing_down'],
+                ['☝', 'index_pointing_up'], ['🫵', 'index_pointing_at_the_viewer'], ['👍', 'thumbs_up'], ['👎', 'thumbs_down'], ['✊', 'raised_fist'],
+                ['👊', 'oncoming_fist'], ['🤛', 'left-facing_fist'], ['🤜', 'right-facing_fist'], ['👏', 'clapping_hands'], ['🙌', 'raising_hands'],
+                ['🫶', 'heart_hands'], ['👐', 'open_hands'], ['🤲', 'palms_up_together'], ['🤝', 'handshake'], ['🙏', 'folded_hands'],
+                ['✍', 'writing_hand'], ['💅', 'nail_polish'], ['🤳', 'selfie'], ['💪', 'flexed_biceps'], ['🦾', 'mechanical_arm'],
+                ['🦿', 'mechanical_leg'], ['🦵', 'leg'], ['🦶', 'foot'], ['👂', 'ear'], ['🦻', 'ear_with_hearing_aid'],
+                ['👃', 'nose'], ['🧠', 'brain'], ['🫀', 'anatomical_heart'], ['🫁', 'lungs'], ['🦷', 'tooth'],
+                ['🦴', 'bone'], ['👀', 'eyes'], ['👁', 'eye'], ['👅', 'tongue'], ['👄', 'mouth'],
+                ['🫦', 'biting_lip'], ['👶', 'baby'], ['🧒', 'child'], ['👦', 'boy'], ['👧', 'girl'],
+                ['🧑', 'person'], ['👱', 'person_blond_hair'], ['👨', 'man'], ['🧔', 'person_beard'], ['👩', 'woman'],
+                ['🧓', 'older_person'], ['👴', 'old_man'], ['👵', 'old_woman'], ['🙍', 'person_frowning'], ['🙎', 'person_pouting'],
+                ['🙅', 'person_gesturing_NO'], ['🙆', 'person_gesturing_OK'], ['💁', 'person_tipping_hand'], ['🙋', 'person_raising_hand'], ['🧏', 'deaf_person'],
+                ['🙇', 'person_bowing'], ['🤦', 'person_facepalming'], ['🤷', 'person_shrugging'], ['👮', 'police_officer'], ['🕵', 'detective'],
+                ['💂', 'guard'], ['🥷', 'ninja'], ['👷', 'construction_worker'], ['🫅', 'person_with_crown'], ['🤴', 'prince'],
+                ['👸', 'princess'], ['👳', 'person_wearing_turban'], ['👲', 'person_with_skullcap'], ['🧕', 'woman_with_headscarf'], ['🤵', 'person_in_tuxedo'],
+                ['👰', 'person_with_veil'], ['🤰', 'pregnant_woman'], ['🫃', 'pregnant_man'], ['🫄', 'pregnant_person'], ['🤱', 'breast-feeding'],
+                ['👼', 'baby_angel'], ['🎅', 'Santa_Claus'], ['🤶', 'Mrs._Claus'], ['🦸', 'superhero'], ['🦹', 'supervillain'],
+                ['🧙', 'mage'], ['🧚', 'fairy'], ['🧛', 'vampire'], ['🧜', 'merperson'], ['🧝', 'elf'],
+                ['🧞', 'genie'], ['🧟', 'zombie'], ['🧌', 'troll'], ['💆', 'person_getting_massage'], ['💇', 'person_getting_haircut'],
+                ['🚶', 'person_walking'], ['🧍', 'person_standing'], ['🧎', 'person_kneeling'], ['🏃', 'person_running'], ['💃', 'woman_dancing'],
+                ['🕺', 'man_dancing'], ['🕴', 'person_in_suit_levitating'], ['👯', 'people_with_bunny_ears'], ['🧖', 'person_in_steamy_room'], ['🧗', 'person_climbing'],
+                ['🤺', 'person_fencing'], ['🏇', 'horse_racing'], ['⛷', 'skier'], ['🏂', 'snowboarder'], ['🏌', 'person_golfing'],
+                ['🏄', 'person_surfing'], ['🚣', 'person_rowing_boat'], ['🏊', 'person_swimming'], ['⛹', 'person_bouncing_ball'], ['🏋', 'person_lifting_weights'],
+                ['🚴', 'person_biking'], ['🚵', 'person_mountain_biking'], ['🤸', 'person_cartwheeling'], ['🤼', 'people_wrestling'], ['🤽', 'person_playing_water_polo'],
+                ['🤾', 'person_playing_handball'], ['🤹', 'person_juggling'], ['🧘', 'person_in_lotus_position'], ['🛀', 'person_taking_bath'], ['🛌', 'person_in_bed'],
+                ['👭', 'women_holding_hands'], ['👫', 'woman_and_man_holding_hands'], ['👬', 'men_holding_hands'], ['💏', 'kiss'], ['💑', 'couple_with_heart'],
+                ['🗣', 'speaking_head'], ['👤', 'bust_in_silhouette'], ['👥', 'busts_in_silhouette'], ['🫂', 'people_hugging'], ['👪', 'family'],
+                ['👣', 'footprints'],
+                // Component
+                ['🦰', 'red_hair'], ['🦱', 'curly_hair'], ['🦳', 'white_hair'], ['🦲', 'bald'],
+                // Animals & Nature
+                ['🐵', 'monkey_face'], ['🐒', 'monkey'], ['🦍', 'gorilla'], ['🦧', 'orangutan'], ['🐶', 'dog_face'],
+                ['🐕', 'dog'], ['🦮', 'guide_dog'], ['🐩', 'poodle'], ['🐺', 'wolf'], ['🦊', 'fox'],
+                ['🦝', 'raccoon'], ['🐱', 'cat_face'], ['🐈', 'cat'], ['🦁', 'lion'], ['🐯', 'tiger_face'],
+                ['🐅', 'tiger'], ['🐆', 'leopard'], ['🐴', 'horse_face'], ['🫎', 'moose'], ['🫏', 'donkey'],
+                ['🐎', 'horse'], ['🦄', 'unicorn'], ['🦓', 'zebra'], ['🦌', 'deer'], ['🦬', 'bison'],
+                ['🐮', 'cow_face'], ['🐂', 'ox'], ['🐃', 'water_buffalo'], ['🐄', 'cow'], ['🐷', 'pig_face'],
+                ['🐖', 'pig'], ['🐗', 'boar'], ['🐽', 'pig_nose'], ['🐏', 'ram'], ['🐑', 'ewe'],
+                ['🐐', 'goat'], ['🐪', 'camel'], ['🐫', 'two-hump_camel'], ['🦙', 'llama'], ['🦒', 'giraffe'],
+                ['🐘', 'elephant'], ['🦣', 'mammoth'], ['🦏', 'rhinoceros'], ['🦛', 'hippopotamus'], ['🐭', 'mouse_face'],
+                ['🐁', 'mouse'], ['🐀', 'rat'], ['🐹', 'hamster'], ['🐰', 'rabbit_face'], ['🐇', 'rabbit'],
+                ['🐿', 'chipmunk'], ['🦫', 'beaver'], ['🦔', 'hedgehog'], ['🦇', 'bat'], ['🐻', 'bear'],
+                ['🐨', 'koala'], ['🐼', 'panda'], ['🦥', 'sloth'], ['🦦', 'otter'], ['🦨', 'skunk'],
+                ['🦘', 'kangaroo'], ['🦡', 'badger'], ['🐾', 'paw_prints'], ['🦃', 'turkey'], ['🐔', 'chicken'],
+                ['🐓', 'rooster'], ['🐣', 'hatching_chick'], ['🐤', 'baby_chick'], ['🐥', 'front-facing_baby_chick'], ['🐦', 'bird'],
+                ['🐧', 'penguin'], ['🕊', 'dove'], ['🦅', 'eagle'], ['🦆', 'duck'], ['🦢', 'swan'],
+                ['🦉', 'owl'], ['🦤', 'dodo'], ['🪶', 'feather'], ['🦩', 'flamingo'], ['🦚', 'peacock'],
+                ['🦜', 'parrot'], ['🪽', 'wing'], ['🪿', 'goose'], ['🐸', 'frog'], ['🐊', 'crocodile'],
+                ['🐢', 'turtle'], ['🦎', 'lizard'], ['🐍', 'snake'], ['🐲', 'dragon_face'], ['🐉', 'dragon'],
+                ['🦕', 'sauropod'], ['🦖', 'T-Rex'], ['🐳', 'spouting_whale'], ['🐋', 'whale'], ['🐬', 'dolphin'],
+                ['🦭', 'seal'], ['🐟', 'fish'], ['🐠', 'tropical_fish'], ['🐡', 'blowfish'], ['🦈', 'shark'],
+                ['🐙', 'octopus'], ['🐚', 'spiral_shell'], ['🪸', 'coral'], ['🪼', 'jellyfish'], ['🐌', 'snail'],
+                ['🦋', 'butterfly'], ['🐛', 'bug'], ['🐜', 'ant'], ['🐝', 'honeybee'], ['🪲', 'beetle'],
+                ['🐞', 'lady_beetle'], ['🦗', 'cricket'], ['🪳', 'cockroach'], ['🕷', 'spider'], ['🕸', 'spider_web'],
+                ['🦂', 'scorpion'], ['🦟', 'mosquito'], ['🪰', 'fly'], ['🪱', 'worm'], ['🦠', 'microbe'],
+                ['💐', 'bouquet'], ['🌸', 'cherry_blossom'], ['💮', 'white_flower'], ['🪷', 'lotus'], ['🏵', 'rosette'],
+                ['🌹', 'rose'], ['🥀', 'wilted_flower'], ['🌺', 'hibiscus'], ['🌻', 'sunflower'], ['🌼', 'blossom'],
+                ['🌷', 'tulip'], ['🪻', 'hyacinth'], ['🌱', 'seedling'], ['🪴', 'potted_plant'], ['🌲', 'evergreen_tree'],
+                ['🌳', 'deciduous_tree'], ['🌴', 'palm_tree'], ['🌵', 'cactus'], ['🌾', 'sheaf_of_rice'], ['🌿', 'herb'],
+                ['☘', 'shamrock'], ['🍀', 'four_leaf_clover'], ['🍁', 'maple_leaf'], ['🍂', 'fallen_leaf'], ['🍃', 'leaf_fluttering_in_wind'],
+                ['🪹', 'empty_nest'], ['🪺', 'nest_with_eggs'], ['🍄', 'mushroom'],
+                // Food & Drink
+                ['🍇', 'grapes'], ['🍈', 'melon'], ['🍉', 'watermelon'], ['🍊', 'tangerine'], ['🍋', 'lemon'],
+                ['🍌', 'banana'], ['🍍', 'pineapple'], ['🥭', 'mango'], ['🍎', 'red_apple'], ['🍏', 'green_apple'],
+                ['🍐', 'pear'], ['🍑', 'peach'], ['🍒', 'cherries'], ['🍓', 'strawberry'], ['🫐', 'blueberries'],
+                ['🥝', 'kiwi_fruit'], ['🍅', 'tomato'], ['🫒', 'olive'], ['🥥', 'coconut'], ['🥑', 'avocado'],
+                ['🍆', 'eggplant'], ['🥔', 'potato'], ['🥕', 'carrot'], ['🌽', 'ear_of_corn'], ['🌶', 'hot_pepper'],
+                ['🫑', 'bell_pepper'], ['🥒', 'cucumber'], ['🥬', 'leafy_green'], ['🥦', 'broccoli'], ['🧄', 'garlic'],
+                ['🧅', 'onion'], ['🥜', 'peanuts'], ['🫘', 'beans'], ['🌰', 'chestnut'], ['🫚', 'ginger_root'],
+                ['🫛', 'pea_pod'], ['🍞', 'bread'], ['🥐', 'croissant'], ['🥖', 'baguette_bread'], ['🫓', 'flatbread'],
+                ['🥨', 'pretzel'], ['🥯', 'bagel'], ['🥞', 'pancakes'], ['🧇', 'waffle'], ['🧀', 'cheese_wedge'],
+                ['🍖', 'meat_on_bone'], ['🍗', 'poultry_leg'], ['🥩', 'cut_of_meat'], ['🥓', 'bacon'], ['🍔', 'hamburger'],
+                ['🍟', 'french_fries'], ['🍕', 'pizza'], ['🌭', 'hot_dog'], ['🥪', 'sandwich'], ['🌮', 'taco'],
+                ['🌯', 'burrito'], ['🫔', 'tamale'], ['🥙', 'stuffed_flatbread'], ['🧆', 'falafel'], ['🥚', 'egg'],
+                ['🍳', 'cooking'], ['🥘', 'shallow_pan_of_food'], ['🍲', 'pot_of_food'], ['🫕', 'fondue'], ['🥣', 'bowl_with_spoon'],
+                ['🥗', 'green_salad'], ['🍿', 'popcorn'], ['🧈', 'butter'], ['🧂', 'salt'], ['🥫', 'canned_food'],
+                ['🍱', 'bento_box'], ['🍘', 'rice_cracker'], ['🍙', 'rice_ball'], ['🍚', 'cooked_rice'], ['🍛', 'curry_rice'],
+                ['🍜', 'steaming_bowl'], ['🍝', 'spaghetti'], ['🍠', 'roasted_sweet_potato'], ['🍢', 'oden'], ['🍣', 'sushi'],
+                ['🍤', 'fried_shrimp'], ['🍥', 'fish_cake_with_swirl'], ['🥮', 'moon_cake'], ['🍡', 'dango'], ['🥟', 'dumpling'],
+                ['🥠', 'fortune_cookie'], ['🥡', 'takeout_box'], ['🦀', 'crab'], ['🦞', 'lobster'], ['🦐', 'shrimp'],
+                ['🦑', 'squid'], ['🦪', 'oyster'], ['🍦', 'soft_ice_cream'], ['🍧', 'shaved_ice'], ['🍨', 'ice_cream'],
+                ['🍩', 'doughnut'], ['🍪', 'cookie'], ['🎂', 'birthday_cake'], ['🍰', 'shortcake'], ['🧁', 'cupcake'],
+                ['🥧', 'pie'], ['🍫', 'chocolate_bar'], ['🍬', 'candy'], ['🍭', 'lollipop'], ['🍮', 'custard'],
+                ['🍯', 'honey_pot'], ['🍼', 'baby_bottle'], ['🥛', 'glass_of_milk'], ['☕', 'hot_beverage'], ['🫖', 'teapot'],
+                ['🍵', 'teacup_without_handle'], ['🍶', 'sake'], ['🍾', 'bottle_with_popping_cork'], ['🍷', 'wine_glass'], ['🍸', 'cocktail_glass'],
+                ['🍹', 'tropical_drink'], ['🍺', 'beer_mug'], ['🍻', 'clinking_beer_mugs'], ['🥂', 'clinking_glasses'], ['🥃', 'tumbler_glass'],
+                ['🫗', 'pouring_liquid'], ['🥤', 'cup_with_straw'], ['🧋', 'bubble_tea'], ['🧃', 'beverage_box'], ['🧉', 'mate'],
+                ['🧊', 'ice'], ['🥢', 'chopsticks'], ['🍽', 'fork_and_knife_with_plate'], ['🍴', 'fork_and_knife'], ['🥄', 'spoon'],
+                ['🔪', 'kitchen_knife'], ['🫙', 'jar'], ['🏺', 'amphora'],
+                // Travel & Places
+                ['🌍', 'globe_showing_Europe-Africa'], ['🌎', 'globe_showing_Americas'], ['🌏', 'globe_showing_Asia-Australia'], ['🌐', 'globe_with_meridians'], ['🗺', 'world_map'],
+                ['🗾', 'map_of_Japan'], ['🧭', 'compass'], ['🏔', 'snow-capped_mountain'], ['⛰', 'mountain'], ['🌋', 'volcano'],
+                ['🗻', 'mount_fuji'], ['🏕', 'camping'], ['🏖', 'beach_with_umbrella'], ['🏜', 'desert'], ['🏝', 'desert_island'],
+                ['🏞', 'national_park'], ['🏟', 'stadium'], ['🏛', 'classical_building'], ['🏗', 'building_construction'], ['🧱', 'brick'],
+                ['🪨', 'rock'], ['🪵', 'wood'], ['🛖', 'hut'], ['🏘', 'houses'], ['🏚', 'derelict_house'],
+                ['🏠', 'house'], ['🏡', 'house_with_garden'], ['🏢', 'office_building'], ['🏣', 'Japanese_post_office'], ['🏤', 'post_office'],
+                ['🏥', 'hospital'], ['🏦', 'bank'], ['🏨', 'hotel'], ['🏩', 'love_hotel'], ['🏪', 'convenience_store'],
+                ['🏫', 'school'], ['🏬', 'department_store'], ['🏭', 'factory'], ['🏯', 'Japanese_castle'], ['🏰', 'castle'],
+                ['💒', 'wedding'], ['🗼', 'Tokyo_tower'], ['🗽', 'Statue_of_Liberty'], ['⛪', 'church'], ['🕌', 'mosque'],
+                ['🛕', 'hindu_temple'], ['🕍', 'synagogue'], ['⛩', 'shinto_shrine'], ['🕋', 'kaaba'], ['⛲', 'fountain'],
+                ['⛺', 'tent'], ['🌁', 'foggy'], ['🌃', 'night_with_stars'], ['🏙', 'cityscape'], ['🌄', 'sunrise_over_mountains'],
+                ['🌅', 'sunrise'], ['🌆', 'cityscape_at_dusk'], ['🌇', 'sunset'], ['🌉', 'bridge_at_night'], ['♨', 'hot_springs'],
+                ['🎠', 'carousel_horse'], ['🛝', 'playground_slide'], ['🎡', 'ferris_wheel'], ['🎢', 'roller_coaster'], ['💈', 'barber_pole'],
+                ['🎪', 'circus_tent'], ['🚂', 'locomotive'], ['🚃', 'railway_car'], ['🚄', 'high-speed_train'], ['🚅', 'bullet_train'],
+                ['🚆', 'train'], ['🚇', 'metro'], ['🚈', 'light_rail'], ['🚉', 'station'], ['🚊', 'tram'],
+                ['🚝', 'monorail'], ['🚞', 'mountain_railway'], ['🚋', 'tram_car'], ['🚌', 'bus'], ['🚍', 'oncoming_bus'],
+                ['🚎', 'trolleybus'], ['🚐', 'minibus'], ['🚑', 'ambulance'], ['🚒', 'fire_engine'], ['🚓', 'police_car'],
+                ['🚔', 'oncoming_police_car'], ['🚕', 'taxi'], ['🚖', 'oncoming_taxi'], ['🚗', 'automobile'], ['🚘', 'oncoming_automobile'],
+                ['🚙', 'sport_utility_vehicle'], ['🛻', 'pickup_truck'], ['🚚', 'delivery_truck'], ['🚛', 'articulated_lorry'], ['🚜', 'tractor'],
+                ['🏎', 'racing_car'], ['🏍', 'motorcycle'], ['🛵', 'motor_scooter'], ['🦽', 'manual_wheelchair'], ['🦼', 'motorized_wheelchair'],
+                ['🛺', 'auto_rickshaw'], ['🚲', 'bicycle'], ['🛴', 'kick_scooter'], ['🛹', 'skateboard'], ['🛼', 'roller_skate'],
+                ['🚏', 'bus_stop'], ['🛣', 'motorway'], ['🛤', 'railway_track'], ['🛢', 'oil_drum'], ['⛽', 'fuel_pump'],
+                ['🛞', 'wheel'], ['🚨', 'police_car_light'], ['🚥', 'horizontal_traffic_light'], ['🚦', 'vertical_traffic_light'], ['🛑', 'stop_sign'],
+                ['🚧', 'construction'], ['⚓', 'anchor'], ['🛟', 'ring_buoy'], ['⛵', 'sailboat'], ['🛶', 'canoe'],
+                ['🚤', 'speedboat'], ['🛳', 'passenger_ship'], ['⛴', 'ferry'], ['🛥', 'motor_boat'], ['🚢', 'ship'],
+                ['✈', 'airplane'], ['🛩', 'small_airplane'], ['🛫', 'airplane_departure'], ['🛬', 'airplane_arrival'], ['🪂', 'parachute'],
+                ['💺', 'seat'], ['🚁', 'helicopter'], ['🚟', 'suspension_railway'], ['🚠', 'mountain_cableway'], ['🚡', 'aerial_tramway'],
+                ['🛰', 'satellite'], ['🚀', 'rocket'], ['🛸', 'flying_saucer'], ['🛎', 'bellhop_bell'], ['🧳', 'luggage'],
+                ['⌛', 'hourglass_done'], ['⏳', 'hourglass_not_done'], ['⌚', 'watch'], ['⏰', 'alarm_clock'], ['⏱', 'stopwatch'],
+                ['⏲', 'timer_clock'], ['🕰', 'mantelpiece_clock'], ['🕛', 'twelve_o’clock'], ['🕧', 'twelve-thirty'], ['🕐', 'one_o’clock'],
+                ['🕜', 'one-thirty'], ['🕑', 'two_o’clock'], ['🕝', 'two-thirty'], ['🕒', 'three_o’clock'], ['🕞', 'three-thirty'],
+                ['🕓', 'four_o’clock'], ['🕟', 'four-thirty'], ['🕔', 'five_o’clock'], ['🕠', 'five-thirty'], ['🕕', 'six_o’clock'],
+                ['🕡', 'six-thirty'], ['🕖', 'seven_o’clock'], ['🕢', 'seven-thirty'], ['🕗', 'eight_o’clock'], ['🕣', 'eight-thirty'],
+                ['🕘', 'nine_o’clock'], ['🕤', 'nine-thirty'], ['🕙', 'ten_o’clock'], ['🕥', 'ten-thirty'], ['🕚', 'eleven_o’clock'],
+                ['🕦', 'eleven-thirty'], ['🌑', 'new_moon'], ['🌒', 'waxing_crescent_moon'], ['🌓', 'first_quarter_moon'], ['🌔', 'waxing_gibbous_moon'],
+                ['🌕', 'full_moon'], ['🌖', 'waning_gibbous_moon'], ['🌗', 'last_quarter_moon'], ['🌘', 'waning_crescent_moon'], ['🌙', 'crescent_moon'],
+                ['🌚', 'new_moon_face'], ['🌛', 'first_quarter_moon_face'], ['🌜', 'last_quarter_moon_face'], ['🌡', 'thermometer'], ['☀', 'sun'],
+                ['🌝', 'full_moon_face'], ['🌞', 'sun_with_face'], ['🪐', 'ringed_planet'], ['⭐', 'star'], ['🌟', 'glowing_star'],
+                ['🌠', 'shooting_star'], ['🌌', 'milky_way'], ['☁', 'cloud'], ['⛅', 'sun_behind_cloud'], ['⛈', 'cloud_with_lightning_and_rain'],
+                ['🌤', 'sun_behind_small_cloud'], ['🌥', 'sun_behind_large_cloud'], ['🌦', 'sun_behind_rain_cloud'], ['🌧', 'cloud_with_rain'], ['🌨', 'cloud_with_snow'],
+                ['🌩', 'cloud_with_lightning'], ['🌪', 'tornado'], ['🌫', 'fog'], ['🌬', 'wind_face'], ['🌀', 'cyclone'],
+                ['🌈', 'rainbow'], ['🌂', 'closed_umbrella'], ['☂', 'umbrella'], ['☔', 'umbrella_with_rain_drops'], ['⛱', 'umbrella_on_ground'],
+                ['⚡', 'high_voltage'], ['❄', 'snowflake'], ['☃', 'snowman'], ['⛄', 'snowman_without_snow'], ['☄', 'comet'],
+                ['🔥', 'fire'], ['💧', 'droplet'], ['🌊', 'water_wave'],
+                // Activities
+                ['🎃', 'jack-o-lantern'], ['🎄', 'Christmas_tree'], ['🎆', 'fireworks'], ['🎇', 'sparkler'], ['🧨', 'firecracker'],
+                ['✨', 'sparkles'], ['🎈', 'balloon'], ['🎉', 'party_popper'], ['🎊', 'confetti_ball'], ['🎋', 'tanabata_tree'],
+                ['🎍', 'pine_decoration'], ['🎎', 'Japanese_dolls'], ['🎏', 'carp_streamer'], ['🎐', 'wind_chime'], ['🎑', 'moon_viewing_ceremony'],
+                ['🧧', 'red_envelope'], ['🎀', 'ribbon'], ['🎁', 'wrapped_gift'], ['🎗', 'reminder_ribbon'], ['🎟', 'admission_tickets'],
+                ['🎫', 'ticket'], ['🎖', 'military_medal'], ['🏆', 'trophy'], ['🏅', 'sports_medal'], ['🥇', '1st_place_medal'],
+                ['🥈', '2nd_place_medal'], ['🥉', '3rd_place_medal'], ['⚽', 'soccer_ball'], ['⚾', 'baseball'], ['🥎', 'softball'],
+                ['🏀', 'basketball'], ['🏐', 'volleyball'], ['🏈', 'american_football'], ['🏉', 'rugby_football'], ['🎾', 'tennis'],
+                ['🥏', 'flying_disc'], ['🎳', 'bowling'], ['🏏', 'cricket_game'], ['🏑', 'field_hockey'], ['🏒', 'ice_hockey'],
+                ['🥍', 'lacrosse'], ['🏓', 'ping_pong'], ['🏸', 'badminton'], ['🥊', 'boxing_glove'], ['🥋', 'martial_arts_uniform'],
+                ['🥅', 'goal_net'], ['⛳', 'flag_in_hole'], ['⛸', 'ice_skate'], ['🎣', 'fishing_pole'], ['🤿', 'diving_mask'],
+                ['🎽', 'running_shirt'], ['🎿', 'skis'], ['🛷', 'sled'], ['🥌', 'curling_stone'], ['🎯', 'bullseye'],
+                ['🪀', 'yo-yo'], ['🪁', 'kite'], ['🔫', 'water_pistol'], ['🎱', 'pool_8_ball'], ['🔮', 'crystal_ball'],
+                ['🪄', 'magic_wand'], ['🎮', 'video_game'], ['🕹', 'joystick'], ['🎰', 'slot_machine'], ['🎲', 'game_die'],
+                ['🧩', 'puzzle_piece'], ['🧸', 'teddy_bear'], ['🪅', 'piñata'], ['🪩', 'mirror_ball'], ['🪆', 'nesting_dolls'],
+                ['♠', 'spade_suit'], ['♥', 'heart_suit'], ['♦', 'diamond_suit'], ['♣', 'club_suit'], ['♟', 'chess_pawn'],
+                ['🃏', 'joker'], ['🀄', 'mahjong_red_dragon'], ['🎴', 'flower_playing_cards'], ['🎭', 'performing_arts'], ['🖼', 'framed_picture'],
+                ['🎨', 'artist_palette'], ['🧵', 'thread'], ['🪡', 'sewing_needle'], ['🧶', 'yarn'], ['🪢', 'knot'],
+
+                // Objects
+                ['👓', 'glasses'], ['🕶', 'sunglasses'], ['🥽', 'goggles'], ['🥼', 'lab_coat'], ['🦺', 'safety_vest'],
+                ['👔', 'necktie'], ['👕', 't-shirt'], ['👖', 'jeans'], ['🧣', 'scarf'], ['🧤', 'gloves'],
+                ['🧥', 'coat'], ['🧦', 'socks'], ['👗', 'dress'], ['👘', 'kimono'], ['🥻', 'sari'],
+                ['🩱', 'one-piece_swimsuit'], ['🩲', 'briefs'], ['🩳', 'shorts'], ['👙', 'bikini'], ['👚', 'woman’s_clothes'],
+                ['🪭', 'folding_hand_fan'], ['👛', 'purse'], ['👜', 'handbag'], ['👝', 'clutch_bag'], ['🛍', 'shopping_bags'],
+                ['🎒', 'backpack'], ['🩴', 'thong_sandal'], ['👞', 'man’s_shoe'], ['👟', 'running_shoe'], ['🥾', 'hiking_boot'],
+                ['🥿', 'flat_shoe'], ['👠', 'high-heeled_shoe'], ['👡', 'woman’s_sandal'], ['🩰', 'ballet_shoes'], ['👢', 'woman’s_boot'],
+                ['🪮', 'hair_pick'], ['👑', 'crown'], ['👒', 'woman’s_hat'], ['🎩', 'top_hat'], ['🎓', 'graduation_cap'],
+                ['🧢', 'billed_cap'], ['🪖', 'military_helmet'], ['⛑', 'rescue_worker’s_helmet'], ['📿', 'prayer_beads'], ['💄', 'lipstick'],
+                ['💍', 'ring'], ['💎', 'gem_stone'], ['🔇', 'muted_speaker'], ['🔈', 'speaker_low_volume'], ['🔉', 'speaker_medium_volume'],
+                ['🔊', 'speaker_high_volume'], ['📢', 'loudspeaker'], ['📣', 'megaphone'], ['📯', 'postal_horn'], ['🔔', 'bell'],
+                ['🔕', 'bell_with_slash'], ['🎼', 'musical_score'], ['🎵', 'musical_note'], ['🎶', 'musical_notes'], ['🎙', 'studio_microphone'],
+                ['🎚', 'level_slider'], ['🎛', 'control_knobs'], ['🎤', 'microphone'], ['🎧', 'headphone'], ['📻', 'radio'],
+                ['🎷', 'saxophone'], ['🪗', 'accordion'], ['🎸', 'guitar'], ['🎹', 'musical_keyboard'], ['🎺', 'trumpet'],
+                ['🎻', 'violin'], ['🪕', 'banjo'], ['🥁', 'drum'], ['🪘', 'long_drum'], ['🪇', 'maracas'],
+                ['🪈', 'flute'], ['📱', 'mobile_phone'], ['📲', 'mobile_phone_with_arrow'], ['☎', 'telephone'], ['📞', 'telephone_receiver'],
+                ['📟', 'pager'], ['📠', 'fax_machine'], ['🔋', 'battery'], ['🪫', 'low_battery'], ['🔌', 'electric_plug'],
+                ['💻', 'laptop'], ['🖥', 'desktop_computer'], ['🖨', 'printer'], ['⌨', 'keyboard'], ['🖱', 'computer_mouse'],
+                ['🖲', 'trackball'], ['💽', 'computer_disk'], ['💾', 'floppy_disk'], ['💿', 'optical_disk'], ['📀', 'dvd'],
+                ['🧮', 'abacus'], ['🎥', 'movie_camera'], ['🎞', 'film_frames'], ['📽', 'film_projector'], ['🎬', 'clapper_board'],
+                ['📺', 'television'], ['📷', 'camera'], ['📸', 'camera_with_flash'], ['📹', 'video_camera'], ['📼', 'videocassette'],
+                ['🔍', 'magnifying_glass_tilted_left'], ['🔎', 'magnifying_glass_tilted_right'], ['🕯', 'candle'], ['💡', 'light_bulb'], ['🔦', 'flashlight'],
+                ['🏮', 'red_paper_lantern'], ['🪔', 'diya_lamp'], ['📔', 'notebook_with_decorative_cover'], ['📕', 'closed_book'], ['📖', 'open_book'],
+                ['📗', 'green_book'], ['📘', 'blue_book'], ['📙', 'orange_book'], ['📚', 'books'], ['📓', 'notebook'],
+                ['📒', 'ledger'], ['📃', 'page_with_curl'], ['📜', 'scroll'], ['📄', 'page_facing_up'], ['📰', 'newspaper'],
+                ['🗞', 'rolled-up_newspaper'], ['📑', 'bookmark_tabs'], ['🔖', 'bookmark'], ['🏷', 'label'], ['💰', 'money_bag'],
+                ['🪙', 'coin'], ['💴', 'yen_banknote'], ['💵', 'dollar_banknote'], ['💶', 'euro_banknote'], ['💷', 'pound_banknote'],
+                ['💸', 'money_with_wings'], ['💳', 'credit_card'], ['🧾', 'receipt'], ['💹', 'chart_increasing_with_yen'], ['✉', 'envelope'],
+                ['📧', 'e-mail'], ['📨', 'incoming_envelope'], ['📩', 'envelope_with_arrow'], ['📤', 'outbox_tray'], ['📥', 'inbox_tray'],
+                ['📦', 'package'], ['📫', 'closed_mailbox_with_raised_flag'], ['📪', 'closed_mailbox_with_lowered_flag'], ['📬', 'open_mailbox_with_raised_flag'], ['📭', 'open_mailbox_with_lowered_flag'],
+                ['📮', 'postbox'], ['🗳', 'ballot_box_with_ballot'], ['✏', 'pencil'], ['✒', 'black_nib'], ['🖋', 'fountain_pen'],
+                ['🖊', 'pen'], ['🖌', 'paintbrush'], ['🖍', 'crayon'], ['📝', 'memo'], ['💼', 'briefcase'],
+                ['📁', 'file_folder'], ['📂', 'open_file_folder'], ['🗂', 'card_index_dividers'], ['📅', 'calendar'], ['📆', 'tear-off_calendar'],
+                ['🗒', 'spiral_notepad'], ['🗓', 'spiral_calendar'], ['📇', 'card_index'], ['📈', 'chart_increasing'], ['📉', 'chart_decreasing'],
+                ['📊', 'bar_chart'], ['📋', 'clipboard'], ['📌', 'pushpin'], ['📍', 'round_pushpin'], ['📎', 'paperclip'],
+                ['🖇', 'linked_paperclips'], ['📏', 'straight_ruler'], ['📐', 'triangular_ruler'], ['✂', 'scissors'], ['🗃', 'card_file_box'],
+                ['🗄', 'file_cabinet'], ['🗑', 'wastebasket'], ['🔒', 'locked'], ['🔓', 'unlocked'], ['🔏', 'locked_with_pen'],
+                ['🔐', 'locked_with_key'], ['🔑', 'key'], ['🗝', 'old_key'], ['🔨', 'hammer'], ['🪓', 'axe'],
+                ['⛏', 'pick'], ['⚒', 'hammer_and_pick'], ['🛠', 'hammer_and_wrench'], ['🗡', 'dagger'], ['⚔', 'crossed_swords'],
+                ['💣', 'bomb'], ['🪃', 'boomerang'], ['🏹', 'bow_and_arrow'], ['🛡', 'shield'], ['🪚', 'carpentry_saw'],
+                ['🔧', 'wrench'], ['🪛', 'screwdriver'], ['🔩', 'nut_and_bolt'], ['⚙', 'gear'], ['🗜', 'clamp'],
+                ['⚖', 'balance_scale'], ['🦯', 'white_cane'], ['🔗', 'link'], ['⛓', 'chains'], ['🪝', 'hook'],
+                ['🧰', 'toolbox'], ['🧲', 'magnet'], ['🪜', 'ladder'], ['⚗', 'alembic'], ['🧪', 'test_tube'],
+                ['🧫', 'petri_dish'], ['🧬', 'dna'], ['🔬', 'microscope'], ['🔭', 'telescope'], ['📡', 'satellite_antenna'],
+                ['💉', 'syringe'], ['🩸', 'drop_of_blood'], ['💊', 'pill'], ['🩹', 'adhesive_bandage'], ['🩼', 'crutch'],
+                ['🩺', 'stethoscope'], ['🩻', 'x-ray'], ['🚪', 'door'], ['🛗', 'elevator'], ['🪞', 'mirror'],
+                ['🪟', 'window'], ['🛏', 'bed'], ['🛋', 'couch_and_lamp'], ['🪑', 'chair'], ['🚽', 'toilet'],
+                ['🪠', 'plunger'], ['🚿', 'shower'], ['🛁', 'bathtub'], ['🪤', 'mouse_trap'], ['🪒', 'razor'],
+                ['🧴', 'lotion_bottle'], ['🧷', 'safety_pin'], ['🧹', 'broom'], ['🧺', 'basket'], ['🧻', 'roll_of_paper'],
+                ['🪣', 'bucket'], ['🧼', 'soap'], ['🫧', 'bubbles'], ['🪥', 'toothbrush'], ['🧽', 'sponge'],
+                ['🧯', 'fire_extinguisher'], ['🛒', 'shopping_cart'], ['🚬', 'cigarette'], ['⚰', 'coffin'], ['🪦', 'headstone'],
+                ['⚱', 'funeral_urn'], ['🧿', 'nazar_amulet'], ['🪬', 'hamsa'], ['🗿', 'moai'], ['🪧', 'placard'],
+                ['🪪', 'identification_card'],
+                // Symbols
+                ['🏧', 'ATM_sign'], ['🚮', 'litter_in_bin_sign'], ['🚰', 'potable_water'], ['♿', 'wheelchair_symbol'], ['🚹', 'men’s_room'],
+                ['🚺', 'women’s_room'], ['🚻', 'restroom'], ['🚼', 'baby_symbol'], ['🚾', 'water_closet'], ['🛂', 'passport_control'],
+                ['🛃', 'customs'], ['🛄', 'baggage_claim'], ['🛅', 'left_luggage'], ['⚠', 'warning'], ['🚸', 'children_crossing'],
+                ['⛔', 'no_entry'], ['🚫', 'prohibited'], ['🚳', 'no_bicycles'], ['🚭', 'no_smoking'], ['🚯', 'no_littering'],
+                ['🚱', 'non-potable_water'], ['🚷', 'no_pedestrians'], ['📵', 'no_mobile_phones'], ['🔞', 'no_one_under_eighteen'], ['☢', 'radioactive'],
+                ['☣', 'biohazard'], ['⬆', 'up_arrow'], ['↗', 'up-right_arrow'], ['➡', 'right_arrow'], ['↘', 'down-right_arrow'],
+                ['⬇', 'down_arrow'], ['↙', 'down-left_arrow'], ['⬅', 'left_arrow'], ['↖', 'up-left_arrow'], ['↕', 'up-down_arrow'],
+                ['↔', 'left-right_arrow'], ['↩', 'right_arrow_curving_left'], ['↪', 'left_arrow_curving_right'], ['⤴', 'right_arrow_curving_up'], ['⤵', 'right_arrow_curving_down'],
+                ['🔃', 'clockwise_vertical_arrows'], ['🔄', 'counterclockwise_arrows_button'], ['🔙', 'BACK_arrow'], ['🔚', 'END_arrow'], ['🔛', 'ON!_arrow'],
+                ['🔜', 'SOON_arrow'], ['🔝', 'TOP_arrow'], ['🛐', 'place_of_worship'], ['⚛', 'atom_symbol'], ['🕉', 'om'],
+                ['✡', 'star_of_David'], ['☸', 'wheel_of_dharma'], ['☯', 'yin_yang'], ['✝', 'latin_cross'], ['☦', 'orthodox_cross'],
+                ['☪', 'star_and_crescent'], ['☮', 'peace_symbol'], ['🕎', 'menorah'], ['🔯', 'dotted_six-pointed_star'], ['🪯', 'khanda'],
+                ['♈', 'Aries'], ['♉', 'Taurus'], ['♊', 'Gemini'], ['♋', 'Cancer'], ['♌', 'Leo'],
+                ['♍', 'Virgo'], ['♎', 'Libra'], ['♏', 'Scorpio'], ['♐', 'Sagittarius'], ['♑', 'Capricorn'],
+                ['♒', 'Aquarius'], ['♓', 'Pisces'], ['⛎', 'Ophiuchus'], ['🔀', 'shuffle_tracks_button'], ['🔁', 'repeat_button'],
+                ['🔂', 'repeat_single_button'], ['▶', 'play_button'], ['⏩', 'fast-forward_button'], ['⏭', 'next_track_button'], ['⏯', 'play_or_pause_button'],
+                ['◀', 'reverse_button'], ['⏪', 'fast_reverse_button'], ['⏮', 'last_track_button'], ['🔼', 'upwards_button'], ['⏫', 'fast_up_button'],
+                ['🔽', 'downwards_button'], ['⏬', 'fast_down_button'], ['⏸', 'pause_button'], ['⏹', 'stop_button'], ['⏺', 'record_button'],
+                ['⏏', 'eject_button'], ['🎦', 'cinema'], ['🔅', 'dim_button'], ['🔆', 'bright_button'], ['📶', 'antenna_bars'],
+                ['🛜', 'wireless'], ['📳', 'vibration_mode'], ['📴', 'mobile_phone_off'], ['♀', 'female_sign'], ['♂', 'male_sign'],
+                ['⚧', 'transgender_symbol'], ['✖', 'multiply'], ['➕', 'plus'], ['➖', 'minus'], ['➗', 'divide'],
+                ['🟰', 'heavy_equals_sign'], ['♾', 'infinity'], ['‼', 'double_exclamation_mark'], ['⁉', 'exclamation_question_mark'], ['❓', 'red_question_mark'],
+                ['❔', 'white_question_mark'], ['❕', 'white_exclamation_mark'], ['❗', 'red_exclamation_mark'], ['〰', 'wavy_dash'], ['💱', 'currency_exchange'],
+                ['💲', 'heavy_dollar_sign'], ['⚕', 'medical_symbol'], ['♻', 'recycling_symbol'], ['⚜', 'fleur-de-lis'], ['🔱', 'trident_emblem'],
+                ['📛', 'name_badge'], ['🔰', 'Japanese_symbol_for_beginner'], ['⭕', 'hollow_red_circle'], ['✅', 'check_mark_button'], ['☑', 'check_box_with_check'],
+                ['✔', 'check_mark'], ['❌', 'cross_mark'], ['❎', 'cross_mark_button'], ['➰', 'curly_loop'], ['➿', 'double_curly_loop'],
+                ['〽', 'part_alternation_mark'], ['✳', 'eight-spoked_asterisk'], ['✴', 'eight-pointed_star'], ['❇', 'sparkle'], ['©', 'copyright'],
+                ['®', 'registered'], ['™', 'trade_mark'], ['🔟', 'keycap_10'], ['🔠', 'input_latin_uppercase'], ['🔡', 'input_latin_lowercase'],
+                ['🔢', 'input_numbers'], ['🔣', 'input_symbols'], ['🔤', 'input_latin_letters'], ['🅰', 'A_button_(blood_type)'], ['🆎', 'AB_button_(blood_type)'],
+                ['🅱', 'B_button_(blood_type)'], ['🆑', 'CL_button'], ['🆒', 'COOL_button'], ['🆓', 'FREE_button'], ['ℹ', 'information'],
+                ['🆔', 'ID_button'], ['Ⓜ', 'circled_M'], ['🆕', 'NEW_button'], ['🆖', 'NG_button'], ['🅾', 'O_button_(blood_type)'],
+                ['🆗', 'OK_button'], ['🅿', 'P_button'], ['🆘', 'SOS_button'], ['🆙', 'UP!_button'], ['🆚', 'VS_button'],
+                ['🈁', 'Japanese_“here”_button'], ['🈂', 'Japanese_“service_charge”_button'], ['🈷', 'Japanese_“monthly_amount”_button'], ['🈶', 'Japanese_“not_free_of_charge”_button'], ['🈯', 'Japanese_“reserved”_button'],
+                ['🉐', 'Japanese_“bargain”_button'], ['🈹', 'Japanese_“discount”_button'], ['🈚', 'Japanese_“free_of_charge”_button'], ['🈲', 'Japanese_“prohibited”_button'], ['🉑', 'Japanese_“acceptable”_button'],
+                ['🈸', 'Japanese_“application”_button'], ['🈴', 'Japanese_“passing_grade”_button'], ['🈳', 'Japanese_“vacancy”_button'], ['㊗', 'Japanese_“congratulations”_button'], ['㊙', 'Japanese_“secret”_button'],
+                ['🈺', 'Japanese_“open_for_business”_button'], ['🈵', 'Japanese_“no_vacancy”_button'], ['🔴', 'red_circle'], ['🟠', 'orange_circle'], ['🟡', 'yellow_circle'],
+                ['🟢', 'green_circle'], ['🔵', 'blue_circle'], ['🟣', 'purple_circle'], ['🟤', 'brown_circle'], ['⚫', 'black_circle'],
+                ['⚪', 'white_circle'], ['🟥', 'red_square'], ['🟧', 'orange_square'], ['🟨', 'yellow_square'], ['🟩', 'green_square'],
+                ['🟦', 'blue_square'], ['🟪', 'purple_square'], ['🟫', 'brown_square'], ['⬛', 'black_large_square'], ['⬜', 'white_large_square'],
+                ['◼', 'black_medium_square'], ['◻', 'white_medium_square'], ['◾', 'black_medium-small_square'], ['◽', 'white_medium-small_square'], ['▪', 'black_small_square'],
+                ['▫', 'white_small_square'], ['🔶', 'large_orange_diamond'], ['🔷', 'large_blue_diamond'], ['🔸', 'small_orange_diamond'], ['🔹', 'small_blue_diamond'],
+                ['🔺', 'red_triangle_pointed_up'], ['🔻', 'red_triangle_pointed_down'], ['💠', 'diamond_with_a_dot'], ['🔘', 'radio_button'], ['🔳', 'white_square_button'],
+                ['🔲', 'black_square_button'],
+                // Flags
+                ['🏁', 'chequered_flag'], ['🚩', 'triangular_flag'], ['🎌', 'crossed_flags'], ['🏴', 'black_flag'], ['🏳', 'white_flag'],
+
+                // manually added due to OverflowError: Python int too large to convert to C int
+                ['0️⃣', 'zero'], ['1️⃣', 'one'], ['2️⃣', 'two'], ['3️⃣', 'three'], ['4️⃣', 'four'],
+                ['5️⃣', 'five'], ['6️⃣', 'six'], ['7️⃣', 'seven'], ['8️⃣', 'eight'], ['9️⃣', 'nine'],
+                ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'], ['🇲🇾', 'malaysia'],
+                ['🌎', 'earth_americas'], ['🌍', 'earth_africa'], ['🌏', 'earth_asia']
+            ]
+        );
+
+        if (mode == 'replace') {
+            for (let [key, value] of unicode_emoji_map) {
+                text = text.replaceAll(key, '<span class="masked">(' + value + ')</span>');
+            }
+        } else if (mode == 'remove') {
+            for (let [key, value] of unicode_emoji_map) {
+                text = text.replaceAll(key, '');
+            }
+            for (let [key, value] of chinese_text_emoji_map) {
+                text = text.replaceAll(key, '');
+            }
+            if (!text) {
+                text = maskUnicodeEmojis(text, 'replace');
+            }
+        }
+        return text;
     }
 
 })();

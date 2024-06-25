@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.17
+// @version      0.10.18
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -88,7 +88,7 @@
                 ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
                 ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall'],
                 ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands'], ['emoji1f392', 'Bag'],
-                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette']
+                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1']
             ]
         );
 
@@ -421,7 +421,7 @@
 
     const chinese_text_emoji_map = new Map(
         [
-            ['[破涕为笑]', 'Lol_cn'], ['[裂开]', 'ChappedFace_cn'], ['[庆祝]', 'Celebrating_cn'], ['[囧]', 'Jiong_cn'],
+            ['[破涕为笑]', 'Lol_cn'], ['[破涕為笑]', 'Lol_trcn'], ['[裂开]', 'ChappedFace_cn'], ['[庆祝]', 'Celebrating_cn'], ['[囧]', 'Jiong_cn'],
             ['[笑脸]', 'Smile_cn'], ['[生病]', 'Sick_cn'], ['[脸红]', 'Shy_cn'], ['[恐惧]', 'Panic_cn'], ['[失望]', 'Dispointed_cn'],
             ['[无语]', 'Speechless_cn'], ['[吃瓜]', 'EatingWatermelon_cn'], ['[加油]', 'WorkHard_cn'], ['[汗]', 'Speechless_cn'], ['[天啊]', 'OMG_cn'],
             ['[Emm]', 'Emm'], ['[社会社会]', 'SocialSocial_cn'], ['[旺柴]', 'Doge_cn'], ['[好的]', 'OK_cn'], ['[打脸]', 'SlapOnFace_cn'],
@@ -450,13 +450,13 @@
             line-height: 1.35;
         }
         .button_primary {
-            background-color:#0E639C !important;
-            border-color:#0E639C !important;
+            background-color: #0E639C !important;
+            border-color: #0E639C !important;
         }
         .button_default,
         .waiting_confirm  {
-            background-color:#333333 !important;
-            color:white !important;
+            background-color: #333333 !important;
+            color: white !important;
         }
 
 
@@ -471,14 +471,14 @@
             display:none;
         }
         .login {
-            background-color:#333333;
+            background-color: #333333;
         }
         .login_box {
-            background-color:#1E1E1E;
+            background-color: #1E1E1E;
         }
         .login_box .avatar .action {
-            background-color:#333333 !important;
-            color:white !important;
+            background-color: #333333 !important;
+            color: white !important;
         }
 
 
@@ -489,7 +489,7 @@
         .download_entry,
         .header .avatar,
         .header .info .nickname .display_name,
-        .chat_item .avatar,
+        .chat_item .avatar .img,
         .chat_item .info .msg,
         .chat_item .ext,
         .chat_item .nickname .emoji {
@@ -560,17 +560,18 @@
         .chat_item .info .nickname {
             color: unset;
         }
+        .chat_item .avatar .icon {
+            top: -13px;
+            right: -38px;
+        }
         .vscode_file_icon {
             display: flex;
             margin-right: 6px;
         }
-        .web_wechat_reddot {
-            background: url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
-            background-position: -473px -380px;
-        }
-        .web_wechat_reddot_middle {
-            background: url(https://img2.imgtp.com/2024/04/18/vNEgsIni.png) no-repeat;
-            background-position: -451px -380px;
+        .web_wechat_reddot,
+        .web_wechat_reddot_middle,
+        .web_wechat_reddot_bbig {
+            background: unset;
         }
         .vscode_collapsable {
             display: flex;
@@ -1113,15 +1114,12 @@
     let vscodeFavico = 'https://code.visualstudio.com/favicon.ico';
     let vscodeName = 'Microsoft VS Code';
 
-    // change favicon
+    // change favicon and title
     document.getElementsByTagName('link')[0].href = vscodeFavico;
-    // set title every 0.5 second, never end
-    setInterval(function() {
-        var titleNode = document.getElementsByTagName('title')[0];
-        if (titleNode.innerHTML != vscodeName) {
-            titleNode.innerHTML = vscodeName;
-        }
-    }, 500);
+    /* If window is blur (not focus), page title will be updated once there are new messages.
+       Another user script, named "Always on focus" (https://github.com/daijro/always-on-focus),
+       is being used to trick the app that window is always "focused" */
+    document.getElementsByTagName('title')[0].innerHTML = vscodeName;
 
 
     ////////////////////////////////////////////
@@ -1180,6 +1178,7 @@
             vsHeaderName.textContent = 'EXPLORER';
             var nickname = document.querySelector('.header .info .nickname');
             var opt = nickname.getElementsByClassName('opt')[0];
+            // ellipsis
             opt.innerHTML = `
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="#999" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 8C4 8.19778 3.94135 8.39112 3.83147 8.55557C3.72159 8.72002 3.56541 8.84819 3.38268 8.92388C3.19996 8.99957 2.99889 9.01937 2.80491 8.98079C2.61093 8.9422 2.43275 8.84696 2.29289 8.70711C2.15304 8.56725 2.0578 8.38907 2.01922 8.19509C1.98063 8.00111 2.00043 7.80004 2.07612 7.61732C2.15181 7.43459 2.27998 7.27841 2.44443 7.16853C2.60888 7.05865 2.80222 7 3 7C3.26522 7 3.51957 7.10536 3.70711 7.29289C3.89464 7.48043 4 7.73478 4 8Z"></path>
@@ -1471,17 +1470,6 @@
                             pre.innerHTML = '<p class="masked">(FRIENDS REQUEST ACCEPTED)</p>';
                             return;
                         }
-                        /*
-                        else if (pre.innerHTML.includes('[该消息类型暂不能展示]')) {
-                            pre.innerHTML = pre.innerHTML.replace('[该消息类型暂不能展示]', '<span class="masked">(UNSUPPORTED MESSGE)</span>');
-                            // continue to the logic as below
-                        } else if (pre.innerHTML.includes('[图片]')) {
-                            pre.innerHTML = pre.innerHTML.replace('[图片]', '<span class="masked">(IMAGE)</span>');
-                            // continue to the logic as below
-                        } else if (pre.innerHTML.includes('[视频]')) {
-                            pre.innerHTML = pre.innerHTML.replace('[视频]', '<span class="masked">(VIDEO)</span>');
-                            // continue to the logic as below
-                        } */
                         //  if it is a quoted message
                         if (pre.innerHTML.includes('- - - - - - - - - - - - - - -')) {
                             var displayName = document.querySelector('.header .info .nickname .display_name');
@@ -1665,11 +1653,11 @@
         } else if (text.includes('已恢复默认进群方式')) {
             return parts[1] + ' reset to default group entry setting';
         } else if (text.includes('通过扫描') && text.includes('分享的二维码加入群聊')) {
-            return parts[1] + ' joined group by QR code from ' + parts[3];
+            return parts[1] + ' joined the group';
         } else if (text.includes('你通过扫描二维码加入群聊，群聊参与人还有')) {
-            return 'You joined group by QR code';
+            return 'You joined the group';
         } else if (text.includes('被添加为群管理员')) {
-            return parts[1] + ' is added as administrator';
+            return parts[1] + ' is group administrator now';
         } else if (text.includes('你已添加了') && text.includes('现在可以开始聊天了')) {
             return 'You accepted his/her friends request'
         }
@@ -2003,6 +1991,24 @@
                 }
             }
         }, 500);
+    }
+
+    function renderLineNumber() {
+        const line_num_map = new Map();
+        var scrollContent = document.querySelector('#chatArea .scroll-content');
+        var lineNum = document.getElementById('vscode_line_num');
+        setInterval(function() {
+            var currentActiveChatItem = document.querySelector('.chat_item.active');
+            var activeName = currentActiveChatItem.getElementsByClassName('nickname_text')[0];
+            var topPlaceHolder = scrollContent.getElementsByClassName('top-placeholder')[0];
+            var topPlaceHolderHeight = parseInt(topPlaceHolder.style.height.replace('px', ''));
+            if (!line_num_map.get(activeName)) {
+                line_num_map.put(activeName, topPlaceHolderHeight);
+            } else if (line_num_map.get(activeName) < topPlaceHolderHeight) {
+
+                var diffLineNum = Math.round((topPlaceHolderHeight - line_num_map.get(activeName)) / 18.9);
+            }
+        }, 1000);
     }
 
     function renderSidePanel() {

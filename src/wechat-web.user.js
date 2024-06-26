@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.20
+// @version      0.10.21
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -1123,7 +1123,7 @@
                         var a = locations[0].getElementsByTagName('a')[0];
                         var desc = a.getElementsByTagName('p')[0].innerHTML;
                         a.setAttribute('class', 'masked');
-                        a.innerHTML += '(LOCATION:' + desc + ')';
+                        a.innerHTML += '(LOCATION: ' + desc + ')';
                     }
                     // if it is card
                     var cards = bubbleCont.getElementsByClassName('card');
@@ -1176,9 +1176,7 @@
                 var voices = msgCont.getElementsByClassName('voice');
                 if (nodeIsValidForMasking(voices)) {
                     voices[0].removeAttribute('style');
-                    var duration = voices[0].querySelector('.duration').firstElementChild;
-                    console.log(duration.nodeType);
-                    console.log(duration.tagName);
+                    var duration = voices[0].querySelector('.duration').innerText;
                     GM_addElement(voices[0], 'p', {
                         class: 'masked',
                         textContent: '(VOICE: ' + duration + ')'

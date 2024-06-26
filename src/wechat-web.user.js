@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.19
+// @version      0.10.20
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -17,8 +17,7 @@
     var css = `
         /* Common elements */
         body {
-            background: none;
-            background-size: unset;
+            background: unset;
         }
         .main {
             min-height: 100%;
@@ -51,7 +50,7 @@
         .login .login_box .sub_desc,
         .login .login_box .avatar,
         .login_box .broken_network .icon-broken-logo {
-            display:none;
+            display: none;
         }
         .login {
             background-color: #333333;
@@ -510,6 +509,7 @@
         .message {
             margin-bottom: 0;
             margin-left: 20px;
+            width: unset;
         }
         .message.me {
             float: left;
@@ -754,6 +754,14 @@
     ////////////////////////////////////////////
     // functions
     ////////////////////////////////////////////
+    function renderVsCodeMenuAndBars() {
+        renderTopMenuBar();
+        renderLeftSideBar();
+        renderSidePanel();
+        renderBottomStatusBar();
+        renderCommentBlockAndLineNumber();
+    }
+
     function maskAvatarAndNickName() {
         if (!document.getElementById('vscode_header_name')) {
             var vsHeaderName = document.createElement('span');
@@ -1067,6 +1075,8 @@
                                 pre.innerHTML = pre.innerHTML.replace('[图片]', '<span class="masked">(IMAGE)</span>');
                             } else if (pre.innerHTML.includes('[视频]')) {
                                 pre.innerHTML = pre.innerHTML.replace('[视频]', '<span class="masked">(VIDEO)</span>');
+                            } else if (pre.innerHTML.includes('[动画表情]')) {
+                                pre.innerHTML = pre.innerHTML.replace('[动画表情]', '<span class="masked">(CUSTOM_EMOJI)</span>');
                             }
                         }
                         // mask emojis that are on panels
@@ -1210,14 +1220,6 @@
             return 'You accepted his/her friends request'
         }
         return text;
-    }
-
-    function renderVsCodeMenuAndBars() {
-        renderTopMenuBar();
-        renderLeftSideBar();
-        renderSidePanel();
-        renderBottomStatusBar();
-        renderCommentBlockAndLineNumber();
     }
 
     function renderLeftSideBar() {
@@ -1435,6 +1437,9 @@
             </svg>
             <span class="vscode_search_hint">microsoft-vscode</span>
         `;
+        vsSearch.addEventListener('click', function() {
+            console.log('vsSearch clicked');
+        });
         topMenuBar.appendChild(vsSearch);
         // vscode window actions
         var vsWinActions = [
@@ -1767,7 +1772,7 @@
                 ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
                 ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall'],
                 ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands'], ['emoji1f392', 'Bag'],
-                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1']
+                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1'], ['emoji1f437', 'Pig_1']
             ]
         );
 

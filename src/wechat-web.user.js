@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.21
+// @version      0.10.22
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -1770,7 +1770,8 @@
                 ['emoji1f4d1', 'Note'], ['emoji1f3ab', 'Ticket'],['emoji1f45a', 'BlueT-Shirt'], ['emoji1f393', 'graduation_cap'], ['emoji1f64f', 'Namaste_1'],
                 ['emoji1f236', 'Have'], ['emoji1f488', 'BarberPole'], ['emoji1f51d', 'TOP'], ['emoji1f534', 'BlackCircle'], ['emoji1f4f2', 'PhoneCall'],
                 ['emoji1f44c', 'OK'], ['emoji1f3af', 'Target'], ['emoji1f412', 'Monkey_2'], ['emoji1f44f', 'ClapHands'], ['emoji1f392', 'Bag'],
-                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1'], ['emoji1f437', 'Pig_1']
+                ['emoji1f337', 'Flower_2'], ['emoji1f5fd', 'StatueOfLiberty'], ['emoji1f6ac', 'Cigarette'], ['emoji1f444', 'Lips_1'], ['emoji1f437', 'Pig_1'],
+                ['emoji1f349', 'Watermelon_1']
             ]
         );
 
@@ -2083,7 +2084,7 @@
                 // manually added due to OverflowError: Python int too large to convert to C int
                 ['0️⃣', 'zero'], ['1️⃣', 'one'], ['2️⃣', 'two'], ['3️⃣', 'three'], ['4️⃣', 'four'],
                 ['5️⃣', 'five'], ['6️⃣', 'six'], ['7️⃣', 'seven'], ['8️⃣', 'eight'], ['9️⃣', 'nine'],
-                ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'], ['🇲🇾', 'malaysia'],
+                ['🇪🇺', 'eu'], ['🇹🇭', 'thailand'], ['🇻🇳', 'vietnam'], ['🇨🇦', 'canada'], ['🇲🇾', 'malaysia'], ['🇳🇵', 'nepal'],
                 ['🌎', 'earth_americas'], ['🌍', 'earth_africa'], ['🌏', 'earth_asia']
             ]
         );

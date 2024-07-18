@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VS Code UI for WeChat
 // @namespace    https://github.com/bensgith/vscode-style-wechat
-// @version      0.10.22
+// @version      0.10.23
 // @description  Change the UI to VS Code style(dark mode) for WeChat Web application
 // @author       Benjamin L
 // @match        https://wx2.qq.com/*
@@ -392,7 +392,7 @@
         }
         #chatArea {
             background-color: #1E1E1E;
-            font-family: Consolas;
+            font-family: system-ui;
         }
         .box_hd {
             text-align: left;
@@ -606,7 +606,7 @@
         }
         .chat .box_ft .content {
             padding: 5px 17px;
-            font-family: Consolas;
+            font-family: system-ui;
             font-size: 14px;
         }
         .exp_hd,
@@ -1196,7 +1196,9 @@
 
     function translateIntoEnglish(text) {
         var parts = text.split('\"');
-        if (text.includes('邀请') && text.endsWith('加入了群聊')) {
+        if (text.includes('邀请你加入了群聊')) {
+            return parts[1] + ' added you into the group';
+        } else if (text.includes('邀请') && text.endsWith('加入了群聊')) {
             return parts[1] + ' invited ' + parts[3];
         } else if (text.endsWith('与群里其他人都不是朋友关系，请注意隐私安全')) {
             return parts[1] + ' is not friends with anyone';
